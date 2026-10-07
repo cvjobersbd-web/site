@@ -1,0 +1,1054 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;400;600;700&family=Poppins:wght@500;700;800&display=swap" rel="stylesheet" />
+
+<style>
+    body {
+        overflow-x: hidden;
+    }
+
+    /* ================= HERO ================= */
+    .hero-wrap {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 18px 15px 14px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .hero {
+        max-width: 1620px;
+        margin: 0 auto;
+        container-type: inline-size;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .hero .carousel-inner {
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .hero .carousel-item {
+            aspect-ratio: 1620 / 553;
+            transition: opacity .9s ease;
+        }
+
+    .hero-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-caption {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: clamp(0px, 7.2cqw, 117px) 20px 0 clamp(20px, 3.2cqw, 52px);
+        color: #fff;
+        text-align: left;
+    }
+
+    .hero-label {
+        font-size: clamp(10px, 1cqw, 16px);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: -.2px;
+        margin: 0 0 clamp(6px, .7cqw, 12px);
+    }
+
+    .hero-title-light {
+        font-size: clamp(20px, 3.1cqw, 50px);
+        font-weight: 500;
+        line-height: 1;
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    .hero-title-bold {
+        font-size: clamp(32px, 5.1cqw, 82px);
+        font-weight: 800;
+        line-height: 1;
+        text-transform: uppercase;
+        letter-spacing: -.02em;
+        margin: 0;
+    }
+
+    .hero-sub {
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+        font-size: clamp(12px, 1.1cqw, 18px);
+        font-weight: 300;
+        letter-spacing: .3px;
+        margin: clamp(8px, .9cqw, 16px) 0 clamp(14px, 1.8cqw, 34px);
+        max-width: 90%;
+    }
+
+    .hero-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: clamp(32px, 2.7cqw, 44px);
+        padding: 0 clamp(16px, 1.7cqw, 32px);
+        background: #fff;
+        color: #000;
+        font-size: clamp(10px, .65cqw, 11px);
+        font-weight: 800;
+        letter-spacing: -.2px;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: background .25s, color .25s;
+    }
+
+        .hero-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+    .hero .carousel-item.active .hero-anim,
+    .hero .carousel-item-next .hero-anim {
+        animation: heroSlideIn .8s cubic-bezier(.22, .61, .36, 1) both;
+    }
+
+    .hero .carousel-item.active .hero-label, .hero .carousel-item-next .hero-label {
+        animation-delay: .15s;
+    }
+
+    .hero .carousel-item.active .hero-title-light, .hero .carousel-item-next .hero-title-light {
+        animation-delay: .3s;
+    }
+
+    .hero .carousel-item.active .hero-title-bold, .hero .carousel-item-next .hero-title-bold {
+        animation-delay: .45s;
+    }
+
+    .hero .carousel-item.active .hero-sub, .hero .carousel-item-next .hero-sub {
+        animation-delay: .6s;
+    }
+
+    .hero .carousel-item.active .hero-btn, .hero .carousel-item-next .hero-btn {
+        animation-delay: .75s;
+    }
+
+    @@keyframes heroSlideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-70px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .hero .carousel-indicators {
+        position: static;
+        order: 2;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin: 8px 0 0;
+    }
+
+        .hero .carousel-indicators [data-bs-target] {
+            box-sizing: border-box;
+            flex: 0 0 auto;
+            width: 12px;
+            height: 12px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background-color: #c9ced4;
+            opacity: 1;
+            text-indent: -999px;
+            transition: background-color .25s;
+        }
+
+        .hero .carousel-indicators .active {
+            background-color: #0d82f5;
+        }
+
+    @@media (max-width: 767.98px) {
+        .hero-wrap {
+            padding: 10px 10px 8px;
+        }
+
+        .hero .carousel-inner {
+            border-radius: 10px;
+        }
+
+        .hero .carousel-item {
+            aspect-ratio: 4 / 3;
+        }
+
+            .hero .carousel-item::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(90deg, rgba(0,0,0,.45), rgba(0,0,0,.05));
+                pointer-events: none;
+            }
+
+        .hero-caption {
+            z-index: 2;
+            padding-top: 0;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .hero .carousel-item.active .hero-anim,
+        .hero .carousel-item-next .hero-anim {
+            animation: none;
+        }
+    }
+
+    /* ================= TOP ITEM ================= */
+    .tc {
+        --g: clamp(8px, .9vw, 16px);
+        --n: 9;
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 28px 15px 20px;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+        color: #1c1c1c;
+    }
+
+    .tc-inner {
+        max-width: 1620px;
+        margin: 0 auto;
+    }
+
+    .tc-head {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(14px, 2.2vw, 40px);
+        margin: 0 0 clamp(16px, 1.8vw, 28px);
+    }
+
+        .tc-head::before,
+        .tc-head::after {
+            content: "";
+            flex: 1 1 auto;
+            max-width: 42%;
+            height: 1px;
+            background: #d9d9d9;
+        }
+
+        .tc-head h2 {
+            flex: 0 0 auto;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(15px, 1.2vw, 20px);
+            font-weight: 700;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+    .tc-track {
+        display: flex;
+        gap: var(--g);
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        padding: 4px 2px 10px;
+    }
+
+        .tc-track::-webkit-scrollbar {
+            display: none;
+        }
+
+    .tc-card {
+        flex: 0 0 calc((100% - (var(--n) - 1) * var(--g)) / var(--n));
+        scroll-snap-align: start;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+        min-width: 0;
+    }
+
+    .tc-img {
+        position: relative;
+        display: block;
+        aspect-ratio: 200 / 235;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f3f3f3;
+        box-shadow: 0 1px 3px rgba(0,0,0,.05);
+        transition: transform .35s ease, box-shadow .35s ease;
+    }
+
+    .tc-card:hover .tc-img {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(0,0,0,.12);
+    }
+
+    .tc-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform .7s ease;
+    }
+
+    .tc-card:hover .tc-img img {
+        transform: scale(1.06);
+    }
+
+    @@media (max-width: 1199.98px) {
+        .tc {
+            --n: 7;
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .tc {
+            --n: 6;
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .tc {
+            --n: 4;
+            --g: 10px;
+            padding: 20px 12px 16px;
+        }
+
+        .tc-head::before, .tc-head::after {
+            max-width: 25%;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .tc {
+            --n: 3;
+            --g: 8px;
+        }
+    }
+
+    /* ================= SHOWROOM LOCATION BANNER ================= */
+    .showroom-banner {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 10px 15px 20px;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+    }
+
+    .showroom-inner {
+        max-width: 1620px;
+        margin: 0 auto;
+    }
+
+    .showroom-link {
+        display: block;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, .08);
+        transition: transform .35s ease, box-shadow .35s ease;
+    }
+
+        .showroom-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, .14);
+        }
+
+        .showroom-link img {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+    @@media (max-width: 767.98px) {
+        .showroom-banner {
+            padding: 8px 12px 16px;
+        }
+
+        .showroom-link {
+            border-radius: 10px;
+        }
+    }
+
+    /* ================= JUBBAH SECTION ================= */
+    .jb {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 28px 15px 20px;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+        color: #1c1c1c;
+    }
+
+    .jb-inner {
+        max-width: 1620px;
+        margin: 0 auto;
+    }
+
+    /* Main image */
+    .jb-main {
+        display: block;
+        width: 100%;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+        .jb-main img {
+            display: block;
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
+
+    /* Product grid */
+    .jb-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: clamp(10px, 1.1vw, 18px);
+    }
+
+    .jb-card {
+        display: flex;
+        flex-direction: column;
+        text-decoration: none;
+        color: inherit;
+        min-width: 0;
+    }
+
+    .jb-card-img {
+        position: relative;
+        display: block;
+        aspect-ratio: 3 / 4;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #f3f3f3;
+        box-shadow: 0 1px 3px rgba(0,0,0,.05);
+        transition: transform .35s ease, box-shadow .35s ease;
+    }
+
+    .jb-card:hover .jb-card-img {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 22px rgba(0,0,0,.12);
+    }
+
+    .jb-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform .7s ease;
+    }
+
+    .jb-card:hover .jb-card-img img {
+        transform: scale(1.06);
+    }
+
+    /* Discount badge */
+    .jb-badge {
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        background: #000;
+        color: #fff;
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(10px, .75vw, 12px);
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 3px;
+        letter-spacing: .3px;
+        z-index: 2;
+    }
+
+    .jb-card-title {
+        margin: 10px 0 2px;
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(12px, .85vw, 14px);
+        font-weight: 600;
+        color: #222;
+        line-height: 1.3;
+    }
+
+    .jb-card-price {
+        margin: 0;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+        font-size: clamp(12px, .85vw, 14px);
+        font-weight: 700;
+        color: #111;
+        letter-spacing: .2px;
+    }
+
+    @@media (max-width: 991.98px) {
+        .jb-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 767.98px) {
+        .jb {
+            padding: 20px 12px 16px;
+        }
+
+        .jb-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .jb-main {
+            margin-bottom: 14px;
+        }
+    }
+
+    @@media (max-width: 420px) {
+        .jb-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+    }
+
+    /* ================= FEATURES ================= */
+    .ft {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 30px 15px;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+    }
+
+    .ft-inner {
+        max-width: 1620px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 32px;
+    }
+
+    .ft-item {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
+
+    .ft-icon {
+        flex: 0 0 52px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .ft-icon img {
+            display: block;
+            max-width: 52px;
+            max-height: 46px;
+            width: auto;
+            height: auto;
+        }
+
+    .ft-text {
+        margin: 0;
+        max-width: 340px;
+        font-size: clamp(15px, 1vw, 17.5px);
+        font-weight: 400;
+        line-height: 1.45;
+        letter-spacing: .2px;
+        color: #555;
+    }
+
+        .ft-text strong {
+            font-weight: 600;
+            color: #333;
+        }
+
+    .ft-item.wide .ft-text {
+        max-width: 440px;
+    }
+
+    @@media (max-width: 991.98px) {
+        .ft-inner {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 22px;
+        }
+
+        .ft-item.wide .ft-text, .ft-text {
+            max-width: none;
+        }
+    }
+</style>
+
+@* Hero Section *@
+<div class="hero-wrap">
+    <section id="heroSlider" class="hero carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" aria-label="Featured collections">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="hero-img" src="https://i.ibb.co.com/8gpc2ppZ/hero-images-1.jpg" alt="Fashion glasses" />
+                <div class="hero-caption">
+                    <p class="hero-label hero-anim">New Collection</p>
+                    <h2 class="hero-title-light hero-anim">Fashion</h2>
+                    <h2 class="hero-title-bold hero-anim">Glasses</h2>
+                    <p class="hero-sub hero-anim">Best eyeglasses for women to channel your inner Clark Kent</p>
+                    <a href="#" class="hero-btn hero-anim">Shop the collection</a>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <img class="hero-img" src="https://i.ibb.co.com/QvN0kN3Y/hero-images-2.jpg" alt="The hotlist of summer" />
+                <div class="hero-caption">
+                    <p class="hero-label hero-anim">Fashion Trends</p>
+                    <h2 class="hero-title-light hero-anim">The Hotlist of</h2>
+                    <h2 class="hero-title-bold hero-anim">Summer</h2>
+                    <p class="hero-sub hero-anim">The 12 Biggest Spring/Summer 2021 Trends</p>
+                    <a href="#" class="hero-btn hero-anim">Shop the collection</a>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <img class="hero-img" src="https://i.ibb.co.com/FbkwZKSs/hero-images-3.jpg" alt="Find your perfect style" />
+                <div class="hero-caption">
+                    <p class="hero-label hero-anim">New Collection</p>
+                    <h2 class="hero-title-light hero-anim">Find Your</h2>
+                    <h2 class="hero-title-bold hero-anim">Perfect</h2>
+                    <p class="hero-sub hero-anim">Uncompromising in style, quality and performance</p>
+                    <a href="#" class="hero-btn hero-anim">Shop the collection</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+@* Top Item Section *@
+@{
+    var categories = new[]
+    {
+        new { Name = "Panjabi",        Img = "https://i.ibb.co.com/7xRkW8KV/1.jpg" },
+        new { Name = "Shirt",          Img = "https://i.ibb.co.com/VYskZpVz/2.jpg" },
+        new { Name = "T-Shirt",        Img = "https://i.ibb.co.com/whjZxfNK/3.jpg" },
+        new { Name = "Polo Shirt",     Img = "https://i.ibb.co.com/JwbWyD8G/4.jpg" },
+        new { Name = "Pant & Trouser", Img = "https://i.ibb.co.com/gLKg35Sq/5.jpg" },
+        new { Name = "Attar",          Img = "https://i.ibb.co.com/RkNZH6Vh/6.jpg" },
+        new { Name = "Sneakers",       Img = "https://i.ibb.co.com/9HvJCWkV/7.jpg" },
+        new { Name = "Foods",          Img = "https://i.ibb.co.com/SD1j3nRJ/8.jpg" },
+        new { Name = "Flash Sale",     Img = "https://i.ibb.co.com/SD1j3nRJ/8.jpg" }
+    };
+}
+
+<section class="tc" aria-label="Top Item">
+    <div class="tc-inner">
+
+        <div class="tc-head">
+            <h2>Top Item</h2>
+        </div>
+
+        <div class="tc-track">
+            @foreach (var c in categories)
+            {
+                <a href="#" class="tc-card" aria-label="@c.Name">
+                    <span class="tc-img">
+                        <img src="@c.Img" alt="@c.Name" loading="lazy" />
+                    </span>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Showroom Location Banner Section *@
+<section class="showroom-banner" aria-label="Showroom Location">
+    <div class="showroom-inner">
+        <a href="#" class="showroom-link">
+            <img src="https://i.ibb.co.com/SD7KskQZ/Mint-Showroom-Get-Direction-Banner.png"
+                 alt="Mint Showroom - Get Direction"
+                 loading="lazy" />
+        </a>
+    </div>
+</section>
+
+@* Jubbah Section *@
+@{
+    var jubbahProducts = new[]
+    {
+        new { Name = "As-Shabab Panjabi - 08", Img = "https://i.ibb.co.com/5WKkqDgr/Original-Arab-s-Thobe-22.jpg",  Price = "1890৳", Discount = "" },
+        new { Name = "As-Shabab Panjabi - 09", Img = "https://i.ibb.co.com/cXb0F6qS/Soft-Arabian-Thobe-26.jpg",   Price = "1890৳", Discount = "" },
+        new { Name = "As-Shabab Panjabi - 13", Img = "https://i.ibb.co.com/hFPqhKn7/Soft-Arabian-Thobe-25.jpg",   Price = "1890৳", Discount = "" },
+        new { Name = "Superior Panjabi - 08",  Img = "https://i.ibb.co.com/S4P1QVnd/Premium-Arabian-Thobe-27.jpg", Price = "2250৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Jubbah Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/nsF1QbH4/Elegant-Jubbah-in-Islamic-Courtyard.png" alt="Elegant Jubbah in Islamic Courtyard" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in jubbahProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Thobe Section *@
+@{
+    var thobeProducts = new[]
+    {
+        new { Name = "Emirati Thobe - 01", Img = "https://i.ibb.co.com/5X6DjR4y/Emirati-Thobe-01.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "Emirati Thobe - 02", Img = "https://i.ibb.co.com/h1KQvZX4/Emirati-Thobe-02.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "Emirati Thobe - 19", Img = "https://i.ibb.co.com/1f8bJ2Ny/Emirati-Thobe-19.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "Emirati Thobe - 23", Img = "https://i.ibb.co.com/7JHxJDVk/Emirati-Thobe-23.jpg", Price = "2250৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Thobe Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/xKn32pbD/Luxury-Thobe-Courtyard-Campaign.png" alt="Premium Thobe Collection in Courtyard" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in thobeProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Panjabi Section *@
+@{
+    var panjabiProducts = new[]
+    {
+        new { Name = "As-Shabab Panjabi - 13", Img = "https://i.ibb.co.com/mVHcbR0p/As-Shabab-Panjabi-13.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "As-Shabab Panjabi - 09", Img = "https://i.ibb.co.com/RTpJ1KLY/As-Shabab-Panjabi-09.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "Superior Panjabi - 08",  Img = "https://i.ibb.co.com/ymjnSMHt/Superior-Panjabi-08.jpg",  Price = "2250৳", Discount = "" },
+        new { Name = "As-Shabab Panjabi - 08", Img = "https://i.ibb.co.com/JRWPJpdn/As-Shabab-Panjabi-08.jpg", Price = "1890৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Panjabi Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/NnKffXNf/category-image-2-20251008131600.jpg" alt="Premium Panjabi Collection" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in panjabiProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Waistcoat Section *@
+@{
+    var waistcoatProducts = new[]
+    {
+        new { Name = "Platinum Jacquard Waistcoat - 111", Img = "https://i.ibb.co.com/BHZm9SrF/Platinum-Jacquard-Waistcoat-111.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "Platinum Jacquard Waistcoat - 108", Img = "https://i.ibb.co.com/F4fPjnwr/Platinum-Jacquard-Waistcoat-108.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "Platinum Jacquard Waistcoat - 106", Img = "https://i.ibb.co.com/BVj5M5rY/Platinum-Jacquard-Waistcoat-106.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "Premium Suit Embroidered Waistcoat - 303", Img = "https://i.ibb.co.com/zWMGgjzs/Premium-Suit-Embroidered-Waistcoat-303.jpg", Price = "2250৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Waistcoat Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/BHk7K2CT/Signature-Waistcoat-Collection.png" alt="Signature Waistcoat Collection" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in waistcoatProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Pajamas Trousers Section *@
+@{
+    var pajamasTrousersProducts = new[]
+    {
+        new { Name = "China Angle Trouser - Dark Chocolate", Img = "https://i.ibb.co.com/Wv0vpLyJ/China-Angle-Trouser-Dark-Chocolate.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "China Angle Trouser - Olive", Img = "https://i.ibb.co.com/gFFdwXJc/China-Angle-Trouser-Olive.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "China Angle Trouser - Beige", Img = "https://i.ibb.co.com/5XQmBL9X/China-Angle-Trouser-Beige.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "China Micro Pajama - White", Img = "https://i.ibb.co.com/hx3GD1yx/China-Micro-Pajama-White.jpg", Price = "1890৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Pajamas Trousers Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/707sg7Y/Premium-Pants-Trousers-Display.png" alt="Premium Pants & Trousers Display" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in pajamasTrousersProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Sneakers Section *@
+@{
+    var sneakersProducts = new[]
+    {
+        new { Name = "NB 9060 Dark Gray Replica", Img = "https://i.ibb.co.com/35qxDPsK/NB-9060-Dark-Gray-Replica.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "NB 9060 Gray Black Replica", Img = "https://i.ibb.co.com/xqS4VNJV/NB-9060-Gray-Black-Replica.jpg", Price = "2250৳", Discount = "" },
+        new { Name = "China Branded Sneakers Y26-1084", Img = "https://i.ibb.co.com/pvs72Mmv/China-Branded-Sneakers-Y26-1084.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "China Branded Sneakers Y26-1076", Img = "https://i.ibb.co.com/NdP6w6q4/China-Branded-Sneakers-Y26-1076.jpg", Price = "1890৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Sneakers Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/n8NCysMY/Sneakers.jpg" alt="Sneakers Collection" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in sneakersProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Attar Section *@
+@{
+    var attarProducts = new[]
+    {
+        new { Name = "Jadore Al Oud", Img = "https://i.ibb.co.com/21gWcMk1/Jadore-Al-Oud.jpg", Price = "1250৳", Discount = "" },
+        new { Name = "Safa", Img = "https://i.ibb.co.com/zhtxbdHw/Safa.jpg", Price = "950৳", Discount = "" },
+        new { Name = "Best Seller Attar Combo 60ml", Img = "https://i.ibb.co.com/gFvWzrDZ/Best-Seller-Attar-Combo-60ml.jpg", Price = "1890৳", Discount = "" },
+        new { Name = "Corporate Elegance Combo 2.0", Img = "https://i.ibb.co.com/7xwwtRRg/Corporate-Elegance-Combo-2-0.jpg", Price = "2250৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Attar Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/rRNbTjgZ/ATTAR.jpg" alt="Attar Collection" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in attarProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Drop Shoulder Section *@
+@{
+    var dropShoulderProducts = new[]
+    {
+        new { Name = "Waffle Drop Shoulder T-shirt - Muslim", Img = "https://i.ibb.co.com/jPFyGtNg/Waffle-Drop-Shoulder-T-shirt-Muslim.jpg", Price = "890৳", Discount = "" },
+        new { Name = "Waffle Drop Shoulder T-shirt - Khilafah", Img = "https://i.ibb.co.com/BKy5fc43/Waffle-Drop-Shoulder-T-shirt-Khilafah.jpg", Price = "890৳", Discount = "" },
+        new { Name = "Waffle Drop Shoulder T-shirt - Desciplined", Img = "https://i.ibb.co.com/gFVXwBjM/Waffle-Drop-Shoulder-T-shirt-Desciplined.jpg", Price = "890৳", Discount = "" },
+        new { Name = "Waffle Drop Shoulder T-shirt - Inspired", Img = "https://i.ibb.co.com/7NXCzbFk/Waffle-Drop-Shoulder-T-shirt-Inspired.jpg", Price = "890৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Drop Shoulder Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/mrfP1CR5/Premium-Drop-Shoulder-Tee-Campaign.png" alt="Premium Drop Shoulder Tee Campaign" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in dropShoulderProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Katua Section *@
+@{
+    var katuaProducts = new[]
+    {
+        new { Name = "Premium Katua For Men - KAT-112", Img = "https://i.ibb.co.com/N2p49BNf/Premium-Katua-For-Men-KAT-112.webp", Price = "1250৳", Discount = "" },
+        new { Name = "Premium Katua For Men - KAT-108", Img = "https://i.ibb.co.com/rKHgswtw/Premium-Katua-For-Men-KAT-108.webp", Price = "1250৳", Discount = "" },
+        new { Name = "Premium Katua For Men - KAT-107", Img = "https://i.ibb.co.com/8qft5bT/Premium-Katua-For-Men-KAT-107.webp", Price = "1250৳", Discount = "" },
+        new { Name = "Premium Katua For Men - KAT-110", Img = "https://i.ibb.co.com/qLchrKLZ/Premium-Katua-For-Men-KAT-110.webp", Price = "1250৳", Discount = "0%" }
+    };
+}
+
+<section class="jb" aria-label="Katua Collection">
+    <div class="jb-inner">
+
+        <!-- Main Banner Image -->
+        <a href="#" class="jb-main">
+            <img src="https://i.ibb.co.com/TDG6NFhr/Premium-Katua-Courtyard-Collection.png" alt="Premium Katua Courtyard Collection" loading="lazy" />
+        </a>
+
+        <!-- Product Grid -->
+        <div class="jb-grid">
+            @foreach (var p in katuaProducts)
+            {
+                <a href="#" class="jb-card" aria-label="@p.Name">
+                    <span class="jb-card-img">
+                        @if (!string.IsNullOrEmpty(p.Discount))
+                        {
+                            <span class="jb-badge">@p.Discount</span>
+                        }
+                        <img src="@p.Img" alt="@p.Name" loading="lazy" />
+                    </span>
+                    <h3 class="jb-card-title">@p.Name</h3>
+                    <p class="jb-card-price">@p.Price</p>
+                </a>
+            }
+        </div>
+    </div>
+</section>
+
+@* Features Section *@
+@{
+    var features = new[]
+    {
+        new { Icon = "https://i.ibb.co.com/B5hkPz33/truck.png", Strong = "Free Shipping", Text = " on all US order or order above $99", Wide = false },
+        new { Icon = "https://i.ibb.co.com/Z6mM7Gyz/call.png",  Strong = "Support 24/7 :", Text = " Contact us 24 hours a day, 7 days a week", Wide = true },
+        new { Icon = "https://i.ibb.co.com/tw2zpHPY/Return.png", Strong = "30 Days Return :", Text = " Simply return it within 30 days for an exchange.", Wide = false }
+    };
+}
+
+<section class="ft" aria-label="Our services">
+    <div class="ft-inner">
+        @foreach (var f in features)
+        {
+            <div class="ft-item@(f.Wide ? " wide" : "")">
+                <span class="ft-icon"><img src="@f.Icon" alt="" loading="lazy" /></span>
+                <p class="ft-text"><strong>@f.Strong</strong>@f.Text</p>
+            </div>
+        }
+    </div>
+</section>
