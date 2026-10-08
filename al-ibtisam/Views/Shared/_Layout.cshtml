@@ -39,22 +39,18 @@
 
         .wishlist-link { position: relative; color: #E5FBFF; display: inline-flex; margin-right: 13px; text-decoration: none; }
         .wishlist-link:hover { color: #86D200; }
-        /* Wishlist Badge - Action Color #86D200 */
         .wishlist-badge { position: absolute; top: -14px; right: -16px; min-width: 25px; height: 25px; border-radius: 50%; background: #86D200; color: #134856; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #134856; }
 
         .cart-link { position: relative; color: #E5FBFF; display: inline-flex; margin-right: 13px; text-decoration: none; cursor: pointer; }
         .cart-link:hover { color: #86D200; }
-        /* Cart Badge - Action Color #86D200 */
         .cart-badge { position: absolute; top: -14px; right: -16px; min-width: 25px; height: 25px; border-radius: 50%; background: #86D200; color: #134856; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #134856; }
 
         /* ---------- Category nav ---------- */
         .category-nav { padding: 0; background: #134856; border-bottom: 1px solid #0e3641; box-shadow: 0 2px 3px rgba(0,0,0,.06); position: relative; }
         .category-nav-inner { display: flex; align-items: center; justify-content: space-between; min-height: 61px; }
-        .category-nav .navbar-nav { flex-direction: row; flex-wrap: wrap; max-width: 1300px; padding-left: 0; margin: 0; list-style: none; }
-        .category-nav .nav-link { display: flex; align-items: center; gap: 7px; padding: 0 14px; height: 61px; font-size: 18px; font-weight: 500; letter-spacing: .1px; color: #E5FBFF; white-space: nowrap; }
+        .category-nav .navbar-nav { flex-direction: row; flex-wrap: wrap; max-width: 1400px; padding-left: 0; margin: 0; list-style: none; }
+        .category-nav .nav-link { display: flex; align-items: center; gap: 7px; padding: 0 12px; height: 61px; font-size: 17px; font-weight: 500; letter-spacing: .1px; color: #E5FBFF; white-space: nowrap; }
         .category-nav .nav-link:hover { color: #86D200; }
-        .category-nav .dropdown-toggle::after { content: ""; display: inline-block; border: 0; margin: 0; width: 13px; height: 13px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23E5FBFF' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat; transition: transform .2s ease; }
-        .category-nav .nav-item:hover > .dropdown-toggle::after { transform: rotate(180deg); }
         .category-nav .flash-sale { font-weight: 600; color: #86D200; }
 
         .hotline { display: flex; align-items: center; gap: 10px; padding-right: 0; }
@@ -71,7 +67,6 @@
         .mobile-header .wishlist-icon-m { background: none; border: 0; padding: 6px; font-size: 22px; color: #E5FBFF; cursor: pointer; display: flex; align-items: center; justify-content: center; position: relative; text-decoration: none; }
         .mobile-header .cart-icon-m:hover,
         .mobile-header .wishlist-icon-m:hover { color: #86D200; }
-        /* Mobile Badges - #86D200 */
         .mobile-header .cart-badge-m,
         .mobile-header .wishlist-badge-m { position: absolute; top: -2px; right: -6px; min-width: 18px; height: 18px; border-radius: 50%; background: #86D200; color: #134856; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; border: 2px solid #134856; }
         .mobile-header .mobile-logo { flex: 1; display: flex; justify-content: center; }
@@ -133,16 +128,13 @@
         .cart-item-size { font-size: 13px; color: #6c8a93; }
         .cart-item-price-row { font-size: 13.5px; color: #134856; margin-top: 4px; }
         .cart-item-original { color: #6c8a93; font-size: 12.5px; }
-        /* Cart Item Price - #FFAA0D */
         .cart-item-price { color: #FFAA0D; font-weight: 700; font-size: 14px; }
         .cart-item-qty { color: #6c8a93; font-size: 12.5px; }
         .cart-item-remove { position: absolute; top: 0; right: 0; background: transparent; border: 0; color: #6c8a93; font-size: 16px; cursor: pointer; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; border-radius: 4px; transition: color .2s, background .2s; }
         .cart-item-remove:hover { color: #86D200; background: #F2FCDE; }
         .cart-drawer-footer { flex: 0 0 auto; padding: 20px 24px 24px; border-top: 1px solid #E5FBFF; background: #fff; }
         .cart-subtotal { display: flex; align-items: center; justify-content: space-between; font-size: 16px; margin-bottom: 16px; color: #134856; }
-        /* Cart Subtotal - #FFAA0D */
         .cart-subtotal strong { font-size: 18px; font-weight: 700; color: #FFAA0D; }
-        /* Cart Checkout Button - Action Color #86D200 */
         .cart-checkout-btn { display: flex; align-items: center; justify-content: center; width: 100%; height: 54px; background: #86D200; color: #134856; border-radius: 6px; text-decoration: none; font-size: 15px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; transition: background .2s, color .2s; font-family: 'Poppins', sans-serif; }
         .cart-checkout-btn:hover { background: #134856; color: #fff; }
 
@@ -153,17 +145,13 @@
         @@media (max-width: 1399.98px) {
             .search-box { flex: 1 1 auto; }
             .header-actions { gap: 32px; }
+            .category-nav .nav-link { font-size: 16px; padding: 0 10px; }
         }
         @@media (max-width: 991.98px) {
             .main-header, .category-nav { display: none !important; }
             .mobile-header { display: block; }
-            .footer-news-inner { flex-direction: column; align-items: flex-start; }
-            .footer-news form { flex: 1 1 auto; }
             .footer-main { grid-template-columns: 1fr 1fr; gap: 36px 24px; padding: 40px 0 28px; }
             .footer-brand { grid-column: 1 / -1; }
-        }
-        @@media (max-width: 575.98px) {
-            .footer-bottom-inner { flex-direction: column; align-items: flex-start; }
         }
         @@media (max-width: 480px) {
             .cart-drawer { width: 100%; }
@@ -174,16 +162,6 @@
         .site-footer { background: #134856; color: #b0d4dc; font-size: 15px; margin-top: 20px; }
         .site-footer a { color: #b0d4dc; text-decoration: none; transition: color .2s; }
         .site-footer a:hover { color: #86D200; }
-        .footer-news { border-bottom: 1px solid #1e5f6e; }
-        .footer-news-inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 34px 0; }
-        .footer-news h3 { margin: 0 0 4px; font-size: 22px; font-weight: 600; color: #E5FBFF; }
-        .footer-news p { margin: 0; color: #8ab5c0; }
-        .footer-news form { display: flex; flex: 0 1 520px; width: 100%; }
-        .footer-news input { flex: 1; min-width: 0; height: 52px; padding: 0 20px; border: 1px solid #1e5f6e; border-right: 0; border-radius: 4px 0 0 4px; background: #0e3641; color: #fff; outline: 0; }
-        .footer-news input::placeholder { color: #7d889c; }
-        /* Footer Subscribe Button - Action Color #86D200 */
-        .footer-news button { height: 52px; padding: 0 28px; border: 0; border-radius: 0 4px 4px 0; background: #86D200; color: #134856; font-weight: 700; text-transform: uppercase; font-size: 14px; cursor: pointer; transition: background .2s, color .2s; }
-        .footer-news button:hover { background: #E5FBFF; color: #134856; }
         .footer-main { display: grid; grid-template-columns: 1.7fr 1fr 1fr 1fr; gap: 48px; padding: 56px 0 44px; }
         .footer-logo { display: inline-block; padding: 10px 16px; background: #fff; border-radius: 8px; }
         .footer-logo img { height: 56px; width: auto; max-width: 240px; object-fit: contain; display: block; }
@@ -199,10 +177,8 @@
         .footer-col ul { list-style: none; margin: 0; padding: 0; }
         .footer-col li { margin-bottom: 12px; }
         .footer-bottom { border-top: 1px solid #1e5f6e; }
-        .footer-bottom-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; padding: 22px 0; }
-        .footer-copy { color: #8ab5c0; font-size: 14px; }
-        .footer-pay { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
-        .footer-pay span { padding: 6px 12px; border: 1px solid #1e5f6e; border-radius: 4px; background: #0e3641; color: #d5dbe6; font-size: 12.5px; font-weight: 600; letter-spacing: .3px; }
+        .footer-bottom-inner { display: flex; align-items: center; justify-content: center; padding: 22px 0; }
+        .footer-copy { color: #8ab5c0; font-size: 14px; text-align: center; }
     </style>
 </head>
 <body>
@@ -254,23 +230,21 @@
                     </button>
                     <div class="collapse navbar-collapse category-nav-inner" id="mainNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Panjabi">Panjabi</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Thobe">Thobe</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Shirt">Shirt</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="TShirt">T-Shirt</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="WomensClothing">Women's Clothing</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Attar">Attar</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Perfumes">Perfumes</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Gadgets">Gadgets</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Panjabi">Panjabi</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Thobe">Thobe</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Jubbah">Jubbah</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="TShirt">Drop Shoulder</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="WomensClothing">Women's Clothing</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Attar">Attar</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Perfumes">Perfumes</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Watch">Watch</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Wallet">Wallet</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="Sneakers">Sneakers</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Sneakers">Sneakers</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Waistcoat">Waistcoat</a></li>
                             <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Tupi">Tupi</a></li>
-                            <li class="nav-item"><a class="nav-link dropdown-toggle" asp-controller="Category" asp-action="ComboOffers">Combo Offers</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Katua">Katua</a></li>
+                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="ComboOffers">Combo Offers</a></li>
                             <li class="nav-item"><a class="nav-link flash-sale" asp-controller="Category" asp-action="FlashSale">FLASH SALE - 26 🔥🔥</a></li>
                         </ul>
                         <div class="hotline">
@@ -310,8 +284,8 @@
                 <div class="mobile-cat-list">
                     <a asp-controller="Category" asp-action="Panjabi">Panjabi</a>
                     <a asp-controller="Category" asp-action="Thobe">Thobe</a>
-                    <a asp-controller="Category" asp-action="Shirt">Shirt</a>
-                    <a asp-controller="Category" asp-action="TShirt">T-Shirt</a>
+                    <a asp-controller="Category" asp-action="Jubbah">Jubbah</a>
+                    <a asp-controller="Category" asp-action="TShirt">Drop Shoulder</a>
                     <a asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a>
                 </div>
                 <button type="button" class="mobile-cat-more" id="mobileMenuOpen" aria-label="More categories">
@@ -343,22 +317,19 @@
             <ul>
                 <li><a asp-controller="Category" asp-action="Panjabi">Panjabi <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Thobe">Thobe <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Shirt">Shirt <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="TShirt">T-Shirt <i class="fa-solid fa-chevron-right"></i></a></li>
+                <li><a asp-controller="Category" asp-action="Jubbah">Jubbah <i class="fa-solid fa-chevron-right"></i></a></li>
+                <li><a asp-controller="Category" asp-action="TShirt">Drop Shoulder <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="PoloShirt">Polo Shirt <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="WomensClothing">Women's Clothing <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Attar">Attar <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Perfumes">Perfumes <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Gadgets">Gadgets <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Watch">Watch <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Wallet">Wallet <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Sneakers">Sneakers <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Waistcoat">Waistcoat <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Tupi">Tupi <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="ComboOffers">Combo Offers <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Jubbah">Jubbah <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Katua">Katua <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="FlashSale" class="flash">FLASH SALE - 26 🔥🔥 <i class="fa-solid fa-chevron-right"></i></a></li>
             </ul>
         </div>
@@ -393,20 +364,8 @@
         </main>
     </div>
 
+    <!-- ================= FOOTER (Newsletter ও Payment Methods ছাড়া) ================= -->
     <footer class="site-footer">
-        <div class="footer-news">
-            <div class="site-container footer-news-inner">
-                <div>
-                    <h3>Join our newsletter</h3>
-                    <p>Get the latest offers, new arrivals and style updates in your inbox.</p>
-                </div>
-                <form action="#" method="post">
-                    <input type="email" name="email" placeholder="Enter your email address" aria-label="Email address" required />
-                    <button type="submit">Subscribe</button>
-                </form>
-            </div>
-        </div>
-
         <div class="site-container">
             <div class="footer-main">
                 <div class="footer-brand">
@@ -433,9 +392,9 @@
                         <li><a asp-controller="Category" asp-action="Panjabi">Panjabi</a></li>
                         <li><a asp-controller="Category" asp-action="Thobe">Thobe</a></li>
                         <li><a asp-controller="Category" asp-action="Jubbah">Jubbah</a></li>
-                        <li><a asp-controller="Category" asp-action="Katua">Katua</a></li>
                         <li><a asp-controller="Category" asp-action="TShirt">Drop Shoulder</a></li>
                         <li><a asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a></li>
+                        <li><a asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser</a></li>
                         <li><a asp-controller="Category" asp-action="WomensClothing">Women's Clothing</a></li>
                         <li><a asp-controller="Category" asp-action="Attar">Attar &amp; Perfumes</a></li>
                         <li><a asp-controller="Category" asp-action="ComboOffers">Combo Offers</a></li>
@@ -470,13 +429,6 @@
         <div class="footer-bottom">
             <div class="site-container footer-bottom-inner">
                 <div class="footer-copy">&copy; 2026 al_ibtisam. All rights reserved.</div>
-                <div class="footer-pay" aria-label="Payment methods">
-                    <span>Cash on Delivery</span>
-                    <span>bKash</span>
-                    <span>Nagad</span>
-                    <span>VISA</span>
-                    <span>Mastercard</span>
-                </div>
             </div>
         </div>
     </footer>

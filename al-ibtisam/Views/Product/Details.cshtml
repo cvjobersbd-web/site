@@ -61,25 +61,126 @@
     .brand-row { font-size: 15px; color: #134856; margin-top: 4px; }
     .brand-row strong { color: #028EA5; font-weight: 600; }
 
-    .qty-row { display: flex; align-items: center; gap: 14px; margin-top: 8px; flex-wrap: wrap; }
-    .qty-box { display: flex; align-items: center; height: 54px; border: 1.5px solid #E5FBFF; border-radius: 6px; overflow: hidden; background: #fff; }
-    .qty-box button { width: 50px; height: 100%; border: 0; background: #fff; font-size: 20px; color: #134856; cursor: pointer; transition: background .2s; }
-    .qty-box button:hover { background: #E5FBFF; }
-    .qty-box input { width: 60px; height: 100%; border: 0; outline: 0; text-align: center; font-size: 16px; font-weight: 600; color: #134856; background: #fff; font-family: 'Poppins', sans-serif; }
+    /* ================= QTY + ACTION BUTTONS ================= */
+    .qty-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
 
-    /* Action Button - Add to Cart #86D200 */
-    .btn-cart { flex: 1 1 200px; height: 54px; border: 0; border-radius: 6px; background: #86D200; color: #134856; font-size: 15px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; cursor: pointer; font-family: 'Poppins', sans-serif; transition: background .2s, color .2s; }
-    .btn-cart:hover { background: #134856; color: #fff; }
+    .qty-box {
+        display: flex;
+        align-items: center;
+        height: 54px;
+        border: 1.5px solid #E5FBFF;
+        border-radius: 6px;
+        overflow: hidden;
+        background: #fff;
+        flex: 0 0 auto;
+    }
+
+    .qty-box button {
+        width: 50px;
+        height: 100%;
+        border: 0;
+        background: #fff;
+        font-size: 20px;
+        color: #134856;
+        cursor: pointer;
+        transition: background .2s;
+    }
+
+    .qty-box button:hover { background: #E5FBFF; }
+
+    .qty-box input {
+        width: 60px;
+        height: 100%;
+        border: 0;
+        outline: 0;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        color: #134856;
+        background: #fff;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    /* Action Buttons - Side by Side */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 4px;
+        flex-wrap: wrap;
+    }
+
+    /* Add to Cart Button - #FFAA0D */
+    .btn-cart {
+        flex: 1 1 200px;
+        height: 54px;
+        border: 0;
+        border-radius: 6px;
+        background: #FFAA0D;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        transition: background .2s, transform .1s, opacity .2s;
+    }
+
+    .btn-cart:hover { background: #e69900; }
+    .btn-cart:active { transform: scale(.99); }
     .btn-cart:disabled { opacity: .7; cursor: not-allowed; }
 
-    /* Action Button - Buy Now #86D200 */
-    .btn-buy { width: 100%; height: 54px; border: 0; border-radius: 6px; background: #86D200; color: #134856; font-size: 15px; font-weight: 700; letter-spacing: .4px; text-transform: uppercase; cursor: pointer; margin-top: 10px; font-family: 'Poppins', sans-serif; transition: background .2s, color .2s; }
-    .btn-buy:hover { background: #134856; color: #fff; }
+    /* Buy Now Button - #86D200 */
+    .btn-buy {
+        flex: 1 1 200px;
+        height: 54px;
+        border: 0;
+        border-radius: 6px;
+        background: #86D200;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        transition: background .2s, transform .1s, opacity .2s;
+    }
+
+    .btn-buy:hover { background: #76bb00; }
+    .btn-buy:active { transform: scale(.99); }
     .btn-buy:disabled { opacity: .7; cursor: not-allowed; }
 
     /* Wishlist Inline - Action Color #86D200 */
-    .wishlist-inline { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1.5px solid #86D200; border-radius: 6px; background: #fff; color: #134856; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 12px; width: fit-content; font-family: 'Poppins', sans-serif; transition: all .2s; }
-    .wishlist-inline:hover, .wishlist-inline.active { border-color: #86D200; color: #134856; background: #F2FCDE; }
+    .wishlist-inline {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border: 1.5px solid #86D200;
+        border-radius: 6px;
+        background: #fff;
+        color: #134856;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 12px;
+        width: fit-content;
+        font-family: 'Poppins', sans-serif;
+        transition: all .2s;
+    }
+
+    .wishlist-inline:hover, .wishlist-inline.active {
+        border-color: #86D200;
+        color: #134856;
+        background: #F2FCDE;
+    }
 
     /* Description */
     .description-section { margin-top: 30px; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
@@ -139,6 +240,22 @@
         .related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
         .description-section { padding: 16px; }
         .desc-heading { font-size: 18px; }
+
+        .qty-row { gap: 10px; }
+        .qty-box { height: 50px; }
+        .qty-box button { width: 42px; font-size: 18px; }
+        .qty-box input { width: 50px; font-size: 15px; }
+
+        .action-buttons { gap: 10px; }
+        .btn-cart, .btn-buy { flex: 1 1 140px; height: 50px; font-size: 14px; }
+    }
+
+    @@media (max-width: 480px) {
+        .qty-row { flex-direction: column; align-items: stretch; }
+        .qty-box { width: 100%; justify-content: center; }
+        .qty-box input { width: 80px; }
+        .action-buttons { flex-direction: column; }
+        .btn-cart, .btn-buy { flex: 1 1 auto; width: 100%; }
     }
 
     .toast-msg { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #134856; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 14px; z-index: 9999; opacity: 0; transition: opacity .25s; font-family: 'Poppins', sans-serif; }
@@ -242,16 +359,20 @@
             <p class="brand-row">Brand: <strong>@Model.Brand</strong></p>
 
             <p class="section-label" style="margin-top:12px;">Quantity</p>
+
+            <!-- QTY + ACTION BUTTONS TOGETHER -->
             <div class="qty-row">
                 <div class="qty-box">
                     <button type="button" id="qtyMinus">−</button>
                     <input type="text" id="qtyInput" value="1" readonly />
                     <button type="button" id="qtyPlus">+</button>
                 </div>
-                <button type="button" class="btn-cart" id="addToCartBtn">Add To Cart</button>
-            </div>
 
-            <button type="button" class="btn-buy" id="buyNowBtn">Buy Now</button>
+                <div class="action-buttons">
+                    <button type="button" class="btn-cart" id="addToCartBtn">Add To Cart</button>
+                    <button type="button" class="btn-buy" id="buyNowBtn">Buy Now</button>
+                </div>
+            </div>
 
             <button type="button" class="wishlist-inline" id="wishlistBtn" data-product-id="@Model.Id">
                 <i class="fa-regular fa-heart"></i>
@@ -413,12 +534,10 @@
                         addBtn.disabled = false;
                         if (data.success) {
                             addBtn.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
-                            addBtn.style.background = '#134856';
-                            addBtn.style.color = '#fff';
+                            addBtn.style.background = '#e69900';
                             setTimeout(function () {
                                 addBtn.innerHTML = 'Add To Cart';
                                 addBtn.style.background = '';
-                                addBtn.style.color = '';
                             }, 1400);
                             if (window.refreshCartBadge) window.refreshCartBadge();
                             showToast('Added to cart');
@@ -436,7 +555,7 @@
                 });
             }
 
-            // BUY NOW — সরাসরি Checkout পেজে নিয়ে যায়
+            // BUY NOW
             var buyBtn = document.getElementById('buyNowBtn');
             if (buyBtn) {
                 buyBtn.addEventListener('click', function () {

@@ -6,58 +6,182 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
 <style>
+    :root {
+        --ai-deep: #0f4c5c;
+        --ai-deep-2: #0a3a48;
+        --ai-primary: #0b8aa7;
+        --ai-primary-dark: #08758f;
+        --ai-page: #e4f6fa;
+        --ai-panel: #eaf9fc;
+        --ai-field: #f3fcfe;
+        --ai-line: #bddfe7;
+        --ai-text: #0e4558;
+        --ai-muted: #3f7384;
+        --ai-placeholder: #7fa6b3;
+    }
+
     .auth-wrap {
         width: 100vw;
         margin-left: calc(50% - 50vw);
-        padding: 40px 15px 60px;
-        font-family: 'Poppins', sans-serif;
-        background: #f7f8fa;
+        padding: 40px 16px 60px;
+        font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+        background: var(--ai-page);
         min-height: calc(100vh - 260px);
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* subtle geometric corner ornaments */
+    .auth-wrap::before,
+    .auth-wrap::after {
+        content: "";
+        position: absolute;
+        width: 220px;
+        height: 220px;
+        pointer-events: none;
+        opacity: .5;
+        background-image:
+            repeating-linear-gradient(45deg, transparent 0 17px, rgba(11,138,167,.16) 17px 18px),
+            repeating-linear-gradient(-45deg, transparent 0 17px, rgba(11,138,167,.16) 17px 18px);
+    }
+
+    .auth-wrap::before {
+        top: 0;
+        left: 0;
+        -webkit-mask-image: radial-gradient(circle at 0 0, #000 0, transparent 70%);
+        mask-image: radial-gradient(circle at 0 0, #000 0, transparent 70%);
+    }
+
+    .auth-wrap::after {
+        right: 0;
+        bottom: 0;
+        -webkit-mask-image: radial-gradient(circle at 100% 100%, #000 0, transparent 70%);
+        mask-image: radial-gradient(circle at 100% 100%, #000 0, transparent 70%);
     }
 
     .auth-card {
+        position: relative;
+        z-index: 1;
         width: 100%;
-        max-width: 480px;
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, .08);
-        padding: 40px 34px 34px;
-        border: 1px solid #eef0f3;
-    }
-
-    .auth-logo {
+        max-width: 1000px;
         display: flex;
-        justify-content: center;
-        margin-bottom: 18px;
+        background: var(--ai-panel);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 18px 50px rgba(15, 76, 92, .14);
     }
 
-        .auth-logo img {
-            height: 60px;
-            width: auto;
-            object-fit: contain;
+    /* ---------- Left brand panel ---------- */
+    .auth-brand {
+        flex: 0 0 40%;
+        position: relative;
+        color: #fff;
+        text-align: center;
+        padding: 80px 24px 40px;
+        background-color: var(--ai-deep);
+        background-image:
+            linear-gradient(180deg, rgba(10, 58, 72, .92) 0%, rgba(12, 70, 86, .6) 50%, rgba(12, 70, 86, .12) 100%),
+            url('https://i.ibb.co.com/C5HQG7D3/Teal-Mosque-at-Twilight.png');
+        background-size: cover;
+        background-position: center bottom;
+        background-repeat: no-repeat;
+    }
+
+    .brand-arabic {
+        font-family: 'Aref Ruqaa', serif;
+        font-size: 64px;
+        line-height: 1.1;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+
+    .brand-name {
+        font-family: 'Fraunces', serif;
+        font-size: 30px;
+        font-weight: 400;
+        letter-spacing: 5px;
+        line-height: 1.2;
+    }
+
+    .brand-tag {
+        margin-top: 8px;
+        font-size: 11.5px;
+        letter-spacing: 1.2px;
+        color: rgba(255, 255, 255, .85);
+    }
+
+    .brand-rule {
+        display: block;
+        width: 28px;
+        height: 2px;
+        background: #4cc3d9;
+        margin: 38px auto 34px;
+    }
+
+    .brand-motto {
+        font-family: 'Fraunces', serif;
+        font-size: 18px;
+        font-weight: 300;
+        line-height: 1.5;
+        margin: 0;
+        color: rgba(255, 255, 255, .92);
+    }
+
+    /* ---------- Right form panel ---------- */
+    .auth-main {
+        flex: 1 1 auto;
+        padding: 34px 44px 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-width: 0;
+    }
+
+    .auth-switch {
+        text-align: right;
+        font-size: 13px;
+        color: var(--ai-muted);
+        margin-bottom: 34px;
+    }
+
+        .auth-switch a {
+            color: var(--ai-primary-dark);
+            font-weight: 600;
+            text-decoration: none;
+            margin-left: 6px;
+            white-space: nowrap;
         }
 
+            .auth-switch a:hover {
+                text-decoration: underline;
+            }
+
+            .auth-switch a i {
+                font-size: 11px;
+                margin-left: 3px;
+            }
+
     .auth-title {
-        text-align: center;
-        font-size: 26px;
-        font-weight: 700;
-        color: #111;
-        margin: 0 0 6px;
-        letter-spacing: -.3px;
+        font-family: 'Fraunces', serif;
+        font-size: 34px;
+        font-weight: 500;
+        color: var(--ai-text);
+        margin: 0 0 8px;
+        letter-spacing: -.2px;
     }
 
     .auth-sub {
-        text-align: center;
-        font-size: 14.5px;
-        color: #7b818a;
-        margin: 0 0 28px;
-        font-family: 'League Spartan', 'Poppins', sans-serif;
+        font-size: 15px;
+        line-height: 1.55;
+        color: var(--ai-muted);
+        margin: 0 0 26px;
+        max-width: 340px;
     }
 
     .form-group {
@@ -66,11 +190,10 @@
 
         .form-group label {
             display: block;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
-            color: #333;
+            color: var(--ai-text);
             margin-bottom: 7px;
-            letter-spacing: .2px;
         }
 
     .input-wrap {
@@ -81,75 +204,210 @@
 
         .input-wrap i.field-icon {
             position: absolute;
-            left: 15px;
-            color: #9aa0a8;
-            font-size: 15px;
+            left: 14px;
+            color: var(--ai-text);
+            font-size: 14px;
             pointer-events: none;
         }
 
     .form-control-auth {
         width: 100%;
-        height: 52px;
-        padding: 0 16px 0 44px;
-        border: 1.5px solid #e1e4e8;
-        border-radius: 10px;
-        font-size: 15px;
-        color: #111;
-        background: #fafbfc;
+        height: 46px;
+        padding: 0 44px 0 42px;
+        border: 1px solid var(--ai-line);
+        border-radius: 6px;
+        font-size: 14px;
+        color: var(--ai-text);
+        background: var(--ai-field);
         outline: none;
-        transition: border-color .2s, background .2s, box-shadow .2s;
-        font-family: 'Poppins', sans-serif;
+        transition: border-color .2s, box-shadow .2s, background .2s;
+        font-family: inherit;
     }
 
         .form-control-auth::placeholder {
-            color: #a9afb7;
-            font-size: 14px;
+            color: var(--ai-placeholder);
+            font-size: 13.5px;
         }
 
         .form-control-auth:focus {
-            border-color: #111;
+            border-color: var(--ai-primary);
             background: #fff;
-            box-shadow: 0 0 0 3px rgba(17, 17, 17, .06);
+            box-shadow: 0 0 0 3px rgba(11, 138, 167, .15);
         }
 
     .toggle-password {
         position: absolute;
-        right: 14px;
+        right: 10px;
         background: none;
         border: 0;
-        color: #9aa0a8;
-        font-size: 15px;
+        color: var(--ai-muted);
+        font-size: 14px;
         cursor: pointer;
-        padding: 6px;
+        padding: 8px;
         display: flex;
         align-items: center;
+        border-radius: 6px;
     }
 
         .toggle-password:hover {
-            color: #111;
+            color: var(--ai-text);
+        }
+
+        .toggle-password:focus-visible,
+        .btn-auth:focus-visible,
+        .btn-social:focus-visible {
+            outline: 2px solid var(--ai-primary);
+            outline-offset: 2px;
+        }
+
+    .auth-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 6px 0 22px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .remember {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--ai-muted);
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .remember input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--ai-primary);
+            cursor: pointer;
+        }
+
+    .forgot {
+        font-size: 13px;
+        color: var(--ai-primary-dark);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+    .btn-auth {
+        width: 100%;
+        height: 46px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--ai-primary);
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background .2s, transform .1s;
+        font-family: inherit;
+    }
+
+        .btn-auth:hover {
+            background: var(--ai-primary-dark);
+        }
+
+        .btn-auth:active {
+            transform: scale(.99);
+        }
+
+        .btn-auth i {
+            font-size: 12px;
+            opacity: .85;
+        }
+
+    .auth-or {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin: 20px 0;
+        font-size: 12.5px;
+        color: var(--ai-muted);
+    }
+
+        .auth-or::before,
+        .auth-or::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--ai-line);
+        }
+
+    .btn-social {
+        width: 100%;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        border: 1px solid var(--ai-line);
+        border-radius: 6px;
+        background: var(--ai-field);
+        color: var(--ai-text);
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
+        margin-bottom: 10px;
+        transition: background .2s, border-color .2s;
+    }
+
+        .btn-social:hover {
+            background: #fff;
+            border-color: var(--ai-primary);
+            color: var(--ai-text);
+        }
+
+        .btn-social svg {
+            width: 20px;
+            height: 20px;
+            flex: 0 0 auto;
+        }
+
+    .auth-legal {
+        margin: 16px 0 0;
+        font-size: 12.5px;
+        line-height: 1.6;
+        color: var(--ai-muted);
+    }
+
+        .auth-legal a {
+            color: var(--ai-primary-dark);
+            text-decoration: underline;
         }
 
     .terms-row {
         display: flex;
         align-items: flex-start;
-        gap: 10px;
-        margin: 18px 0 22px;
-        font-size: 13.5px;
-        color: #555;
+        gap: 9px;
+        margin: 4px 0 18px;
+        font-size: 12.5px;
+        color: var(--ai-muted);
         line-height: 1.5;
     }
 
         .terms-row input[type="checkbox"] {
-            width: 17px;
-            height: 17px;
+            width: 16px;
+            height: 16px;
             margin-top: 2px;
-            accent-color: #111;
+            accent-color: var(--ai-primary);
             cursor: pointer;
             flex: 0 0 auto;
         }
 
         .terms-row a {
-            color: #111;
+            color: var(--ai-primary-dark);
             font-weight: 600;
             text-decoration: none;
         }
@@ -158,57 +416,24 @@
                 text-decoration: underline;
             }
 
-    .btn-auth {
-        width: 100%;
-        height: 54px;
-        border: 0;
-        border-radius: 10px;
-        background: #111;
-        color: #fff;
-        font-size: 15px;
-        font-weight: 700;
-        letter-spacing: .4px;
-        text-transform: uppercase;
-        cursor: pointer;
-        transition: background .25s, transform .1s;
-        font-family: 'Poppins', sans-serif;
+    .alert-success-custom {
+        background: #e3f6ec;
+        border: 1px solid #b3e2c6;
+        color: #0f7b3e;
+        padding: 11px 14px;
+        border-radius: 6px;
+        font-size: 13.5px;
+        margin-bottom: 18px;
     }
-
-        .btn-auth:hover {
-            background: #000;
-        }
-
-        .btn-auth:active {
-            transform: scale(.99);
-        }
-
-    .auth-footer {
-        text-align: center;
-        margin-top: 26px;
-        font-size: 14.5px;
-        color: #666;
-        font-family: 'League Spartan', 'Poppins', sans-serif;
-    }
-
-        .auth-footer a {
-            color: #111;
-            font-weight: 700;
-            text-decoration: none;
-            margin-left: 4px;
-        }
-
-            .auth-footer a:hover {
-                text-decoration: underline;
-            }
 
     .validation-summary-errors {
         background: #fdeaea;
         border: 1px solid #f5c2c2;
         color: #b71c1c;
-        padding: 12px 16px;
-        border-radius: 10px;
-        font-size: 14px;
-        margin-bottom: 20px;
+        padding: 11px 14px;
+        border-radius: 6px;
+        font-size: 13.5px;
+        margin-bottom: 18px;
     }
 
         .validation-summary-errors ul {
@@ -218,10 +443,9 @@
 
     .field-validation-error {
         display: block;
-        color: #d32f2f;
+        color: #c62828;
         font-size: 12.5px;
-        margin-top: 6px;
-        font-family: 'League Spartan', 'Poppins', sans-serif;
+        margin-top: 5px;
     }
 
     input.input-validation-error {
@@ -229,18 +453,46 @@
         background: #fff5f5 !important;
     }
 
-    @@media (max-width: 575.98px) {
+    @@media (max-width: 767.98px) {
         .auth-wrap {
-            padding: 24px 12px 40px;
+            padding: 20px 12px 40px;
         }
 
         .auth-card {
-            padding: 30px 22px 26px;
-            border-radius: 14px;
+            flex-direction: column;
+            max-width: 480px;
+        }
+
+        .auth-brand {
+            flex: 0 0 auto;
+            padding: 36px 20px 30px;
+            background-position: center 70%;
+        }
+
+        .brand-arabic {
+            font-size: 48px;
+        }
+
+        .brand-name {
+            font-size: 24px;
+            letter-spacing: 4px;
+        }
+
+        .brand-rule,
+        .brand-motto {
+            display: none;
+        }
+
+        .auth-main {
+            padding: 26px 22px 30px;
+        }
+
+        .auth-switch {
+            margin-bottom: 24px;
         }
 
         .auth-title {
-            font-size: 22px;
+            font-size: 28px;
         }
     }
 </style>
@@ -248,83 +500,97 @@
 <div class="auth-wrap">
     <div class="auth-card">
 
-        <div class="auth-logo">
-            <img src="https://i.ibb.co.com/DfjPHZtK/al-ibtisam-logo.webp" alt="al_ibtisam" />
-        </div>
+        <aside class="auth-brand">
+            <div class="brand-arabic" lang="ar" dir="rtl">الابتسام</div>
+            <div class="brand-name">AL IBTISAM</div>
+            <div class="brand-tag">Sunnah Shop &bull; Islamic Lifestyle</div>
+            <span class="brand-rule"></span>
+            <p class="brand-motto">Better Choices<br />for a Brighter<br />Hereafter</p>
+        </aside>
 
-        <h1 class="auth-title">Create Account</h1>
-        <p class="auth-sub">Join us and start shopping today</p>
+        <section class="auth-main">
 
-        <form asp-controller="Account" asp-action="SignUp" method="post" novalidate>
-            @Html.AntiForgeryToken()
+            <div class="auth-switch">
+                Already have an account?
+                <a asp-controller="Account" asp-action="SignIn">Sign In <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
 
-            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+            <h1 class="auth-title">Create Your Account</h1>
+            <p class="auth-sub">Join Al Ibtisam and be a part of our Sunnah-inspired community.</p>
 
-            <div class="form-group">
-                <label asp-for="FullName">Full Name</label>
-                <div class="input-wrap">
-                    <i class="fa-regular fa-user field-icon"></i>
-                    <input asp-for="FullName" class="form-control-auth" placeholder="Your full name" autocomplete="name" />
+            <form asp-controller="Account" asp-action="SignUp" method="post" novalidate>
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+                <div class="form-group">
+                    <label asp-for="FullName">Full Name</label>
+                    <div class="input-wrap">
+                        <i class="fa-regular fa-user field-icon"></i>
+                        <input asp-for="FullName" class="form-control-auth" placeholder="Enter your full name" autocomplete="name" />
+                    </div>
+                    <span asp-validation-for="FullName" class="field-validation-error"></span>
                 </div>
-                <span asp-validation-for="FullName" class="field-validation-error"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="Email">Email Address</label>
-                <div class="input-wrap">
-                    <i class="fa-regular fa-envelope field-icon"></i>
-                    <input asp-for="Email" type="email" class="form-control-auth" placeholder="you@example.com" autocomplete="email" />
+                <div class="form-group">
+                    <label asp-for="Email">Email Address</label>
+                    <div class="input-wrap">
+                        <i class="fa-regular fa-envelope field-icon"></i>
+                        <input asp-for="Email" type="email" class="form-control-auth" placeholder="Enter your email address" autocomplete="email" />
+                    </div>
+                    <span asp-validation-for="Email" class="field-validation-error"></span>
                 </div>
-                <span asp-validation-for="Email" class="field-validation-error"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="Phone">Phone Number</label>
-                <div class="input-wrap">
-                    <i class="fa-solid fa-phone field-icon"></i>
-                    <input asp-for="Phone" type="tel" class="form-control-auth" placeholder="01XXXXXXXXX" autocomplete="tel" />
+                <div class="form-group">
+                    <label asp-for="Phone">Phone Number</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-phone field-icon"></i>
+                        <input asp-for="Phone" type="tel" class="form-control-auth" placeholder="01XXXXXXXXX" autocomplete="tel" />
+                    </div>
+                    <span asp-validation-for="Phone" class="field-validation-error"></span>
                 </div>
-                <span asp-validation-for="Phone" class="field-validation-error"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="Password">Password</label>
-                <div class="input-wrap">
-                    <i class="fa-solid fa-lock field-icon"></i>
-                    <input asp-for="Password" type="password" id="passwordInput" class="form-control-auth" placeholder="Minimum 6 characters" autocomplete="new-password" />
-                    <button type="button" class="toggle-password" data-target="passwordInput" data-icon="toggleIcon1" aria-label="Show password">
-                        <i class="fa-regular fa-eye" id="toggleIcon1"></i>
-                    </button>
+                <div class="form-group">
+                    <label asp-for="Password">Password</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock field-icon"></i>
+                        <input asp-for="Password" type="password" id="passwordInput" class="form-control-auth" placeholder="Create a password" autocomplete="new-password" />
+                        <button type="button" class="toggle-password" data-target="passwordInput" data-icon="toggleIcon1" aria-label="Show password">
+                            <i class="fa-regular fa-eye-slash" id="toggleIcon1"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="field-validation-error"></span>
                 </div>
-                <span asp-validation-for="Password" class="field-validation-error"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="ConfirmPassword">Confirm Password</label>
-                <div class="input-wrap">
-                    <i class="fa-solid fa-lock field-icon"></i>
-                    <input asp-for="ConfirmPassword" type="password" id="confirmPasswordInput" class="form-control-auth" placeholder="Re-enter your password" autocomplete="new-password" />
-                    <button type="button" class="toggle-password" data-target="confirmPasswordInput" data-icon="toggleIcon2" aria-label="Show password">
-                        <i class="fa-regular fa-eye" id="toggleIcon2"></i>
-                    </button>
+                <div class="form-group">
+                    <label asp-for="ConfirmPassword">Confirm Password</label>
+                    <div class="input-wrap">
+                        <i class="fa-solid fa-lock field-icon"></i>
+                        <input asp-for="ConfirmPassword" type="password" id="confirmPasswordInput" class="form-control-auth" placeholder="Confirm your password" autocomplete="new-password" />
+                        <button type="button" class="toggle-password" data-target="confirmPasswordInput" data-icon="toggleIcon2" aria-label="Show password">
+                            <i class="fa-regular fa-eye-slash" id="toggleIcon2"></i>
+                        </button>
+                    </div>
+                    <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
                 </div>
-                <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
-            </div>
 
-            <div class="terms-row">
-                <input asp-for="AcceptTerms" type="checkbox" id="acceptTerms" />
-                <label for="acceptTerms">
-                    I agree to the <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a>
-                </label>
-            </div>
-            <span asp-validation-for="AcceptTerms" class="field-validation-error" style="margin-top:-10px; margin-bottom:14px;"></span>
+                <div class="terms-row">
+                    <input asp-for="AcceptTerms" type="checkbox" id="acceptTerms" />
+                    <label for="acceptTerms">
+                        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                    </label>
+                </div>
+                <span asp-validation-for="AcceptTerms" class="field-validation-error" style="margin-top:-10px; margin-bottom:14px;"></span>
 
-            <button type="submit" class="btn-auth">Create Account</button>
-        </form>
+                <button type="submit" class="btn-auth">Create Account <i class="fa-solid fa-arrow-right"></i></button>
+            </form>
 
-        <p class="auth-footer">
-            Already have an account? <a asp-controller="Account" asp-action="SignIn">Sign In</a>
-        </p>
+            <div class="auth-or">or</div>
+
+            @* TODO: wire these to your external login (OAuth) actions *@
+            <a href="#" class="btn-social"><svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4 6.9-10 6.9-17.5z"/><path fill="#FBBC05" d="M10.5 28.7A14.5 14.5 0 0 1 9.5 24c0-1.6.3-3.2.8-4.7l-7.9-6.1A24 24 0 0 0 0 24c0 3.9.9 7.5 2.6 10.8l7.9-6.1z"/><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/></svg><span>Continue with Google</span></a>
+            <a href="#" class="btn-social"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path fill="#fff" d="M13.5 19v-6.2h2.1l.4-2.6h-2.5V8.6c0-.8.3-1.3 1.4-1.3H16V5.1c-.3 0-1.1-.1-2-.1-2.1 0-3.5 1.3-3.5 3.6v1.6H8.3v2.6h2.2V19h3z"/></svg><span>Continue with Facebook</span></a>
+        </section>
     </div>
 </div>
 
@@ -332,13 +598,10 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         (function () {
-            // Toggle password visibility (works for both password fields)
             document.querySelectorAll('.toggle-password').forEach(function (btn) {
                 btn.addEventListener('click', function () {
-                    var targetId = btn.getAttribute('data-target');
-                    var iconId = btn.getAttribute('data-icon');
-                    var input = document.getElementById(targetId);
-                    var icon = document.getElementById(iconId);
+                    var input = document.getElementById(btn.getAttribute('data-target'));
+                    var icon = document.getElementById(btn.getAttribute('data-icon'));
                     if (!input || !icon) return;
 
                     var isPassword = input.type === 'password';
