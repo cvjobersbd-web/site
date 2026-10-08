@@ -75,6 +75,12 @@ namespace al_ibtisam.Controllers
                 new Product { Id = 42, Name = "As-Shabab Panjabi - 09",               ImageUrl = "https://i.ibb.co.com/cXb0F6qS/Soft-Arabian-Thobe-26.jpg",      Price = 1890, OldPrice = null, DiscountPercent = 0, CategoryName = "Jubbah" },
                 new Product { Id = 43, Name = "As-Shabab Panjabi - 13",               ImageUrl = "https://i.ibb.co.com/hFPqhKn7/Soft-Arabian-Thobe-25.jpg",      Price = 1890, OldPrice = null, DiscountPercent = 0, CategoryName = "Jubbah" },
                 new Product { Id = 44, Name = "Superior Panjabi - 08",                ImageUrl = "https://i.ibb.co.com/S4P1QVnd/Premium-Arabian-Thobe-27.jpg",   Price = 2250, OldPrice = 4500, DiscountPercent = 50, CategoryName = "Jubbah" },
+
+                // ---------- Katua (নতুন) ----------
+                new Product { Id = 45, Name = "Premium Katua For Men - KAT-112",      ImageUrl = "https://i.ibb.co.com/N2p49BNf/Premium-Katua-For-Men-KAT-112.webp", Price = 1250, OldPrice = null, DiscountPercent = 0,  CategoryName = "Katua" },
+                new Product { Id = 46, Name = "Premium Katua For Men - KAT-108",      ImageUrl = "https://i.ibb.co.com/rKHgswtw/Premium-Katua-For-Men-KAT-108.webp", Price = 1250, OldPrice = null, DiscountPercent = 0,  CategoryName = "Katua" },
+                new Product { Id = 47, Name = "Premium Katua For Men - KAT-107",      ImageUrl = "https://i.ibb.co.com/8qft5bT/Premium-Katua-For-Men-KAT-107.webp", Price = 1250, OldPrice = null, DiscountPercent = 0,  CategoryName = "Katua" },
+                new Product { Id = 48, Name = "Premium Katua For Men - KAT-110",      ImageUrl = "https://i.ibb.co.com/qLchrKLZ/Premium-Katua-For-Men-KAT-110.webp", Price = 1250, OldPrice = 2500, DiscountPercent = 50, CategoryName = "Katua" },
             };
         }
 
@@ -164,6 +170,14 @@ namespace al_ibtisam.Controllers
         public IActionResult Jubbah()
         {
             return LoadCategory("Jubbah");
+        }
+
+        // ============================================================
+        // Katua — নতুন অ্যাকশন
+        // ============================================================
+        public IActionResult Katua()
+        {
+            return LoadCategory("Katua");
         }
 
         public IActionResult FlashSale()

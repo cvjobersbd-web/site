@@ -12,14 +12,14 @@
     /* ================= PAGE ================= */
     .category-page {
         font-family: 'Poppins', sans-serif;
-        background: #f8f9fa;
+        background: #E5FBFF;
         padding: 20px 0 60px;
     }
 
     /* ================= BREADCRUMB ================= */
     .breadcrumb-area {
         font-size: 14px;
-        color: #6c757d;
+        color: #134856;
         margin-bottom: 20px;
         display: flex;
         align-items: center;
@@ -28,7 +28,7 @@
     }
 
         .breadcrumb-area a {
-            color: #6c757d;
+            color: #134856;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -36,12 +36,12 @@
         }
 
             .breadcrumb-area a:hover {
-                color: #111;
+                color: #028EA5;
             }
 
         .breadcrumb-area i {
             font-size: 11px;
-            color: #adb5bd;
+            color: #028EA5;
         }
 
     /* ================= LAYOUT ================= */
@@ -67,8 +67,8 @@
             font-weight: 700;
             margin: 0 0 14px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
-            color: #111;
+            border-bottom: 1px solid #E5FBFF;
+            color: #028EA5;
         }
 
     /* Category list */
@@ -76,10 +76,10 @@
         list-style: none;
         padding: 0;
         margin: 0 0 28px 0;
-        max-height: 420px;
+        max-height: 620px;
         overflow-y: auto;
         scrollbar-width: thin;
-        scrollbar-color: #c9ced4 transparent;
+        scrollbar-color: #b0d4dc transparent;
     }
 
         .category-list::-webkit-scrollbar {
@@ -87,7 +87,7 @@
         }
 
         .category-list::-webkit-scrollbar-thumb {
-            background: #c9ced4;
+            background: #b0d4dc;
             border-radius: 3px;
         }
 
@@ -104,7 +104,7 @@
             align-items: center;
             gap: 10px;
             font-size: 14.5px;
-            color: #555;
+            color: #134856;
             text-decoration: none;
             padding: 7px 4px;
             transition: color .2s;
@@ -112,11 +112,11 @@
         }
 
             .category-list a:hover {
-                color: #0d82f5;
+                color: #028EA5;
             }
 
             .category-list a.active {
-                color: #0d82f5;
+                color: #028EA5;
                 font-weight: 600;
             }
 
@@ -126,17 +126,17 @@
                 width: 8px;
                 height: 8px;
                 border-radius: 50%;
-                background: #ddd;
+                background: #b0d4dc;
                 display: inline-block;
                 transition: background .2s;
             }
 
             .category-list a:hover::before {
-                background: #b9d9fb;
+                background: #028EA5;
             }
 
             .category-list a.active::before {
-                background: #0d82f5;
+                background: #028EA5;
             }
 
     /* New products sidebar */
@@ -145,8 +145,8 @@
         font-weight: 700;
         margin: 0 0 14px;
         padding-bottom: 10px;
-        border-bottom: 1px solid #eee;
-        color: #111;
+        border-bottom: 1px solid #E5FBFF;
+        color: #028EA5;
     }
 
     .new-product-item {
@@ -168,7 +168,7 @@
             height: 56px;
             object-fit: cover;
             border-radius: 6px;
-            border: 1px solid #eee;
+            border: 1px solid #E5FBFF;
             background: #f3f3f3;
         }
 
@@ -183,7 +183,7 @@
             font-size: 13px;
             font-weight: 600;
             margin: 0 0 3px 0;
-            color: #111;
+            color: #134856;
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
@@ -193,7 +193,7 @@
 
         .new-product-info span {
             font-size: 13px;
-            color: #e5322d;
+            color: #FFAA0D;
             font-weight: 700;
         }
 
@@ -221,7 +221,7 @@
 
         .product-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,.08);
+            box-shadow: 0 8px 20px rgba(2, 142, 165, 0.15);
         }
 
     .product-img-wrap {
@@ -243,12 +243,13 @@
         transform: scale(1.05);
     }
 
+    /* Discount Badge - Action Color #86D200 */
     .discount-badge {
         position: absolute;
         top: 8px;
         left: 8px;
-        background: #111;
-        color: #fff;
+        background: #86D200;
+        color: #134856;
         font-size: 11px;
         font-weight: 700;
         padding: 3px 8px;
@@ -273,18 +274,18 @@
         cursor: pointer;
         z-index: 3;
         box-shadow: 0 2px 6px rgba(0,0,0,.12);
-        color: #555;
+        color: #134856;
         font-size: 16px;
         transition: background .2s, color .2s, transform .15s;
     }
 
         .wishlist-btn:hover {
-            color: #e5322d;
+            color: #86D200;
             transform: scale(1.08);
         }
 
         .wishlist-btn.active {
-            color: #e5322d;
+            color: #86D200;
         }
 
             .wishlist-btn.active i {
@@ -301,7 +302,7 @@
     .product-title {
         font-size: 13.5px;
         font-weight: 600;
-        color: #222;
+        color: #134856;
         margin: 0;
         line-height: 1.35;
         display: -webkit-box;
@@ -311,10 +312,11 @@
         min-height: 36px;
     }
 
+    /* Price / Number - #FFAA0D */
     .product-price {
         font-size: 14px;
         font-weight: 700;
-        color: #111;
+        color: #FFAA0D;
         margin: 0;
         display: flex;
         align-items: baseline;
@@ -324,7 +326,7 @@
 
     .product-old-price {
         font-size: 12px;
-        color: #999;
+        color: #6c8a93;
         text-decoration: line-through;
         font-weight: 400;
     }
@@ -334,31 +336,31 @@
         grid-column: 1 / -1;
         text-align: center;
         padding: 70px 20px;
-        color: #888;
+        color: #6c8a93;
         font-size: 15px;
         background: #fff;
         border-radius: 8px;
-        border: 1px dashed #e1e4e8;
+        border: 1px dashed #b0d4dc;
     }
 
         .no-products i {
             font-size: 42px;
             margin-bottom: 14px;
             display: block;
-            color: #c9ced4;
+            color: #b0d4dc;
         }
 
         .no-products h5 {
             margin: 0 0 6px;
             font-weight: 600;
-            color: #333;
+            color: #134856;
             font-size: 18px;
         }
 
         .no-products p {
             margin: 0;
             font-size: 14px;
-            color: #888;
+            color: #6c8a93;
         }
 
     /* ================= TOAST ================= */
@@ -367,7 +369,7 @@
         bottom: 24px;
         left: 50%;
         transform: translateX(-50%);
-        background: #111;
+        background: #134856;
         color: #fff;
         padding: 10px 22px;
         border-radius: 8px;
@@ -488,6 +490,7 @@
                 <li><a asp-controller="Category" asp-action="Tupi"           class="@(ViewBag.CategoryName == "Tupi" ? "active" : "")">Tupi</a></li>
                 <li><a asp-controller="Category" asp-action="ComboOffers"    class="@(ViewBag.CategoryName == "Combo Offers" ? "active" : "")">Combo Offers</a></li>
                 <li><a asp-controller="Category" asp-action="Jubbah"         class="@(ViewBag.CategoryName == "Jubbah" ? "active" : "")">Jubbah</a></li>
+                <li><a asp-controller="Category" asp-action="Katua"          class="@(ViewBag.CategoryName == "Katua" ? "active" : "")">Katua</a></li>
                 <li><a asp-controller="Category" asp-action="FlashSale"      class="@(ViewBag.CategoryName == "Flash Sale" ? "active" : "")">Flash Sale</a></li>
             </ul>
 

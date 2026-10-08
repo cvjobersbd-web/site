@@ -9,6 +9,7 @@
 <style>
     body {
         overflow-x: hidden;
+        background-color: #E5FBFF;
     }
 
     /* ================= HERO ================= */
@@ -87,30 +88,9 @@
         font-size: clamp(12px, 1.1cqw, 18px);
         font-weight: 300;
         letter-spacing: .3px;
-        margin: clamp(8px, .9cqw, 16px) 0 clamp(14px, 1.8cqw, 34px);
+        margin: clamp(8px, .9cqw, 16px) 0 0;
         max-width: 90%;
     }
-
-    .hero-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        height: clamp(32px, 2.7cqw, 44px);
-        padding: 0 clamp(16px, 1.7cqw, 32px);
-        background: #fff;
-        color: #000;
-        font-size: clamp(10px, .65cqw, 11px);
-        font-weight: 800;
-        letter-spacing: -.2px;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition: background .25s, color .25s;
-    }
-
-        .hero-btn:hover {
-            background: #000;
-            color: #fff;
-        }
 
     .hero .carousel-item.active .hero-anim,
     .hero .carousel-item-next .hero-anim {
@@ -131,10 +111,6 @@
 
     .hero .carousel-item.active .hero-sub, .hero .carousel-item-next .hero-sub {
         animation-delay: .6s;
-    }
-
-    .hero .carousel-item.active .hero-btn, .hero .carousel-item-next .hero-btn {
-        animation-delay: .75s;
     }
 
     @@keyframes heroSlideIn {
@@ -167,14 +143,14 @@
             padding: 0;
             border: 0;
             border-radius: 50%;
-            background-color: #c9ced4;
+            background-color: #b0d4dc;
             opacity: 1;
             text-indent: -999px;
             transition: background-color .25s;
         }
 
         .hero .carousel-indicators .active {
-            background-color: #0d82f5;
+            background-color: #028EA5;
         }
 
     @@media (max-width: 767.98px) {
@@ -219,7 +195,8 @@
         margin-left: calc(50% - 50vw);
         padding: 28px 15px 20px;
         font-family: 'League Spartan', 'Poppins', sans-serif;
-        color: #1c1c1c;
+        color: #134856;
+        background-color: #E5FBFF;
     }
 
     .tc-inner {
@@ -241,7 +218,7 @@
             flex: 1 1 auto;
             max-width: 42%;
             height: 1px;
-            background: #d9d9d9;
+            background: #b0d4dc;
         }
 
         .tc-head h2 {
@@ -253,6 +230,7 @@
             letter-spacing: .8px;
             text-transform: uppercase;
             white-space: nowrap;
+            color: #028EA5;
         }
 
     .tc-track {
@@ -284,14 +262,14 @@
         aspect-ratio: 200 / 235;
         border-radius: 10px;
         overflow: hidden;
-        background: #f3f3f3;
+        background: #fff;
         box-shadow: 0 1px 3px rgba(0,0,0,.05);
         transition: transform .35s ease, box-shadow .35s ease;
     }
 
     .tc-card:hover .tc-img {
         transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(0,0,0,.12);
+        box-shadow: 0 10px 22px rgba(2, 142, 165, 0.15);
     }
 
     .tc-img img {
@@ -343,6 +321,7 @@
         margin-left: calc(50% - 50vw);
         padding: 10px 15px 20px;
         font-family: 'League Spartan', 'Poppins', sans-serif;
+        background-color: #E5FBFF;
     }
 
     .showroom-inner {
@@ -361,7 +340,7 @@
 
         .showroom-link:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, .14);
+            box-shadow: 0 12px 28px rgba(2, 142, 165, 0.18);
         }
 
         .showroom-link img {
@@ -387,7 +366,8 @@
         margin-left: calc(50% - 50vw);
         padding: 28px 15px 20px;
         font-family: 'League Spartan', 'Poppins', sans-serif;
-        color: #1c1c1c;
+        color: #134856;
+        background-color: #E5FBFF;
     }
 
     .jb-inner {
@@ -433,14 +413,14 @@
         aspect-ratio: 3 / 4;
         border-radius: 10px;
         overflow: hidden;
-        background: #f3f3f3;
+        background: #fff;
         box-shadow: 0 1px 3px rgba(0,0,0,.05);
         transition: transform .35s ease, box-shadow .35s ease;
     }
 
     .jb-card:hover .jb-card-img {
         transform: translateY(-3px);
-        box-shadow: 0 10px 22px rgba(0,0,0,.12);
+        box-shadow: 0 10px 22px rgba(2, 142, 165, 0.15);
     }
 
     .jb-card-img img {
@@ -455,13 +435,13 @@
         transform: scale(1.06);
     }
 
-    /* Discount badge */
+    /* Discount badge - Action Color #86D200 */
     .jb-badge {
         position: absolute;
         top: 8px;
         left: 8px;
-        background: #000;
-        color: #fff;
+        background: #86D200;
+        color: #134856;
         font-family: 'Poppins', sans-serif;
         font-size: clamp(10px, .75vw, 12px);
         font-weight: 700;
@@ -476,16 +456,17 @@
         font-family: 'Poppins', sans-serif;
         font-size: clamp(12px, .85vw, 14px);
         font-weight: 600;
-        color: #222;
+        color: #134856;
         line-height: 1.3;
     }
 
+    /* Price / Number - #FFAA0D */
     .jb-card-price {
         margin: 0;
         font-family: 'League Spartan', 'Poppins', sans-serif;
         font-size: clamp(12px, .85vw, 14px);
         font-weight: 700;
-        color: #111;
+        color: #FFAA0D;
         letter-spacing: .2px;
     }
 
@@ -523,6 +504,7 @@
         margin-left: calc(50% - 50vw);
         padding: 30px 15px;
         font-family: 'League Spartan', 'Poppins', sans-serif;
+        background-color: #E5FBFF;
     }
 
     .ft-inner {
@@ -562,12 +544,12 @@
         font-weight: 400;
         line-height: 1.45;
         letter-spacing: .2px;
-        color: #555;
+        color: #134856;
     }
 
         .ft-text strong {
             font-weight: 600;
-            color: #333;
+            color: #028EA5;
         }
 
     .ft-item.wide .ft-text {
@@ -604,7 +586,6 @@
                     <h2 class="hero-title-light hero-anim">Fashion</h2>
                     <h2 class="hero-title-bold hero-anim">Glasses</h2>
                     <p class="hero-sub hero-anim">Best eyeglasses for women to channel your inner Clark Kent</p>
-                    <a href="#" class="hero-btn hero-anim">Shop the collection</a>
                 </div>
             </div>
 
@@ -615,7 +596,6 @@
                     <h2 class="hero-title-light hero-anim">The Hotlist of</h2>
                     <h2 class="hero-title-bold hero-anim">Summer</h2>
                     <p class="hero-sub hero-anim">The 12 Biggest Spring/Summer 2021 Trends</p>
-                    <a href="#" class="hero-btn hero-anim">Shop the collection</a>
                 </div>
             </div>
 
@@ -626,7 +606,6 @@
                     <h2 class="hero-title-light hero-anim">Find Your</h2>
                     <h2 class="hero-title-bold hero-anim">Perfect</h2>
                     <p class="hero-sub hero-anim">Uncompromising in style, quality and performance</p>
-                    <a href="#" class="hero-btn hero-anim">Shop the collection</a>
                 </div>
             </div>
         </div>
@@ -637,15 +616,15 @@
 @{
     var categories = new[]
     {
-        new { Name = "Panjabi",        Img = "https://i.ibb.co.com/7xRkW8KV/1.jpg" },
-        new { Name = "Shirt",          Img = "https://i.ibb.co.com/VYskZpVz/2.jpg" },
-        new { Name = "T-Shirt",        Img = "https://i.ibb.co.com/whjZxfNK/3.jpg" },
-        new { Name = "Polo Shirt",     Img = "https://i.ibb.co.com/JwbWyD8G/4.jpg" },
-        new { Name = "Pant & Trouser", Img = "https://i.ibb.co.com/gLKg35Sq/5.jpg" },
-        new { Name = "Attar",          Img = "https://i.ibb.co.com/RkNZH6Vh/6.jpg" },
-        new { Name = "Sneakers",       Img = "https://i.ibb.co.com/9HvJCWkV/7.jpg" },
-        new { Name = "Foods",          Img = "https://i.ibb.co.com/SD1j3nRJ/8.jpg" },
-        new { Name = "Flash Sale",     Img = "https://i.ibb.co.com/SD1j3nRJ/8.jpg" }
+        new { Name = "Panjabi",        Img = "https://i.ibb.co.com/7xRkW8KV/1.jpg",       Action = "Panjabi" },
+        new { Name = "Shirt",          Img = "https://i.ibb.co.com/VYskZpVz/2.jpg",       Action = "Shirt" },
+        new { Name = "T-Shirt",        Img = "https://i.ibb.co.com/whjZxfNK/3.jpg",       Action = "TShirt" },
+        new { Name = "Polo Shirt",     Img = "https://i.ibb.co.com/JwbWyD8G/4.jpg",       Action = "PoloShirt" },
+        new { Name = "Pant & Trouser", Img = "https://i.ibb.co.com/gLKg35Sq/5.jpg",       Action = "PantTrouser" },
+        new { Name = "Attar",          Img = "https://i.ibb.co.com/RkNZH6Vh/6.jpg",       Action = "Attar" },
+        new { Name = "Sneakers",       Img = "https://i.ibb.co.com/9HvJCWkV/7.jpg",       Action = "Sneakers" },
+        new { Name = "Foods",          Img = "https://i.ibb.co.com/SD1j3nRJ/8.jpg",       Action = "FlashSale" },
+        new { Name = "Flash Sale",     Img = "https://i.ibb.co.com/SD1j3nRJ/8.jpg",       Action = "FlashSale" }
     };
 }
 
@@ -659,7 +638,7 @@
         <div class="tc-track">
             @foreach (var c in categories)
             {
-                <a href="#" class="tc-card" aria-label="@c.Name">
+                <a asp-controller="Category" asp-action="@c.Action" class="tc-card" aria-label="@c.Name">
                     <span class="tc-img">
                         <img src="@c.Img" alt="@c.Name" loading="lazy" />
                     </span>
@@ -684,26 +663,24 @@
 @{
     var jubbahProducts = new[]
     {
-        new { Name = "As-Shabab Panjabi - 08", Img = "https://i.ibb.co.com/5WKkqDgr/Original-Arab-s-Thobe-22.jpg",  Price = "1890৳", Discount = "" },
-        new { Name = "As-Shabab Panjabi - 09", Img = "https://i.ibb.co.com/cXb0F6qS/Soft-Arabian-Thobe-26.jpg",   Price = "1890৳", Discount = "" },
-        new { Name = "As-Shabab Panjabi - 13", Img = "https://i.ibb.co.com/hFPqhKn7/Soft-Arabian-Thobe-25.jpg",   Price = "1890৳", Discount = "" },
-        new { Name = "Superior Panjabi - 08",  Img = "https://i.ibb.co.com/S4P1QVnd/Premium-Arabian-Thobe-27.jpg", Price = "2250৳", Discount = "0%" }
+        new { Id = 41, Name = "As-Shabab Panjabi - 08", Img = "https://i.ibb.co.com/5WKkqDgr/Original-Arab-s-Thobe-22.jpg",  Price = "1890৳", Discount = "" },
+        new { Id = 42, Name = "As-Shabab Panjabi - 09", Img = "https://i.ibb.co.com/cXb0F6qS/Soft-Arabian-Thobe-26.jpg",   Price = "1890৳", Discount = "" },
+        new { Id = 43, Name = "As-Shabab Panjabi - 13", Img = "https://i.ibb.co.com/hFPqhKn7/Soft-Arabian-Thobe-25.jpg",   Price = "1890৳", Discount = "" },
+        new { Id = 44, Name = "Superior Panjabi - 08",  Img = "https://i.ibb.co.com/S4P1QVnd/Premium-Arabian-Thobe-27.jpg", Price = "2250৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Jubbah Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Jubbah" class="jb-main">
             <img src="https://i.ibb.co.com/nsF1QbH4/Elegant-Jubbah-in-Islamic-Courtyard.png" alt="Elegant Jubbah in Islamic Courtyard" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in jubbahProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -723,26 +700,24 @@
 @{
     var thobeProducts = new[]
     {
-        new { Name = "Emirati Thobe - 01", Img = "https://i.ibb.co.com/5X6DjR4y/Emirati-Thobe-01.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "Emirati Thobe - 02", Img = "https://i.ibb.co.com/h1KQvZX4/Emirati-Thobe-02.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "Emirati Thobe - 19", Img = "https://i.ibb.co.com/1f8bJ2Ny/Emirati-Thobe-19.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "Emirati Thobe - 23", Img = "https://i.ibb.co.com/7JHxJDVk/Emirati-Thobe-23.jpg", Price = "2250৳", Discount = "0%" }
+        new { Id = 9,  Name = "Emirati Thobe - 01", Img = "https://i.ibb.co.com/5X6DjR4y/Emirati-Thobe-01.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 10, Name = "Emirati Thobe - 02", Img = "https://i.ibb.co.com/h1KQvZX4/Emirati-Thobe-02.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 11, Name = "Emirati Thobe - 19", Img = "https://i.ibb.co.com/1f8bJ2Ny/Emirati-Thobe-19.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 12, Name = "Emirati Thobe - 23", Img = "https://i.ibb.co.com/7JHxJDVk/Emirati-Thobe-23.jpg", Price = "2250৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Thobe Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Thobe" class="jb-main">
             <img src="https://i.ibb.co.com/xKn32pbD/Luxury-Thobe-Courtyard-Campaign.png" alt="Premium Thobe Collection in Courtyard" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in thobeProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -762,26 +737,24 @@
 @{
     var panjabiProducts = new[]
     {
-        new { Name = "As-Shabab Panjabi - 13", Img = "https://i.ibb.co.com/mVHcbR0p/As-Shabab-Panjabi-13.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "As-Shabab Panjabi - 09", Img = "https://i.ibb.co.com/RTpJ1KLY/As-Shabab-Panjabi-09.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "Superior Panjabi - 08",  Img = "https://i.ibb.co.com/ymjnSMHt/Superior-Panjabi-08.jpg",  Price = "2250৳", Discount = "" },
-        new { Name = "As-Shabab Panjabi - 08", Img = "https://i.ibb.co.com/JRWPJpdn/As-Shabab-Panjabi-08.jpg", Price = "1890৳", Discount = "0%" }
+        new { Id = 1, Name = "As-Shabab Panjabi - 13", Img = "https://i.ibb.co.com/mVHcbR0p/As-Shabab-Panjabi-13.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 2, Name = "As-Shabab Panjabi - 09", Img = "https://i.ibb.co.com/RTpJ1KLY/As-Shabab-Panjabi-09.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 3, Name = "Superior Panjabi - 08",  Img = "https://i.ibb.co.com/ymjnSMHt/Superior-Panjabi-08.jpg",  Price = "2250৳", Discount = "" },
+        new { Id = 4, Name = "As-Shabab Panjabi - 08", Img = "https://i.ibb.co.com/JRWPJpdn/As-Shabab-Panjabi-08.jpg", Price = "1890৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Panjabi Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Panjabi" class="jb-main">
             <img src="https://i.ibb.co.com/NnKffXNf/category-image-2-20251008131600.jpg" alt="Premium Panjabi Collection" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in panjabiProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -801,26 +774,24 @@
 @{
     var waistcoatProducts = new[]
     {
-        new { Name = "Platinum Jacquard Waistcoat - 111", Img = "https://i.ibb.co.com/BHZm9SrF/Platinum-Jacquard-Waistcoat-111.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "Platinum Jacquard Waistcoat - 108", Img = "https://i.ibb.co.com/F4fPjnwr/Platinum-Jacquard-Waistcoat-108.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "Platinum Jacquard Waistcoat - 106", Img = "https://i.ibb.co.com/BVj5M5rY/Platinum-Jacquard-Waistcoat-106.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "Premium Suit Embroidered Waistcoat - 303", Img = "https://i.ibb.co.com/zWMGgjzs/Premium-Suit-Embroidered-Waistcoat-303.jpg", Price = "2250৳", Discount = "0%" }
+        new { Id = 37, Name = "Platinum Jacquard Waistcoat - 111", Img = "https://i.ibb.co.com/BHZm9SrF/Platinum-Jacquard-Waistcoat-111.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 38, Name = "Platinum Jacquard Waistcoat - 108", Img = "https://i.ibb.co.com/F4fPjnwr/Platinum-Jacquard-Waistcoat-108.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 39, Name = "Platinum Jacquard Waistcoat - 106", Img = "https://i.ibb.co.com/BVj5M5rY/Platinum-Jacquard-Waistcoat-106.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 40, Name = "Premium Suit Embroidered Waistcoat - 303", Img = "https://i.ibb.co.com/zWMGgjzs/Premium-Suit-Embroidered-Waistcoat-303.jpg", Price = "2250৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Waistcoat Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Waistcoat" class="jb-main">
             <img src="https://i.ibb.co.com/BHk7K2CT/Signature-Waistcoat-Collection.png" alt="Signature Waistcoat Collection" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in waistcoatProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -840,26 +811,24 @@
 @{
     var pajamasTrousersProducts = new[]
     {
-        new { Name = "China Angle Trouser - Dark Chocolate", Img = "https://i.ibb.co.com/Wv0vpLyJ/China-Angle-Trouser-Dark-Chocolate.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "China Angle Trouser - Olive", Img = "https://i.ibb.co.com/gFFdwXJc/China-Angle-Trouser-Olive.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "China Angle Trouser - Beige", Img = "https://i.ibb.co.com/5XQmBL9X/China-Angle-Trouser-Beige.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "China Micro Pajama - White", Img = "https://i.ibb.co.com/hx3GD1yx/China-Micro-Pajama-White.jpg", Price = "1890৳", Discount = "0%" }
+        new { Id = 25, Name = "China Angle Trouser - Dark Chocolate", Img = "https://i.ibb.co.com/Wv0vpLyJ/China-Angle-Trouser-Dark-Chocolate.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 26, Name = "China Angle Trouser - Olive", Img = "https://i.ibb.co.com/gFFdwXJc/China-Angle-Trouser-Olive.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 27, Name = "China Angle Trouser - Beige", Img = "https://i.ibb.co.com/5XQmBL9X/China-Angle-Trouser-Beige.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 28, Name = "China Micro Pajama - White", Img = "https://i.ibb.co.com/hx3GD1yx/China-Micro-Pajama-White.jpg", Price = "1890৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Pajamas Trousers Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="PantTrouser" class="jb-main">
             <img src="https://i.ibb.co.com/707sg7Y/Premium-Pants-Trousers-Display.png" alt="Premium Pants & Trousers Display" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in pajamasTrousersProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -879,26 +848,24 @@
 @{
     var sneakersProducts = new[]
     {
-        new { Name = "NB 9060 Dark Gray Replica", Img = "https://i.ibb.co.com/35qxDPsK/NB-9060-Dark-Gray-Replica.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "NB 9060 Gray Black Replica", Img = "https://i.ibb.co.com/xqS4VNJV/NB-9060-Gray-Black-Replica.jpg", Price = "2250৳", Discount = "" },
-        new { Name = "China Branded Sneakers Y26-1084", Img = "https://i.ibb.co.com/pvs72Mmv/China-Branded-Sneakers-Y26-1084.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "China Branded Sneakers Y26-1076", Img = "https://i.ibb.co.com/NdP6w6q4/China-Branded-Sneakers-Y26-1076.jpg", Price = "1890৳", Discount = "0%" }
+        new { Id = 33, Name = "NB 9060 Dark Gray Replica", Img = "https://i.ibb.co.com/35qxDPsK/NB-9060-Dark-Gray-Replica.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 34, Name = "NB 9060 Gray Black Replica", Img = "https://i.ibb.co.com/xqS4VNJV/NB-9060-Gray-Black-Replica.jpg", Price = "2250৳", Discount = "" },
+        new { Id = 35, Name = "China Branded Sneakers Y26-1084", Img = "https://i.ibb.co.com/pvs72Mmv/China-Branded-Sneakers-Y26-1084.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 36, Name = "China Branded Sneakers Y26-1076", Img = "https://i.ibb.co.com/NdP6w6q4/China-Branded-Sneakers-Y26-1076.jpg", Price = "1890৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Sneakers Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Sneakers" class="jb-main">
             <img src="https://i.ibb.co.com/n8NCysMY/Sneakers.jpg" alt="Sneakers Collection" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in sneakersProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -918,26 +885,24 @@
 @{
     var attarProducts = new[]
     {
-        new { Name = "Jadore Al Oud", Img = "https://i.ibb.co.com/21gWcMk1/Jadore-Al-Oud.jpg", Price = "1250৳", Discount = "" },
-        new { Name = "Safa", Img = "https://i.ibb.co.com/zhtxbdHw/Safa.jpg", Price = "950৳", Discount = "" },
-        new { Name = "Best Seller Attar Combo 60ml", Img = "https://i.ibb.co.com/gFvWzrDZ/Best-Seller-Attar-Combo-60ml.jpg", Price = "1890৳", Discount = "" },
-        new { Name = "Corporate Elegance Combo 2.0", Img = "https://i.ibb.co.com/7xwwtRRg/Corporate-Elegance-Combo-2-0.jpg", Price = "2250৳", Discount = "0%" }
+        new { Id = 29, Name = "Jadore Al Oud", Img = "https://i.ibb.co.com/21gWcMk1/Jadore-Al-Oud.jpg", Price = "1250৳", Discount = "" },
+        new { Id = 30, Name = "Safa", Img = "https://i.ibb.co.com/zhtxbdHw/Safa.jpg", Price = "950৳", Discount = "" },
+        new { Id = 31, Name = "Best Seller Attar Combo 60ml", Img = "https://i.ibb.co.com/gFvWzrDZ/Best-Seller-Attar-Combo-60ml.jpg", Price = "1890৳", Discount = "" },
+        new { Id = 32, Name = "Corporate Elegance Combo 2.0", Img = "https://i.ibb.co.com/7xwwtRRg/Corporate-Elegance-Combo-2-0.jpg", Price = "2250৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Attar Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Attar" class="jb-main">
             <img src="https://i.ibb.co.com/rRNbTjgZ/ATTAR.jpg" alt="Attar Collection" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in attarProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -957,26 +922,24 @@
 @{
     var dropShoulderProducts = new[]
     {
-        new { Name = "Waffle Drop Shoulder T-shirt - Muslim", Img = "https://i.ibb.co.com/jPFyGtNg/Waffle-Drop-Shoulder-T-shirt-Muslim.jpg", Price = "890৳", Discount = "" },
-        new { Name = "Waffle Drop Shoulder T-shirt - Khilafah", Img = "https://i.ibb.co.com/BKy5fc43/Waffle-Drop-Shoulder-T-shirt-Khilafah.jpg", Price = "890৳", Discount = "" },
-        new { Name = "Waffle Drop Shoulder T-shirt - Desciplined", Img = "https://i.ibb.co.com/gFVXwBjM/Waffle-Drop-Shoulder-T-shirt-Desciplined.jpg", Price = "890৳", Discount = "" },
-        new { Name = "Waffle Drop Shoulder T-shirt - Inspired", Img = "https://i.ibb.co.com/7NXCzbFk/Waffle-Drop-Shoulder-T-shirt-Inspired.jpg", Price = "890৳", Discount = "0%" }
+        new { Id = 17, Name = "Waffle Drop Shoulder T-shirt - Muslim", Img = "https://i.ibb.co.com/jPFyGtNg/Waffle-Drop-Shoulder-T-shirt-Muslim.jpg", Price = "890৳", Discount = "" },
+        new { Id = 18, Name = "Waffle Drop Shoulder T-shirt - Khilafah", Img = "https://i.ibb.co.com/BKy5fc43/Waffle-Drop-Shoulder-T-shirt-Khilafah.jpg", Price = "890৳", Discount = "" },
+        new { Id = 19, Name = "Waffle Drop Shoulder T-shirt - Desciplined", Img = "https://i.ibb.co.com/gFVXwBjM/Waffle-Drop-Shoulder-T-shirt-Desciplined.jpg", Price = "890৳", Discount = "" },
+        new { Id = 20, Name = "Waffle Drop Shoulder T-shirt - Inspired", Img = "https://i.ibb.co.com/7NXCzbFk/Waffle-Drop-Shoulder-T-shirt-Inspired.jpg", Price = "890৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Drop Shoulder Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="TShirt" class="jb-main">
             <img src="https://i.ibb.co.com/mrfP1CR5/Premium-Drop-Shoulder-Tee-Campaign.png" alt="Premium Drop Shoulder Tee Campaign" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in dropShoulderProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {
@@ -996,26 +959,24 @@
 @{
     var katuaProducts = new[]
     {
-        new { Name = "Premium Katua For Men - KAT-112", Img = "https://i.ibb.co.com/N2p49BNf/Premium-Katua-For-Men-KAT-112.webp", Price = "1250৳", Discount = "" },
-        new { Name = "Premium Katua For Men - KAT-108", Img = "https://i.ibb.co.com/rKHgswtw/Premium-Katua-For-Men-KAT-108.webp", Price = "1250৳", Discount = "" },
-        new { Name = "Premium Katua For Men - KAT-107", Img = "https://i.ibb.co.com/8qft5bT/Premium-Katua-For-Men-KAT-107.webp", Price = "1250৳", Discount = "" },
-        new { Name = "Premium Katua For Men - KAT-110", Img = "https://i.ibb.co.com/qLchrKLZ/Premium-Katua-For-Men-KAT-110.webp", Price = "1250৳", Discount = "0%" }
+        new { Id = 45, Name = "Premium Katua For Men - KAT-112", Img = "https://i.ibb.co.com/N2p49BNf/Premium-Katua-For-Men-KAT-112.webp", Price = "1250৳", Discount = "" },
+        new { Id = 46, Name = "Premium Katua For Men - KAT-108", Img = "https://i.ibb.co.com/rKHgswtw/Premium-Katua-For-Men-KAT-108.webp", Price = "1250৳", Discount = "" },
+        new { Id = 47, Name = "Premium Katua For Men - KAT-107", Img = "https://i.ibb.co.com/8qft5bT/Premium-Katua-For-Men-KAT-107.webp", Price = "1250৳", Discount = "" },
+        new { Id = 48, Name = "Premium Katua For Men - KAT-110", Img = "https://i.ibb.co.com/qLchrKLZ/Premium-Katua-For-Men-KAT-110.webp", Price = "1250৳", Discount = "50%" }
     };
 }
 
 <section class="jb" aria-label="Katua Collection">
     <div class="jb-inner">
 
-        <!-- Main Banner Image -->
-        <a href="#" class="jb-main">
+        <a asp-controller="Category" asp-action="Katua" class="jb-main">
             <img src="https://i.ibb.co.com/TDG6NFhr/Premium-Katua-Courtyard-Collection.png" alt="Premium Katua Courtyard Collection" loading="lazy" />
         </a>
 
-        <!-- Product Grid -->
         <div class="jb-grid">
             @foreach (var p in katuaProducts)
             {
-                <a href="#" class="jb-card" aria-label="@p.Name">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="jb-card" aria-label="@p.Name">
                     <span class="jb-card-img">
                         @if (!string.IsNullOrEmpty(p.Discount))
                         {

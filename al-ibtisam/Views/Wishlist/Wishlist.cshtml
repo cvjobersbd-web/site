@@ -11,7 +11,7 @@
 <style>
     .wishlist-page {
         font-family: 'Poppins', sans-serif;
-        background: #f8f9fa;
+        background: #E5FBFF;
         padding: 30px 0 60px;
         min-height: 60vh;
     }
@@ -19,13 +19,13 @@
     .wishlist-title {
         font-size: 26px;
         font-weight: 700;
-        color: #111;
+        color: #028EA5;
         margin: 0 0 6px;
     }
 
     .wishlist-sub {
         font-size: 14.5px;
-        color: #7b818a;
+        color: #134856;
         margin: 0 0 28px;
         font-family: 'League Spartan', 'Poppins', sans-serif;
     }
@@ -51,7 +51,7 @@
 
         .wishlist-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 20px rgba(0,0,0,.08);
+            box-shadow: 0 8px 20px rgba(2, 142, 165, 0.15);
         }
 
     .wishlist-img-wrap {
@@ -73,19 +73,22 @@
         transform: scale(1.05);
     }
 
+    /* Discount Badge - Action Color #86D200 */
     .discount-badge {
         position: absolute;
         top: 8px;
         left: 8px;
-        background: #111;
-        color: #fff;
+        background: #86D200;
+        color: #134856;
         font-size: 11px;
         font-weight: 700;
         padding: 3px 8px;
         border-radius: 3px;
         z-index: 2;
+        letter-spacing: .3px;
     }
 
+    /* Remove Wishlist Button - Action Color #86D200 */
     .remove-wishlist {
         position: absolute;
         top: 8px;
@@ -101,14 +104,14 @@
         cursor: pointer;
         z-index: 3;
         box-shadow: 0 2px 6px rgba(0,0,0,.12);
-        color: #e5322d;
+        color: #86D200;
         font-size: 15px;
         transition: background .2s, color .2s, transform .15s;
     }
 
         .remove-wishlist:hover {
-            background: #e5322d;
-            color: #fff;
+            background: #86D200;
+            color: #134856;
             transform: scale(1.05);
         }
 
@@ -122,7 +125,7 @@
     .wishlist-name {
         font-size: 13.5px;
         font-weight: 600;
-        color: #222;
+        color: #134856;
         margin: 0;
         line-height: 1.35;
         display: -webkit-box;
@@ -132,10 +135,11 @@
         min-height: 36px;
     }
 
+    /* Price / Number - #FFAA0D */
     .wishlist-price {
         font-size: 14px;
         font-weight: 700;
-        color: #111;
+        color: #FFAA0D;
         margin: 0;
         display: flex;
         align-items: baseline;
@@ -145,17 +149,18 @@
 
     .wishlist-old-price {
         font-size: 12px;
-        color: #999;
+        color: #6c8a93;
         text-decoration: line-through;
         font-weight: 400;
     }
 
+    /* Action Button - Add to Cart #86D200 */
     .add-to-cart-btn {
         margin-top: 8px;
         height: 38px;
-        border: 1.5px solid #111;
+        border: 1.5px solid #86D200;
         background: #fff;
-        color: #111;
+        color: #134856;
         border-radius: 6px;
         font-size: 13px;
         font-weight: 600;
@@ -168,21 +173,22 @@
     }
 
         .add-to-cart-btn:hover {
-            background: #111;
-            color: #fff;
+            background: #86D200;
+            color: #134856;
         }
 
+    /* Empty State */
     .empty-wishlist {
         text-align: center;
         padding: 80px 20px;
         background: #fff;
         border-radius: 12px;
-        border: 1px dashed #e1e4e8;
+        border: 1px dashed #b0d4dc;
     }
 
         .empty-wishlist i {
             font-size: 56px;
-            color: #e5322d;
+            color: #86D200;
             margin-bottom: 18px;
             display: block;
         }
@@ -190,13 +196,13 @@
         .empty-wishlist h4 {
             font-size: 22px;
             font-weight: 700;
-            color: #111;
+            color: #134856;
             margin: 0 0 8px;
         }
 
         .empty-wishlist p {
             font-size: 15px;
-            color: #7b818a;
+            color: #6c8a93;
             margin: 0 0 22px;
         }
 
@@ -206,20 +212,22 @@
             gap: 8px;
             height: 48px;
             padding: 0 28px;
-            background: #111;
-            color: #fff;
+            background: #86D200;
+            color: #134856;
             border-radius: 8px;
             text-decoration: none;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: .3px;
-            transition: background .2s;
+            transition: background .2s, color .2s;
         }
 
             .empty-wishlist a:hover {
-                background: #000;
+                background: #134856;
+                color: #fff;
             }
 
+    /* ================= RESPONSIVE ================= */
     @@media (max-width: 1199.98px) {
         .wishlist-grid {
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -246,6 +254,28 @@
             font-size: 22px;
         }
     }
+
+    @@media (max-width: 480px) {
+        .wishlist-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .wishlist-name {
+            font-size: 12.5px;
+            min-height: 34px;
+        }
+
+        .wishlist-price {
+            font-size: 13px;
+        }
+
+        .remove-wishlist {
+            width: 30px;
+            height: 30px;
+            font-size: 13px;
+        }
+    }
 </style>
 
 <div class="container wishlist-page">
@@ -266,20 +296,20 @@
                         <button type="button" class="remove-wishlist" data-product-id="@product.Id" aria-label="Remove from wishlist">
                             <i class="fa-solid fa-heart"></i>
                         </button>
-                        <a href="#">
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@product.Id">
                             <img src="@product.ImageUrl" alt="@product.Name" loading="lazy" />
                         </a>
                     </div>
                     <div class="wishlist-info">
                         <h3 class="wishlist-name">@product.Name</h3>
                         <p class="wishlist-price">
-                            @product.Price.ToString("0")৳
+                            ৳@product.Price.ToString("0")
                             @if (product.OldPrice.HasValue && product.OldPrice > product.Price)
                             {
-                                <span class="wishlist-old-price">@product.OldPrice.Value.ToString("0")৳</span>
+                                <span class="wishlist-old-price">৳@product.OldPrice.Value.ToString("0")</span>
                             }
                         </p>
-                        <button type="button" class="add-to-cart-btn">
+                        <button type="button" class="add-to-cart-btn" data-product-id="@product.Id">
                             <i class="fa-solid fa-bag-shopping"></i> Add to Cart
                         </button>
                     </div>
@@ -346,22 +376,51 @@
             });
 
             // ==========================================
-            // Add to Cart (ডামি)
+            // Add to Cart (Real API)
             // ==========================================
             document.querySelectorAll('.add-to-cart-btn').forEach(function (btn) {
                 btn.addEventListener('click', function (e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    btn.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
-                    btn.style.background = '#0f7b3e';
-                    btn.style.color = '#fff';
-                    btn.style.borderColor = '#0f7b3e';
-                    setTimeout(function () {
+
+                    var id = btn.getAttribute('data-product-id');
+                    if (!id) return;
+
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Adding...';
+
+                    fetch('/Cart/Add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ productId: parseInt(id), size: '', quantity: 1 })
+                    })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        btn.disabled = false;
+                        if (data.success) {
+                            btn.innerHTML = '<i class="fa-solid fa-check"></i> Added!';
+                            btn.style.background = '#134856';
+                            btn.style.color = '#fff';
+                            btn.style.borderColor = '#134856';
+
+                            // Update cart badge
+                            if (window.refreshCartBadge) window.refreshCartBadge();
+
+                            setTimeout(function () {
+                                btn.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> Add to Cart';
+                                btn.style.background = '';
+                                btn.style.color = '';
+                                btn.style.borderColor = '';
+                            }, 1400);
+                        } else {
+                            btn.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> Add to Cart';
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                        btn.disabled = false;
                         btn.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> Add to Cart';
-                        btn.style.background = '';
-                        btn.style.color = '';
-                        btn.style.borderColor = '';
-                    }, 1400);
+                    });
                 });
             });
         })();

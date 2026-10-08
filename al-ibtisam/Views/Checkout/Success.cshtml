@@ -12,7 +12,7 @@
     .success-page {
         font-family: 'Poppins', 'Hind Siliguri', sans-serif;
         padding: 80px 15px;
-        background: #f0f2f5;
+        background: #E5FBFF;
         min-height: 70vh;
         display: flex;
         align-items: center;
@@ -26,7 +26,7 @@
         max-width: 560px;
         width: 100%;
         text-align: center;
-        box-shadow: 0 6px 30px rgba(0, 0, 0, .07);
+        box-shadow: 0 6px 30px rgba(2, 142, 165, .12);
         animation: successPop .5s cubic-bezier(.22,.61,.36,1) both;
     }
 
@@ -41,11 +41,12 @@
         }
     }
 
+    /* Check Icon - Action Color #86D200 */
     .check-icon {
         width: 96px;
         height: 96px;
-        background: #e7f7ec;
-        color: #0f7b3e;
+        background: #F2FCDE;
+        color: #86D200;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -58,24 +59,24 @@
 
     @@keyframes checkPulse {
         0%, 100% {
-            box-shadow: 0 0 0 0 rgba(15, 123, 62, .25);
+            box-shadow: 0 0 0 0 rgba(134, 210, 0, .30);
         }
         50% {
-            box-shadow: 0 0 0 16px rgba(15, 123, 62, 0);
+            box-shadow: 0 0 0 16px rgba(134, 210, 0, 0);
         }
     }
 
     .success-card h1 {
         font-size: 28px;
         font-weight: 700;
-        color: #111;
+        color: #134856;
         margin: 0 0 12px;
         letter-spacing: -.3px;
     }
 
     .success-card p {
         font-size: 15.5px;
-        color: #666;
+        color: #134856;
         line-height: 1.75;
         margin: 0 0 28px;
         font-family: 'Hind Siliguri', 'Poppins', sans-serif;
@@ -83,7 +84,7 @@
 
     .success-divider {
         height: 1px;
-        background: #eef0f3;
+        background: #E5FBFF;
         margin: 0 0 24px;
     }
 
@@ -93,6 +94,7 @@
         gap: 10px;
         margin-bottom: 30px;
         text-align: left;
+        padding: 0;
     }
 
     .success-info li {
@@ -101,17 +103,22 @@
         align-items: center;
         gap: 12px;
         font-size: 14.5px;
-        color: #555;
+        color: #134856;
         padding: 10px 14px;
-        background: #f8fafc;
+        background: #E5FBFF;
         border-radius: 8px;
         font-family: 'Hind Siliguri', 'Poppins', sans-serif;
     }
 
     .success-info li i {
         flex: 0 0 20px;
-        color: #0f7b3e;
+        color: #028EA5;
         font-size: 16px;
+    }
+
+    .success-info li strong {
+        color: #FFAA0D;
+        font-weight: 700;
     }
 
     .success-actions {
@@ -120,6 +127,7 @@
         gap: 12px;
     }
 
+    /* Action Button - Back to Home #86D200 */
     .btn-home {
         display: inline-flex;
         align-items: center;
@@ -127,19 +135,19 @@
         gap: 10px;
         height: 54px;
         padding: 0 28px;
-        background: #0a1a2f;
-        color: #fff;
+        background: #86D200;
+        color: #134856;
         border-radius: 8px;
         text-decoration: none;
         font-size: 15px;
         font-weight: 700;
         letter-spacing: .3px;
-        transition: background .2s, transform .1s;
+        transition: background .2s, color .2s, transform .1s;
         font-family: 'Hind Siliguri', 'Poppins', sans-serif;
     }
 
         .btn-home:hover {
-            background: #000;
+            background: #134856;
             color: #fff;
         }
 
@@ -147,6 +155,7 @@
             transform: scale(.99);
         }
 
+    /* Action Button - Continue Shopping #86D200 */
     .btn-continue {
         display: inline-flex;
         align-items: center;
@@ -155,8 +164,8 @@
         height: 54px;
         padding: 0 28px;
         background: #fff;
-        color: #0a1a2f;
-        border: 1.5px solid #0a1a2f;
+        color: #134856;
+        border: 1.5px solid #86D200;
         border-radius: 8px;
         text-decoration: none;
         font-size: 15px;
@@ -167,8 +176,8 @@
     }
 
         .btn-continue:hover {
-            background: #0a1a2f;
-            color: #fff;
+            background: #86D200;
+            color: #134856;
         }
 
     /* Responsive */
@@ -227,11 +236,11 @@
             </li>
             <li>
                 <i class="fa-solid fa-truck-fast"></i>
-                <span>ডেলিভারি: ৩-৫ কর্মদিবসের মধ্যে</span>
+                <span>ডেলিভারি: <strong>৩-৫ কর্মদিবসের মধ্যে</strong></span>
             </li>
             <li>
                 <i class="fa-solid fa-hand-holding-dollar"></i>
-                <span>পেমেন্ট: ক্যাশ অন ডেলিভারি</span>
+                <span>পেমেন্ট: <strong>ক্যাশ অন ডেলিভারি</strong></span>
             </li>
         </ul>
 
