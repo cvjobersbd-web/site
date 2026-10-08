@@ -1,0 +1,248 @@
+﻿@{
+    ViewData["Title"] = "Order Confirmed";
+    Layout = "_Layout";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    /* ================= SUCCESS PAGE ================= */
+    .success-page {
+        font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+        padding: 80px 15px;
+        background: #f0f2f5;
+        min-height: 70vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .success-card {
+        background: #fff;
+        padding: 50px 40px;
+        border-radius: 14px;
+        max-width: 560px;
+        width: 100%;
+        text-align: center;
+        box-shadow: 0 6px 30px rgba(0, 0, 0, .07);
+        animation: successPop .5s cubic-bezier(.22,.61,.36,1) both;
+    }
+
+    @@keyframes successPop {
+        from {
+            opacity: 0;
+            transform: translateY(20px) scale(.96);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .check-icon {
+        width: 96px;
+        height: 96px;
+        background: #e7f7ec;
+        color: #0f7b3e;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 46px;
+        position: relative;
+        animation: checkPulse 1.6s ease-in-out infinite;
+    }
+
+    @@keyframes checkPulse {
+        0%, 100% {
+            box-shadow: 0 0 0 0 rgba(15, 123, 62, .25);
+        }
+        50% {
+            box-shadow: 0 0 0 16px rgba(15, 123, 62, 0);
+        }
+    }
+
+    .success-card h1 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #111;
+        margin: 0 0 12px;
+        letter-spacing: -.3px;
+    }
+
+    .success-card p {
+        font-size: 15.5px;
+        color: #666;
+        line-height: 1.75;
+        margin: 0 0 28px;
+        font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+    }
+
+    .success-divider {
+        height: 1px;
+        background: #eef0f3;
+        margin: 0 0 24px;
+    }
+
+    .success-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 30px;
+        text-align: left;
+    }
+
+    .success-info li {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 14.5px;
+        color: #555;
+        padding: 10px 14px;
+        background: #f8fafc;
+        border-radius: 8px;
+        font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+    }
+
+    .success-info li i {
+        flex: 0 0 20px;
+        color: #0f7b3e;
+        font-size: 16px;
+    }
+
+    .success-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 54px;
+        padding: 0 28px;
+        background: #0a1a2f;
+        color: #fff;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .3px;
+        transition: background .2s, transform .1s;
+        font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+    }
+
+        .btn-home:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .btn-home:active {
+            transform: scale(.99);
+        }
+
+    .btn-continue {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        height: 54px;
+        padding: 0 28px;
+        background: #fff;
+        color: #0a1a2f;
+        border: 1.5px solid #0a1a2f;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .3px;
+        transition: background .2s, color .2s;
+        font-family: 'Hind Siliguri', 'Poppins', sans-serif;
+    }
+
+        .btn-continue:hover {
+            background: #0a1a2f;
+            color: #fff;
+        }
+
+    /* Responsive */
+    @@media (max-width: 575.98px) {
+        .success-page {
+            padding: 50px 12px;
+        }
+
+        .success-card {
+            padding: 36px 22px;
+            border-radius: 12px;
+        }
+
+        .check-icon {
+            width: 78px;
+            height: 78px;
+            font-size: 38px;
+            margin-bottom: 18px;
+        }
+
+        .success-card h1 {
+            font-size: 22px;
+        }
+
+        .success-card p {
+            font-size: 14.5px;
+        }
+
+        .btn-home,
+        .btn-continue {
+            height: 50px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<div class="success-page">
+    <div class="success-card">
+
+        <div class="check-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <h1>Order Confirmed!</h1>
+
+        <p>
+            @(TempData["OrderSuccess"] ?? "আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে! ইনশাআল্লাহ ৩-৫ কর্মদিবসের মধ্যে ডেলিভারি করা হবে।")
+        </p>
+
+        <div class="success-divider"></div>
+
+        <ul class="success-info">
+            <li>
+                <i class="fa-solid fa-phone-volume"></i>
+                <span>যেকোনো সমস্যায় কল করুন: <strong>09638090000</strong></span>
+            </li>
+            <li>
+                <i class="fa-solid fa-truck-fast"></i>
+                <span>ডেলিভারি: ৩-৫ কর্মদিবসের মধ্যে</span>
+            </li>
+            <li>
+                <i class="fa-solid fa-hand-holding-dollar"></i>
+                <span>পেমেন্ট: ক্যাশ অন ডেলিভারি</span>
+            </li>
+        </ul>
+
+        <div class="success-actions">
+            <a asp-controller="Home" asp-action="Index" class="btn-home">
+                <i class="fa-solid fa-house"></i> Back to Home
+            </a>
+            <a asp-controller="Category" asp-action="Panjabi" class="btn-continue">
+                <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
+            </a>
+        </div>
+
+    </div>
+</div>
