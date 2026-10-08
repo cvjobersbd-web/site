@@ -1,0 +1,353 @@
+﻿@model al_ibtisam.Models.SignUpViewModel
+@{
+    ViewData["Title"] = "Sign Up";
+    Layout = "_Layout";
+}
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=League+Spartan:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+    .auth-wrap {
+        width: 100vw;
+        margin-left: calc(50% - 50vw);
+        padding: 40px 15px 60px;
+        font-family: 'Poppins', sans-serif;
+        background: #f7f8fa;
+        min-height: calc(100vh - 260px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 480px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, .08);
+        padding: 40px 34px 34px;
+        border: 1px solid #eef0f3;
+    }
+
+    .auth-logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 18px;
+    }
+
+        .auth-logo img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
+    .auth-title {
+        text-align: center;
+        font-size: 26px;
+        font-weight: 700;
+        color: #111;
+        margin: 0 0 6px;
+        letter-spacing: -.3px;
+    }
+
+    .auth-sub {
+        text-align: center;
+        font-size: 14.5px;
+        color: #7b818a;
+        margin: 0 0 28px;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 7px;
+            letter-spacing: .2px;
+        }
+
+    .input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+        .input-wrap i.field-icon {
+            position: absolute;
+            left: 15px;
+            color: #9aa0a8;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+    .form-control-auth {
+        width: 100%;
+        height: 52px;
+        padding: 0 16px 0 44px;
+        border: 1.5px solid #e1e4e8;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #111;
+        background: #fafbfc;
+        outline: none;
+        transition: border-color .2s, background .2s, box-shadow .2s;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .form-control-auth::placeholder {
+            color: #a9afb7;
+            font-size: 14px;
+        }
+
+        .form-control-auth:focus {
+            border-color: #111;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(17, 17, 17, .06);
+        }
+
+    .toggle-password {
+        position: absolute;
+        right: 14px;
+        background: none;
+        border: 0;
+        color: #9aa0a8;
+        font-size: 15px;
+        cursor: pointer;
+        padding: 6px;
+        display: flex;
+        align-items: center;
+    }
+
+        .toggle-password:hover {
+            color: #111;
+        }
+
+    .terms-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin: 18px 0 22px;
+        font-size: 13.5px;
+        color: #555;
+        line-height: 1.5;
+    }
+
+        .terms-row input[type="checkbox"] {
+            width: 17px;
+            height: 17px;
+            margin-top: 2px;
+            accent-color: #111;
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+
+        .terms-row a {
+            color: #111;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+            .terms-row a:hover {
+                text-decoration: underline;
+            }
+
+    .btn-auth {
+        width: 100%;
+        height: 54px;
+        border: 0;
+        border-radius: 10px;
+        background: #111;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 700;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: background .25s, transform .1s;
+        font-family: 'Poppins', sans-serif;
+    }
+
+        .btn-auth:hover {
+            background: #000;
+        }
+
+        .btn-auth:active {
+            transform: scale(.99);
+        }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 26px;
+        font-size: 14.5px;
+        color: #666;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+    }
+
+        .auth-footer a {
+            color: #111;
+            font-weight: 700;
+            text-decoration: none;
+            margin-left: 4px;
+        }
+
+            .auth-footer a:hover {
+                text-decoration: underline;
+            }
+
+    .validation-summary-errors {
+        background: #fdeaea;
+        border: 1px solid #f5c2c2;
+        color: #b71c1c;
+        padding: 12px 16px;
+        border-radius: 10px;
+        font-size: 14px;
+        margin-bottom: 20px;
+    }
+
+        .validation-summary-errors ul {
+            margin: 0;
+            padding-left: 18px;
+        }
+
+    .field-validation-error {
+        display: block;
+        color: #d32f2f;
+        font-size: 12.5px;
+        margin-top: 6px;
+        font-family: 'League Spartan', 'Poppins', sans-serif;
+    }
+
+    input.input-validation-error {
+        border-color: #e57373 !important;
+        background: #fff5f5 !important;
+    }
+
+    @@media (max-width: 575.98px) {
+        .auth-wrap {
+            padding: 24px 12px 40px;
+        }
+
+        .auth-card {
+            padding: 30px 22px 26px;
+            border-radius: 14px;
+        }
+
+        .auth-title {
+            font-size: 22px;
+        }
+    }
+</style>
+
+<div class="auth-wrap">
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <img src="https://i.ibb.co.com/DfjPHZtK/al-ibtisam-logo.webp" alt="al_ibtisam" />
+        </div>
+
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-sub">Join us and start shopping today</p>
+
+        <form asp-controller="Account" asp-action="SignUp" method="post" novalidate>
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
+
+            <div class="form-group">
+                <label asp-for="FullName">Full Name</label>
+                <div class="input-wrap">
+                    <i class="fa-regular fa-user field-icon"></i>
+                    <input asp-for="FullName" class="form-control-auth" placeholder="Your full name" autocomplete="name" />
+                </div>
+                <span asp-validation-for="FullName" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Email">Email Address</label>
+                <div class="input-wrap">
+                    <i class="fa-regular fa-envelope field-icon"></i>
+                    <input asp-for="Email" type="email" class="form-control-auth" placeholder="you@example.com" autocomplete="email" />
+                </div>
+                <span asp-validation-for="Email" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Phone">Phone Number</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-phone field-icon"></i>
+                    <input asp-for="Phone" type="tel" class="form-control-auth" placeholder="01XXXXXXXXX" autocomplete="tel" />
+                </div>
+                <span asp-validation-for="Phone" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input asp-for="Password" type="password" id="passwordInput" class="form-control-auth" placeholder="Minimum 6 characters" autocomplete="new-password" />
+                    <button type="button" class="toggle-password" data-target="passwordInput" data-icon="toggleIcon1" aria-label="Show password">
+                        <i class="fa-regular fa-eye" id="toggleIcon1"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="Password" class="field-validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ConfirmPassword">Confirm Password</label>
+                <div class="input-wrap">
+                    <i class="fa-solid fa-lock field-icon"></i>
+                    <input asp-for="ConfirmPassword" type="password" id="confirmPasswordInput" class="form-control-auth" placeholder="Re-enter your password" autocomplete="new-password" />
+                    <button type="button" class="toggle-password" data-target="confirmPasswordInput" data-icon="toggleIcon2" aria-label="Show password">
+                        <i class="fa-regular fa-eye" id="toggleIcon2"></i>
+                    </button>
+                </div>
+                <span asp-validation-for="ConfirmPassword" class="field-validation-error"></span>
+            </div>
+
+            <div class="terms-row">
+                <input asp-for="AcceptTerms" type="checkbox" id="acceptTerms" />
+                <label for="acceptTerms">
+                    I agree to the <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a>
+                </label>
+            </div>
+            <span asp-validation-for="AcceptTerms" class="field-validation-error" style="margin-top:-10px; margin-bottom:14px;"></span>
+
+            <button type="submit" class="btn-auth">Create Account</button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? <a asp-controller="Account" asp-action="SignIn">Sign In</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+            // Toggle password visibility (works for both password fields)
+            document.querySelectorAll('.toggle-password').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var targetId = btn.getAttribute('data-target');
+                    var iconId = btn.getAttribute('data-icon');
+                    var input = document.getElementById(targetId);
+                    var icon = document.getElementById(iconId);
+                    if (!input || !icon) return;
+
+                    var isPassword = input.type === 'password';
+                    input.type = isPassword ? 'text' : 'password';
+                    icon.classList.toggle('fa-eye');
+                    icon.classList.toggle('fa-eye-slash');
+                    btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+                });
+            });
+        })();
+    </script>
+}
