@@ -1,0 +1,208 @@
+﻿@model al_ibtisam.Models.ApplicationUser
+@{
+    ViewData["Title"] = "My Profile";
+    ViewData["ActiveTab"] = "Profile";
+    Layout = "_AccountLayout";
+}
+
+<h2 class="content-title">Personal Details</h2>
+<p class="content-subtitle">আপনার অ্যাকাউন্টের তথ্য এখানে দেখুন এবং আপডেট করুন</p>
+
+<form asp-controller="Account" asp-action="UpdateProfile" method="post" novalidate id="profileForm">
+    @Html.AntiForgeryToken()
+
+    @* ================= NAME & PHONE ================= *@
+    <div class="form-row">
+
+        <!-- Full Name -->
+        <div class="form-group-account">
+            <label for="fullName">Full Name</label>
+            <div class="input-icon-wrap">
+                <i class="fa-regular fa-user"></i>
+                <input type="text"
+                       id="fullName"
+                       name="fullName"
+                       class="form-control-account"
+                       value="@Model.FullName"
+                       placeholder="Enter your full name"
+                       autocomplete="name"
+                       required
+                       minlength="3"
+                       maxlength="100" />
+            </div>
+        </div>
+
+        <!-- Phone -->
+        <div class="form-group-account">
+            <label for="phone">Phone Number</label>
+            <div class="input-icon-wrap">
+                <i class="fa-solid fa-phone"></i>
+                <input type="tel"
+                       id="phone"
+                       name="phone"
+                       class="form-control-account"
+                       value="@Model.Phone"
+                       placeholder="01XXXXXXXXX"
+                       autocomplete="tel"
+                       required
+                       pattern="01[3-9][0-9]{8}"
+                       maxlength="11" />
+            </div>
+        </div>
+    </div>
+
+    @* ================= EMAIL (Read-only) ================= *@
+    <div class="form-row full">
+        <div class="form-group-account">
+            <label>Email Address</label>
+            <div class="input-icon-wrap">
+                <i class="fa-regular fa-envelope"></i>
+                <input type="email"
+                       class="form-control-account"
+                       value="@Model.Email"
+                       disabled
+                       title="ইমেইল পরিবর্তন করা যাবে না" />
+            </div>
+        </div>
+    </div>
+
+    @* ================= ADDRESS ================= *@
+    <div class="form-row full">
+        <div class="form-group-account">
+            <label for="address">Address</label>
+            <div class="input-icon-wrap">
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text"
+                       id="address"
+                       name="address"
+                       class="form-control-account"
+                       value="@(Model.Address ?? "")"
+                       placeholder="Enter your address"
+                       autocomplete="street-address"
+                       maxlength="500" />
+            </div>
+        </div>
+    </div>
+
+    @* ================= DISTRICT ================= *@
+    <div class="form-row full">
+        <div class="form-group-account">
+            <label for="district">District</label>
+            <div class="input-icon-wrap">
+                <i class="fa-solid fa-map-location-dot"></i>
+                <input type="text"
+                       id="district"
+                       name="district"
+                       class="form-control-account"
+                       value="@(Model.District ?? "")"
+                       placeholder="Enter your district"
+                       autocomplete="address-level2"
+                       maxlength="100" />
+            </div>
+        </div>
+    </div>
+
+    @* ================= SUBMIT ================= *@
+    <button type="submit" class="btn-account" id="updateBtn">
+        <i class="fa-solid fa-floppy-disk"></i>
+        Update Profile
+    </button>
+
+</form>
+
+@* ================= EXTRA INFO (Read-only) ================= *@
+<div style="margin-top:40px; padding-top:28px; border-top:1px solid #f0f0f0;">
+    <h3 style="font-size:16px; font-weight:600; color:#134856; margin:0 0 18px;">
+        <i class="fa-solid fa-circle-info" style="color:#028EA5; margin-right:8px;"></i>
+        Account Information
+    </h3>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px 28px; font-size:14px; font-family:'Hind Siliguri','Poppins',sans-serif;">
+        <div>
+            <div style="color:#6c8a93; font-size:12.5px; margin-bottom:4px;">Account Created</div>
+            <div style="color:#134856; font-weight:500;">
+                @Model.CreatedAt.ToString("dd MMMM yyyy, hh:mm tt")
+            </div>
+        </div>
+
+        <div>
+            <div style="color:#6c8a93; font-size:12.5px; margin-bottom:4px;">Last Login</div>
+            <div style="color:#134856; font-weight:500;">
+                @(Model.LastLoginAt.HasValue
+                    ? Model.LastLoginAt.Value.ToString("dd MMMM yyyy, hh:mm tt")
+                    : "এখনো লগইন করেননি")
+            </div>
+        </div>
+
+        <div>
+            <div style="color:#6c8a93; font-size:12.5px; margin-bottom:4px;">Account Status</div>
+            <div style="color:@(Model.IsActive ? "#0f7b3e" : "#c62828"); font-weight:600;">
+                <i class="fa-solid @(Model.IsActive ? "fa-circle-check" : "fa-circle-xmark")"></i>
+                @(Model.IsActive ? "Active" : "Inactive")
+            </div>
+        </div>
+
+        <div>
+            <div style="color:#6c8a93; font-size:12.5px; margin-bottom:4px;">Role</div>
+            <div style="color:#134856; font-weight:500;">
+                <i class="fa-solid fa-user-shield" style="color:#028EA5;"></i>
+                @Model.Role
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media (max-width: 767.98px) {
+        /* Account info grid mobile */
+        .account-content > div[style*="margin-top:40px"] > div[style*="grid-template-columns"] {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+
+@section Scripts {
+    <script>
+        (function () {
+            // ==========================================
+            // Phone: শুধু digit allow
+            // ==========================================
+            var phoneInput = document.getElementById('phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 11);
+                });
+            }
+
+            // ==========================================
+            // Submit loading state
+            // ==========================================
+            var form = document.getElementById('profileForm');
+            var btn = document.getElementById('updateBtn');
+
+            if (form && btn) {
+                form.addEventListener('submit', function (e) {
+                    // Client-side validation
+                    var fullName = document.getElementById('fullName').value.trim();
+                    var phone = document.getElementById('phone').value.trim();
+
+                    if (fullName.length < 3) {
+                        e.preventDefault();
+                        alert('নাম কমপক্ষে ৩ অক্ষরের হতে হবে');
+                        return;
+                    }
+
+                    if (!/^01[3-9]\d{8}$/.test(phone)) {
+                        e.preventDefault();
+                        alert('সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 01XXXXXXXXX)');
+                        return;
+                    }
+
+                    // Loading state
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Updating...';
+                });
+            }
+        })();
+    </script>
+}

@@ -31,8 +31,22 @@ namespace al_ibtisam.Models
         [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; } = string.Empty;
 
-        [Range(typeof(bool), "true", "true", ErrorMessage = "শর্তাবলীতে সম্মতি দিতে হবে")]
+        // ✅ এই লাইনটা পরিবর্তন করুন
+        // আগে: [Range(typeof(bool), "true", "true", ErrorMessage = "...")]
+        // এখন:  [MustBeTrue] custom attribute
+        [MustBeTrue(ErrorMessage = "শর্তাবলীতে সম্মতি দিতে হবে")]
         [Display(Name = "Terms & Conditions")]
         public bool AcceptTerms { get; set; }
+    }
+
+    // ============================================================
+    // Custom Validation Attribute
+    // ============================================================
+    public class MustBeTrueAttribute : ValidationAttribute
+    {
+        public override bool IsValid(object? value)
+        {
+            return value is bool b && b;
+        }
     }
 }

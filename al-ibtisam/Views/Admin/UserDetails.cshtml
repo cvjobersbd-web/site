@@ -1,0 +1,580 @@
+﻿@model al_ibtisam.Models.ApplicationUser
+@{
+    ViewData["Title"] = "User Details";
+    Layout = null;
+    var initial = !string.IsNullOrEmpty(Model.FullName)
+        ? Model.FullName.Substring(0, 1).ToUpper()
+        : "?";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Details - al_ibtisam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', 'Hind Siliguri', sans-serif;
+            background: #f0f4f8;
+            color: #134856;
+            min-height: 100vh;
+        }
+
+        /* ================= TOPBAR ================= */
+        .admin-topbar {
+            background: linear-gradient(135deg, #134856 0%, #0a3a48 100%);
+            color: #fff;
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,.1);
+        }
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: .5px;
+        }
+        .admin-logo i {
+            color: #86D200;
+            font-size: 26px;
+        }
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .admin-user-info {
+            text-align: right;
+            line-height: 1.2;
+        }
+        .admin-user-info small {
+            display: block;
+            font-size: 12px;
+            color: #b0d4dc;
+        }
+        .admin-user-info strong {
+            font-size: 15px;
+            color: #fff;
+        }
+        .admin-user-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: rgba(134, 210, 0, .2);
+            border: 2px solid #86D200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #86D200;
+            font-size: 18px;
+        }
+        .admin-logout-btn {
+            background: rgba(255,255,255,.1);
+            border: 1px solid rgba(255,255,255,.2);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .admin-logout-btn:hover {
+            background: #c62828;
+            border-color: #c62828;
+        }
+
+        /* ================= MAIN ================= */
+        .admin-main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        /* ================= BACK BUTTON ================= */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: #fff;
+            color: #134856;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(0,0,0,.06);
+            margin-bottom: 22px;
+            transition: all .2s;
+        }
+        .back-btn:hover {
+            background: #134856;
+            color: #fff;
+            transform: translateX(-3px);
+        }
+        .back-btn i {
+            font-size: 13px;
+        }
+
+        /* ================= PROFILE CARD ================= */
+        .profile-card {
+            background: #fff;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,.08);
+        }
+
+        /* Header */
+        .profile-header {
+            background: linear-gradient(135deg, #134856 0%, #0a3a48 100%);
+            color: #fff;
+            padding: 36px 40px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        .profile-header::before {
+            content: "";
+            position: absolute;
+            right: -60px;
+            top: -60px;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(134, 210, 0, .08);
+        }
+        .profile-header::after {
+            content: "";
+            position: absolute;
+            right: 60px;
+            bottom: -80px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(2, 142, 165, .12);
+        }
+        .profile-avatar-lg {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #86D200, #5fa800);
+            color: #134856;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: 700;
+            flex: 0 0 auto;
+            border: 4px solid rgba(255,255,255,.15);
+            position: relative;
+            z-index: 1;
+        }
+        .profile-header-info {
+            position: relative;
+            z-index: 1;
+        }
+        .profile-header-info h1 {
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+        .profile-header-info p {
+            font-size: 14px;
+            color: #b0d4dc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .profile-header-info p i {
+            font-size: 13px;
+        }
+
+        /* Body */
+        .profile-body {
+            padding: 36px 40px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #134856;
+            margin-bottom: 18px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f0f4f8;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+        }
+        .section-title i {
+            color: #028EA5;
+            font-size: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px 32px;
+            margin-bottom: 32px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .info-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c8a93;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .info-label i {
+            color: #028EA5;
+            font-size: 12px;
+            width: 14px;
+        }
+        .info-value {
+            font-size: 15.5px;
+            color: #134856;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        .info-value.muted {
+            color: #a0b2b8;
+            font-style: italic;
+            font-weight: 400;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 12.5px;
+            font-weight: 600;
+            width: fit-content;
+        }
+        .badge-active {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge-inactive {
+            background: #fdeaea;
+            color: #c62828;
+        }
+        .badge-role {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        .badge-admin {
+            background: #fff3e0;
+            color: #e65100;
+        }
+        .badge-verified {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .badge-unverified {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        /* Actions footer */
+        .profile-actions {
+            padding: 22px 40px;
+            background: #f7fafc;
+            border-top: 1px solid #eef2f5;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 0;
+            text-decoration: none;
+            transition: all .2s;
+            font-family: inherit;
+        }
+        .btn-toggle {
+            background: #fff3e0;
+            color: #f57c00;
+            border: 1.5px solid #ffcc80;
+        }
+        .btn-toggle:hover {
+            background: #f57c00;
+            color: #fff;
+            border-color: #f57c00;
+        }
+        .btn-delete {
+            background: #fdeaea;
+            color: #c62828;
+            border: 1.5px solid #f5c2c2;
+        }
+        .btn-delete:hover {
+            background: #c62828;
+            color: #fff;
+            border-color: #c62828;
+        }
+        .btn-back {
+            background: #134856;
+            color: #fff;
+        }
+        .btn-back:hover {
+            background: #028EA5;
+        }
+
+        /* ================= RESPONSIVE ================= */
+        @@media (max-width: 768px) {
+            .admin-topbar { padding: 14px 18px; flex-wrap: wrap; gap: 10px; }
+            .admin-logo { font-size: 16px; }
+            .admin-user-info { display: none; }
+            .admin-main { padding: 20px 15px; }
+            .profile-header { padding: 26px 22px; flex-direction: column; text-align: center; }
+            .profile-avatar-lg { width: 76px; height: 76px; font-size: 30px; }
+            .profile-header-info h1 { font-size: 22px; }
+            .profile-header-info p { justify-content: center; }
+            .profile-body { padding: 24px 22px; }
+            .info-grid { grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px; }
+            .profile-actions { padding: 18px 22px; justify-content: stretch; }
+            .profile-actions .btn { flex: 1; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ================= TOPBAR ================= -->
+    <div class="admin-topbar">
+        <div class="admin-logo">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Admin Panel — AL IBTISAM</span>
+        </div>
+        <div class="admin-user">
+            <div class="admin-user-info">
+                <small>লগইন করা আছে</small>
+                <strong>@User.Identity?.Name</strong>
+            </div>
+            <div class="admin-user-avatar">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <form asp-controller="Admin" asp-action="SignOut" method="post" style="margin:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="admin-logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= MAIN ================= -->
+    <div class="admin-main">
+
+        <!-- Back Button -->
+        <a href="/Admin/Dashboard" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+
+        <!-- ================= PROFILE CARD ================= -->
+        <div class="profile-card">
+
+            <!-- Header -->
+            <div class="profile-header">
+                <div class="profile-avatar-lg">@initial</div>
+                <div class="profile-header-info">
+                    <h1>@Model.FullName</h1>
+                    <p>
+                        <i class="fa-solid fa-hashtag"></i>
+                        User ID: #@Model.Id
+                    </p>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="profile-body">
+
+                <!-- ================= Personal Info ================= -->
+                <h2 class="section-title">
+                    <i class="fa-solid fa-user"></i>
+                    Personal Information
+                </h2>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-user"></i> Full Name</span>
+                        <span class="info-value">@Model.FullName</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-envelope"></i> Email</span>
+                        <span class="info-value">@Model.Email</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-phone"></i> Phone</span>
+                        <span class="info-value">@Model.Phone</span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-location-dot"></i> Address</span>
+                        @if (!string.IsNullOrEmpty(Model.Address))
+                        {
+                            <span class="info-value">@Model.Address</span>
+                        }
+                        else
+                        {
+                            <span class="info-value muted">Not provided</span>
+                        }
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-map-location-dot"></i> District</span>
+                        @if (!string.IsNullOrEmpty(Model.District))
+                        {
+                            <span class="info-value">@Model.District</span>
+                        }
+                        else
+                        {
+                            <span class="info-value muted">Not provided</span>
+                        }
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-image"></i> Profile Image</span>
+                        @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+                        {
+                            <span class="info-value">@Model.ProfileImageUrl</span>
+                        }
+                        else
+                        {
+                            <span class="info-value muted">Not uploaded</span>
+                        }
+                    </div>
+                </div>
+
+                <!-- ================= Account Info ================= -->
+                <h2 class="section-title">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Account Information
+                </h2>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-user-shield"></i> Role</span>
+                        @if (Model.Role == "Admin")
+                        {
+                            <span class="badge badge-admin"><i class="fa-solid fa-crown"></i> @Model.Role</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-role"><i class="fa-solid fa-user"></i> @Model.Role</span>
+                        }
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-power-off"></i> Status</span>
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge badge-active"><i class="fa-solid fa-circle-check"></i> Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-inactive"><i class="fa-solid fa-circle-xmark"></i> Inactive</span>
+                        }
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-envelope-circle-check"></i> Email Verified</span>
+                        @if (Model.EmailVerified)
+                        {
+                            <span class="badge badge-verified"><i class="fa-solid fa-check"></i> Verified</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-unverified"><i class="fa-solid fa-hourglass-half"></i> Not Verified</span>
+                        }
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-calendar-plus"></i> Account Created</span>
+                        <span class="info-value">
+                            @Model.CreatedAt.ToLocalTime().ToString("dd MMMM yyyy, hh:mm tt")
+                        </span>
+                    </div>
+
+                    <div class="info-item">
+                        <span class="info-label"><i class="fa-solid fa-clock-rotate-left"></i> Last Login</span>
+                        @if (Model.LastLoginAt.HasValue)
+                        {
+                            <span class="info-value">
+                                @Model.LastLoginAt.Value.ToLocalTime().ToString("dd MMMM yyyy, hh:mm tt")
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="info-value muted">Never logged in</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ACTIONS ================= -->
+            <div class="profile-actions">
+
+                <form asp-controller="Admin" asp-action="ToggleActive" method="post" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-toggle">
+                        <i class="fa-solid fa-power-off"></i>
+                        @(Model.IsActive ? "Deactivate User" : "Activate User")
+                    </button>
+                </form>
+
+                <form asp-controller="Admin" asp-action="DeleteUser" method="post" style="margin:0;"
+                      onsubmit="return confirm('আপনি কি নিশ্চিত এই ইউজারকে ডিলিট করতে চান? এই কাজটি ফেরানো যাবে না।');">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-delete">
+                        <i class="fa-solid fa-trash"></i>
+                        Delete User
+                    </button>
+                </form>
+
+                <a href="/Admin/Dashboard" class="btn btn-back">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -30,12 +30,94 @@
         .search-box button { flex: 0 0 77px; border: 0; background: #028EA5; color: #fff; font-size: 24px; cursor: pointer; transition: background .2s; }
         .search-box button:hover { background: #86D200; color: #134856; }
 
-        .header-actions { flex: 0 0 auto; margin-left: auto; padding-left: 48px; display: flex; align-items: center; gap: 50px; padding-right: 0; }
-        .account-link { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #E5FBFF; }
-        .account-icon { width: 54px; height: 54px; border: 1px solid #2b6b7a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #E5FBFF; }
+        .header-actions { flex: 0 0 auto; margin-left: auto; padding-left: 48px; display: flex; align-items: center; gap: 32px; padding-right: 0; }
+        .account-link { flex: 0 0 auto; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #E5FBFF; position: relative; }
+        .account-icon { width: 54px; height: 54px; border: 1px solid #2b6b7a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #E5FBFF; flex: 0 0 auto; }
         .account-text { white-space: nowrap; line-height: 1.25; }
         .account-text small { display: block; font-size: 15px; color: #b0d4dc; }
-        .account-text strong { font-size: 18px; font-weight: 500; color: #E5FBFF; }
+        .account-text strong { font-size: 18px; font-weight: 500; color: #E5FBFF; display: block; max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+
+        /* ---------- Account Dropdown ---------- */
+        .account-dropdown { position: relative; }
+        .account-menu {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            min-width: 220px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(15, 76, 92, .18);
+            padding: 8px;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-8px);
+            transition: opacity .2s, visibility .2s, transform .2s;
+        }
+        .account-dropdown.open .account-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .account-menu::before {
+            content: "";
+            position: absolute;
+            top: -6px;
+            right: 30px;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            transform: rotate(45deg);
+            box-shadow: -2px -2px 4px rgba(0,0,0,.03);
+        }
+        .account-menu a,
+        .account-menu button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 11px 14px;
+            border: 0;
+            background: transparent;
+            text-align: left;
+            font-size: 14px;
+            font-weight: 500;
+            color: #134856;
+            text-decoration: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background .15s, color .15s;
+            font-family: inherit;
+        }
+        .account-menu a i,
+        .account-menu button i {
+            width: 18px;
+            text-align: center;
+            font-size: 15px;
+            color: #028EA5;
+        }
+        .account-menu a:hover,
+        .account-menu button:hover {
+            background: #E5FBFF;
+            color: #028EA5;
+        }
+        .account-menu button.logout-btn {
+            color: #c62828;
+            border-top: 1px solid #E5FBFF;
+            border-radius: 0 0 6px 6px;
+            margin-top: 4px;
+            padding-top: 13px;
+        }
+        .account-menu button.logout-btn i {
+            color: #c62828;
+        }
+        .account-menu button.logout-btn:hover {
+            background: #fdeaea;
+            color: #c62828;
+        }
+        .account-menu button.logout-btn:hover i {
+            color: #c62828;
+        }
 
         .wishlist-link { position: relative; color: #E5FBFF; display: inline-flex; margin-right: 13px; text-decoration: none; }
         .wishlist-link:hover { color: #86D200; }
@@ -144,7 +226,7 @@
         }
         @@media (max-width: 1399.98px) {
             .search-box { flex: 1 1 auto; }
-            .header-actions { gap: 32px; }
+            .header-actions { gap: 22px; }
             .category-nav .nav-link { font-size: 16px; padding: 0 10px; }
         }
         @@media (max-width: 991.98px) {
@@ -183,7 +265,7 @@
 </head>
 <body>
     <header>
-        <!-- DESKTOP -->
+        <!-- ================= DESKTOP HEADER ================= -->
         <div class="desktop-header">
             <div class="main-header">
                 <div class="site-container main-header-inner">
@@ -197,13 +279,54 @@
                     </form>
 
                     <div class="header-actions">
-                        <a asp-controller="Account" asp-action="SignIn" class="account-link">
-                            <span class="account-icon"><i class="fa-regular fa-user"></i></span>
-                            <span class="account-text">
-                                <small>Sign In</small>
-                                <strong>Your Account</strong>
-                            </span>
-                        </a>
+
+                        @* ==================================================== *@
+                        @* === লগইন থাকলে → Account Dropdown দেখাবে === *@
+                        @* === লগইন না থাকলে → Sign In লিংক দেখাবে === *@
+                        @* ==================================================== *@
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <div class="account-dropdown" id="accountDropdown">
+                                <a href="javascript:void(0)" class="account-link" id="accountToggle">
+                                    <span class="account-icon"><i class="fa-regular fa-user"></i></span>
+                                    <span class="account-text">
+                                        <small>স্বাগতম</small>
+                                        <strong>@(User.Identity.Name ?? "User")</strong>
+                                    </span>
+                                </a>
+
+                                <div class="account-menu" id="accountMenu">
+                                    <a asp-controller="Account" asp-action="Profile">
+                                        <i class="fa-regular fa-user"></i> My Profile
+                                    </a>
+                                    <a asp-controller="Account" asp-action="Orders">
+                                        <i class="fa-solid fa-bag-shopping"></i> My Orders
+                                    </a>
+                                    <a asp-controller="Wishlist" asp-action="Wishlist">
+                                        <i class="fa-regular fa-heart"></i> My Wishlist
+                                    </a>
+                                    <a href="#">
+                                        <i class="fa-solid fa-location-dot"></i> My Address
+                                    </a>
+                                    <form asp-controller="Account" asp-action="SignOut" method="post" style="margin:0;">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="logout-btn">
+                                            <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="SignIn" class="account-link">
+                                <span class="account-icon"><i class="fa-regular fa-user"></i></span>
+                                <span class="account-text">
+                                    <small>Sign In</small>
+                                    <strong>Your Account</strong>
+                                </span>
+                            </a>
+                        }
 
                         <a asp-controller="Wishlist" asp-action="Wishlist" class="wishlist-link" aria-label="Wishlist">
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -259,7 +382,7 @@
             </nav>
         </div>
 
-        <!-- MOBILE -->
+        <!-- ================= MOBILE HEADER ================= -->
         <div class="mobile-header">
             <div class="mobile-header-inner">
                 <button class="search-icon" id="mobileSearchToggle" aria-label="Search">
@@ -272,9 +395,21 @@
                     <i class="fa-regular fa-heart"></i>
                     <span class="wishlist-badge-m" id="wishlistCountBadgeMobile">0</span>
                 </a>
-                <a asp-controller="Account" asp-action="SignIn" class="account-icon-m" aria-label="Account">
-                    <i class="fa-regular fa-user"></i>
-                </a>
+
+                @* === Mobile Account Icon: লগইন থাকলে Profile-এ, না থাকলে SignIn-এ যাবে === *@
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="Account" asp-action="Profile" class="account-icon-m" aria-label="Account">
+                        <i class="fa-solid fa-user"></i>
+                    </a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="SignIn" class="account-icon-m" aria-label="Account">
+                        <i class="fa-regular fa-user"></i>
+                    </a>
+                }
+
                 <a href="javascript:void(0)" class="cart-icon-m" id="cartLinkMobile" aria-label="Cart">
                     <i class="fa-solid fa-bag-shopping"></i>
                     <span class="cart-badge-m" id="cartCountBadgeMobile">0</span>
@@ -302,7 +437,7 @@
         </div>
     </header>
 
-    <!-- MOBILE DRAWER -->
+    <!-- ================= MOBILE DRAWER ================= -->
     <div class="mobile-drawer-overlay" id="mobileDrawerOverlay"></div>
     <div class="mobile-drawer" id="mobileDrawer">
         <div class="mobile-drawer-header">
@@ -315,6 +450,26 @@
         </div>
         <div class="mobile-drawer-body">
             <ul>
+                @* === Mobile drawer-এ Account section === *@
+                @if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    <li>
+                        <a asp-controller="Account" asp-action="Profile" style="color:#028EA5; font-weight:700;">
+                            <span><i class="fa-solid fa-user" style="color:#028EA5; margin-right:8px;"></i> @User.Identity.Name</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-controller="Account" asp-action="SignIn" style="color:#028EA5; font-weight:700;">
+                            <span><i class="fa-regular fa-user" style="color:#028EA5; margin-right:8px;"></i> Sign In / Sign Up</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+
                 <li><a asp-controller="Category" asp-action="Panjabi">Panjabi <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Thobe">Thobe <i class="fa-solid fa-chevron-right"></i></a></li>
                 <li><a asp-controller="Category" asp-action="Jubbah">Jubbah <i class="fa-solid fa-chevron-right"></i></a></li>
@@ -334,12 +489,24 @@
             </ul>
         </div>
         <div class="mobile-drawer-footer">
-            <a href="#">Track My Order</a>
-            <a href="#">Our Showroom</a>
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <form asp-controller="Account" asp-action="SignOut" method="post" style="flex:1; margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" style="width:100%; height:48px; border-radius:6px; background:#c62828; color:#fff; font-size:14px; font-weight:700; border:0; cursor:pointer;">
+                        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="SignIn">Sign In</a>
+                <a asp-controller="Account" asp-action="SignUp">Sign Up</a>
+            }
         </div>
     </div>
 
-    <!-- CART DRAWER -->
+    <!-- ================= CART DRAWER ================= -->
     <div class="cart-drawer-overlay" id="cartDrawerOverlay"></div>
     <aside class="cart-drawer" id="cartDrawer" aria-label="Shopping Cart">
         <div class="cart-drawer-header">
@@ -364,7 +531,7 @@
         </main>
     </div>
 
-    <!-- ================= FOOTER (Newsletter ও Payment Methods ছাড়া) ================= -->
+    <!-- ================= FOOTER ================= -->
     <footer class="site-footer">
         <div class="site-container">
             <div class="footer-main">
@@ -417,7 +584,17 @@
                     <h4>Company</h4>
                     <ul>
                         <li><a href="#">About Us</a></li>
-                        <li><a asp-controller="Account" asp-action="SignIn">My Account</a></li>
+
+                        @* === Footer-এ Account Section: লগইন অনুযায়ী পরিবর্তন === *@
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <li><a asp-controller="Account" asp-action="Profile">My Account</a></li>
+                        }
+                        else
+                        {
+                            <li><a asp-controller="Account" asp-action="SignIn">My Account</a></li>
+                        }
+
                         <li><a asp-controller="Wishlist" asp-action="Wishlist">My Wishlist</a></li>
                         <li><a href="#">Terms &amp; Conditions</a></li>
                         <li><a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy Policy</a></li>
@@ -439,7 +616,37 @@
 
     <script>
         (function () {
+            // ==========================================
+            // Account Dropdown Toggle (Desktop)
+            // ==========================================
+            var accountDropdown = document.getElementById('accountDropdown');
+            var accountToggle = document.getElementById('accountToggle');
+
+            if (accountToggle && accountDropdown) {
+                accountToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    accountDropdown.classList.toggle('open');
+                });
+
+                // বাইরে ক্লিক করলে বন্ধ হবে
+                document.addEventListener('click', function (e) {
+                    if (!accountDropdown.contains(e.target)) {
+                        accountDropdown.classList.remove('open');
+                    }
+                });
+
+                // ESC চাপলে বন্ধ হবে
+                document.addEventListener('keydown', function (e) {
+                    if (e.key === 'Escape') {
+                        accountDropdown.classList.remove('open');
+                    }
+                });
+            }
+
+            // ==========================================
             // Mobile drawer
+            // ==========================================
             var openBtn = document.getElementById('mobileMenuOpen');
             var closeBtn = document.getElementById('mobileMenuClose');
             var drawer = document.getElementById('mobileDrawer');
@@ -462,7 +669,9 @@
                 if (e.key === 'Escape') closeDrawer();
             });
 
+            // ==========================================
             // Mobile search
+            // ==========================================
             var searchToggle = document.getElementById('mobileSearchToggle');
             var searchBar = document.getElementById('mobileSearchBar');
             if (searchToggle && searchBar) {
@@ -475,7 +684,9 @@
                 });
             }
 
+            // ==========================================
             // Wishlist badge
+            // ==========================================
             fetch('/Wishlist/Count')
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
@@ -486,7 +697,9 @@
                 })
                 .catch(function () { });
 
+            // ==========================================
             // Cart drawer
+            // ==========================================
             var cartDrawer = document.getElementById('cartDrawer');
             var cartOverlay = document.getElementById('cartDrawerOverlay');
             var cartLink = document.getElementById('cartLink');
