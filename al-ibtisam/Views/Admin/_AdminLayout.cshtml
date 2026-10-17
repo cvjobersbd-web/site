@@ -215,7 +215,7 @@
         }
         
         .has-submenu.open .sidebar-submenu {
-            max-height: 200px; /* ম্যাক্স হাইট */
+            max-height: 300px; /* ম্যাক্স হাইট বাড়ানো হলো */
             opacity: 1;
         }
         
@@ -467,9 +467,13 @@
                 </a>
             </li>
 
-            <!-- PRODUCTS (Smooth Animated Submenu) -->
+            <!-- PRODUCTS & CATEGORIES (Smooth Animated Submenu) -->
             @{
-                var isProductPage = ViewData["ActiveNav"]?.ToString() == "Products" || ViewData["ActiveNav"]?.ToString() == "ProductsList" || ViewData["ActiveNav"]?.ToString() == "AddProduct";
+                // চেক করা হচ্ছে আমরা প্রোডাক্ট বা ক্যাটাগরি পেজে আছি কিনা
+                var isProductPage = ViewData["ActiveNav"]?.ToString() == "Products" 
+                                    || ViewData["ActiveNav"]?.ToString() == "ProductsList" 
+                                    || ViewData["ActiveNav"]?.ToString() == "AddProduct"
+                                    || ViewData["ActiveNav"]?.ToString() == "Categories";
             }
             <li class="has-submenu @(isProductPage ? "open" : "")" id="productsMenu">
                 <a href="javascript:void(0)" id="productsToggle">
@@ -490,6 +494,13 @@
                             Add New Product
                         </a>
                     </li>
+                    <!-- CATEGORIES সরাসরি এখানে যুক্ত করা হলো -->
+                    <li>
+                        <a asp-controller="Admin" asp-action="Categories"
+                           class="@(ViewData["ActiveNav"]?.ToString() == "Categories" ? "active" : "")">
+                            Categories
+                        </a>
+                    </li>
                 </ul>
             </li>
 
@@ -498,15 +509,6 @@
                 <a href="#">
                     <i class="fa-solid fa-bag-shopping"></i>
                     <span>Orders</span>
-                </a>
-            </li>
-
-            <!-- CATEGORIES (লিংক আপডেট করা হয়েছে) -->
-            <li>
-                <a asp-controller="Admin" asp-action="Categories"
-                   class="@(ViewData["ActiveNav"]?.ToString() == "Categories" ? "active" : "")">
-                    <i class="fa-solid fa-layer-group"></i>
-                    <span>Categories</span>
                 </a>
             </li>
 

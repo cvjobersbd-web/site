@@ -189,7 +189,7 @@
                         <tr>
                             <td>
                                 <div class="product-cell">
-                                    <img src="@product.ImageUrl" alt="@product.Name" class="product-img" />
+                                    <img src="@product.ImageUrl" alt="@product.Name" class="product-img" onerror="this.src='https://via.placeholder.com/50x60?text=No+Image'" />
                                     <div>
                                         <div class="product-name">@product.Name</div>
                                         <div class="product-id">#@product.Id</div>
@@ -197,7 +197,14 @@
                                 </div>
                             </td>
                             <td>
-                                <span class="badge badge-category">@product.CategoryName</span>
+                                @if (!string.IsNullOrEmpty(product.CategoryName))
+                                {
+                                    <span class="badge badge-category">@product.CategoryName</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-inactive">No Category</span>
+                                }
                             </td>
                             <td class="price-col">
                                 ৳@product.Price.ToString("0")

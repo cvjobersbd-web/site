@@ -12,16 +12,20 @@ namespace al_ibtisam.Controllers
     public class AdminController : Controller
     {
         private readonly AppDbContext _db;
+        private readonly ILogger<AdminController> _logger;
 
-        public AdminController(AppDbContext db)
+        public AdminController(AppDbContext db, ILogger<AdminController> logger)
         {
             _db = db;
+            _logger = logger;
         }
 
-        // GET: /Admin/Dashboard
+        // ============================================================
+        // 1. DASHBOARD
+        // URL: /Admin/Dashboard
+        // ============================================================
         public async Task<IActionResult> Dashboard()
         {
-            // এখানে আপনার ড্যাশবোর্ডের লজিক থাকবে
             var users = await _db.Users.ToListAsync();
 
             ViewBag.TotalUsers = users.Count;
@@ -31,7 +35,10 @@ namespace al_ibtisam.Controllers
             return View(users);
         }
 
-        // GET: /Admin/Users
+        // ============================================================
+        // 2. USERS MANAGEMENT
+        // URL: /Admin/Users
+        // ============================================================
         public async Task<IActionResult> Users()
         {
             var users = await _db.Users.ToListAsync();
@@ -76,6 +83,16 @@ namespace al_ibtisam.Controllers
             return RedirectToAction(nameof(Users));
         }
 
+        // ============================================================
+        // 3. PRODUCTS MANAGEMENT
+        // URL: /Admin/Products
+        // ============================================================
+        public async Task<IActionResult> Products()
+        {
+            var products = await _db.Products.ToListAsync();
+            return View(products);
+        }
+
         // GET: /Admin/AddProduct
         public IActionResult AddProduct()
         {
@@ -97,13 +114,6 @@ namespace al_ibtisam.Controllers
             return View(model);
         }
 
-        // GET: /Admin/Products
-        public async Task<IActionResult> Products()
-        {
-            var products = await _db.Products.ToListAsync();
-            return View(products);
-        }
-
         // POST: /Admin/DeleteProduct
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -119,12 +129,28 @@ namespace al_ibtisam.Controllers
             return RedirectToAction(nameof(Products));
         }
 
-        // GET: /Admin/Categories
-        public IActionResult Categories()
+        // ============================================================
+        // 4. CATEGORIES MANAGEMENT
+        // URL: /Admin/Categories
+        // ============================================================
+        public async Task<IActionResult> Categories()
         {
-            // CategoryStore থেকে ডাটা নিয়ে আসা
-            var categories = CategoryStore.GetAll();
-            // এখানে আপনার ViewBag.CategoriesData ফিল্টার লজিক বসাতে হবে (যদি প্রয়োজন হয়)
+            // CategoryStore থেকে সব ক্যাটাগরি নিয়ে আসা
+            var categories = al_ibtisam.Models.CategoryStore.GetAll();
+
+            // ডাটাবেজ থেকে সব প্রোডাক্ট নিয়ে আসা (ক্যাটাগরি কাউন্ট করার জন্য)
+            var products = await _db.Products.ToListAsync();
+
+            // প্রতিটি ক্যাটাগরির জন্য কতগুলো প্রোডাক্ট আছে তা হিসাব করা
+            var categoriesData = categories.Select(catName => new
+            {
+                Name = catName,
+                ProductCount = products.Count(p => !string.IsNullOrEmpty(p.CategoryName) && p.CategoryName.Equals(catName, StringComparison.OrdinalIgnoreCase))
+            }).ToList();
+
+            // ViewBag-এ ডাটা পাঠানো হচ্ছে (আপনার Categories.cshtml ভিউতে ব্যবহারের জন্য)
+            ViewBag.CategoriesData = categoriesData;
+
             return View();
         }
 
@@ -135,8 +161,13 @@ namespace al_ibtisam.Controllers
         {
             if (!string.IsNullOrWhiteSpace(categoryName))
             {
-                CategoryStore.Add(categoryName);
+                // CategoryStore-এ নতুন ক্যাটাগরি যোগ করা
+                al_ibtisam.Models.CategoryStore.Add(categoryName);
                 TempData["Success"] = "নতুন ক্যাটাগরি যোগ করা হয়েছে।";
+            }
+            else
+            {
+                TempData["Error"] = "ক্যাটাগরির নাম খালি রাখা যাবে না।";
             }
             return RedirectToAction(nameof(Categories));
         }
@@ -148,13 +179,17 @@ namespace al_ibtisam.Controllers
         {
             if (!string.IsNullOrWhiteSpace(categoryName))
             {
-                CategoryStore.Delete(categoryName);
+                // CategoryStore থেকে ক্যাটাগরি ডিলিট করা
+                al_ibtisam.Models.CategoryStore.Delete(categoryName);
                 TempData["Success"] = "ক্যাটাগরি ডিলিট করা হয়েছে।";
             }
             return RedirectToAction(nameof(Categories));
         }
 
-        // POST: /Admin/SignOut
+        // ============================================================
+        // 5. SIGN OUT
+        // URL: /Admin/SignOut
+        // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignOut()
