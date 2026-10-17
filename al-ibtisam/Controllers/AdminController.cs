@@ -1,141 +1,165 @@
 ﻿using al_ibtisam.Data;
+using al_ibtisam.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace al_ibtisam.Controllers
 {
-    /// <summary>
-    /// অ্যাডমিন প্যানেল সংক্রান্ত সব কাজ।
-    /// শুধু "Admin" রোল এর ইউজার ঢুকতে পারবে।
-    /// </summary>
-    [Authorize(Roles = "Admin")]
+    // [Authorize(Roles = "Admin")] // প্রয়োজনে এটি আনকমেন্ট করুন
     public class AdminController : Controller
     {
         private readonly AppDbContext _db;
-        private readonly ILogger<AdminController> _logger;
-        private readonly IConfiguration _config;
 
-        // ============================================================
-        // Constructor — Dependency Injection
-        // ============================================================
-        public AdminController(
-            AppDbContext db,
-            ILogger<AdminController> logger,
-            IConfiguration config)
+        public AdminController(AppDbContext db)
         {
             _db = db;
-            _logger = logger;
-            _config = config;
         }
 
-        // ============================================================
-        // Admin Dashboard — সব ইউজারের লিস্ট
-        // URL: /Admin/Dashboard
-        // ============================================================
-        [HttpGet]
+        // GET: /Admin/Dashboard
         public async Task<IActionResult> Dashboard()
         {
-            try
-            {
-                var users = await _db.Users
-                    .OrderByDescending(u => u.LastLoginAt ?? u.CreatedAt)
-                    .ToListAsync();
+            // এখানে আপনার ড্যাশবোর্ডের লজিক থাকবে
+            var users = await _db.Users.ToListAsync();
 
-                // ---------- Statistics ----------
-                ViewBag.TotalUsers = users.Count;
-                ViewBag.ActiveUsers = users.Count(u => u.IsActive);
-                ViewBag.TodayLogins = users.Count(u =>
-                    u.LastLoginAt.HasValue &&
-                    u.LastLoginAt.Value.Date == DateTime.UtcNow.Date);
+            ViewBag.TotalUsers = users.Count;
+            ViewBag.ActiveUsers = users.Count(u => u.IsActive);
+            ViewBag.TodayLogins = users.Count(u => u.LastLoginAt.HasValue && u.LastLoginAt.Value.Date == DateTime.UtcNow.Date);
 
-                return View(users);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError($"Admin Dashboard error: {ex.Message}");
-                ViewBag.ErrorMessage = "ডাটা লোড করতে সমস্যা হয়েছে।";
-                ViewBag.TotalUsers = 0;
-                ViewBag.ActiveUsers = 0;
-                ViewBag.TodayLogins = 0;
-                return View(new List<al_ibtisam.Models.ApplicationUser>());
-            }
+            return View(users);
         }
 
-        // ============================================================
-        // ইউজার ডিটেইলস
-        // URL: /Admin/UserDetails/5
-        // ============================================================
-        [HttpGet]
+        // GET: /Admin/Users
+        public async Task<IActionResult> Users()
+        {
+            var users = await _db.Users.ToListAsync();
+            return View(users);
+        }
+
+        // GET: /Admin/UserDetails/5
         public async Task<IActionResult> UserDetails(int id)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
-            {
-                TempData["Error"] = "ইউজার পাওয়া যায়নি।";
-                return RedirectToAction("Dashboard");
-            }
+            if (user == null) return NotFound();
             return View(user);
         }
 
-        // ============================================================
-        // ইউজার Active / Inactive টগল
-        // URL: /Admin/ToggleActive
-        // ============================================================
+        // POST: /Admin/ToggleActive
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleActive(int id)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
+            var user = await _db.Users.FindAsync(id);
+            if (user != null)
             {
-                TempData["Error"] = "ইউজার পাওয়া যায়নি।";
-                return RedirectToAction("Dashboard");
+                user.IsActive = !user.IsActive;
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "ইউজারের স্ট্যাটাস আপডেট করা হয়েছে।";
             }
-
-            user.IsActive = !user.IsActive;
-            await _db.SaveChangesAsync();
-
-            TempData["Success"] = $"{user.FullName} এর অ্যাকাউন্ট {(user.IsActive ? "সক্রিয়" : "নিষ্ক্রিয়")} করা হয়েছে।";
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(Users));
         }
 
-        // ============================================================
-        // ইউজার ডিলিট
-        // URL: /Admin/DeleteUser
-        // ============================================================
+        // POST: /Admin/DeleteUser
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
-            if (user == null)
+            var user = await _db.Users.FindAsync(id);
+            if (user != null)
             {
-                TempData["Error"] = "ইউজার পাওয়া যায়নি।";
-                return RedirectToAction("Dashboard");
+                _db.Users.Remove(user);
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "ইউজার ডিলিট করা হয়েছে।";
             }
-
-            _db.Users.Remove(user);
-            await _db.SaveChangesAsync();
-
-            TempData["Success"] = $"{user.FullName} কে ডিলিট করা হয়েছে।";
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(Users));
         }
 
-        // ============================================================
-        // Admin Sign Out
-        // URL: /Admin/SignOut
-        // ============================================================
+        // GET: /Admin/AddProduct
+        public IActionResult AddProduct()
+        {
+            return View(new Product());
+        }
+
+        // POST: /Admin/AddProduct
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddProduct(Product model)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Products.Add(model);
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "নতুন প্রোডাক্ট সফলভাবে যোগ করা হয়েছে।";
+                return RedirectToAction(nameof(Products));
+            }
+            return View(model);
+        }
+
+        // GET: /Admin/Products
+        public async Task<IActionResult> Products()
+        {
+            var products = await _db.Products.ToListAsync();
+            return View(products);
+        }
+
+        // POST: /Admin/DeleteProduct
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await _db.Products.FindAsync(id);
+            if (product != null)
+            {
+                _db.Products.Remove(product);
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "প্রোডাক্ট ডিলিট করা হয়েছে।";
+            }
+            return RedirectToAction(nameof(Products));
+        }
+
+        // GET: /Admin/Categories
+        public IActionResult Categories()
+        {
+            // CategoryStore থেকে ডাটা নিয়ে আসা
+            var categories = CategoryStore.GetAll();
+            // এখানে আপনার ViewBag.CategoriesData ফিল্টার লজিক বসাতে হবে (যদি প্রয়োজন হয়)
+            return View();
+        }
+
+        // POST: /Admin/AddCategory
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddCategory(string categoryName)
+        {
+            if (!string.IsNullOrWhiteSpace(categoryName))
+            {
+                CategoryStore.Add(categoryName);
+                TempData["Success"] = "নতুন ক্যাটাগরি যোগ করা হয়েছে।";
+            }
+            return RedirectToAction(nameof(Categories));
+        }
+
+        // POST: /Admin/DeleteCategory
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteCategory(string categoryName)
+        {
+            if (!string.IsNullOrWhiteSpace(categoryName))
+            {
+                CategoryStore.Delete(categoryName);
+                TempData["Success"] = "ক্যাটাগরি ডিলিট করা হয়েছে।";
+            }
+            return RedirectToAction(nameof(Categories));
+        }
+
+        // POST: /Admin/SignOut
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            _logger.LogInformation("Admin signed out");
-            TempData["SuccessMessage"] = "অ্যাডমিন প্যানেল থেকে সাইন আউট হয়েছেন।";
             return RedirectToAction("SignIn", "Account");
         }
     }

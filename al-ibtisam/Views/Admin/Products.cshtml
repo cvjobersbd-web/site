@@ -1,0 +1,244 @@
+﻿@model List<al_ibtisam.Models.Product>
+@{
+    ViewData["Title"] = "All Products";
+    ViewData["ActiveNav"] = "ProductsList"; // সাইডবারে All Products একটিভ রাখার জন্য
+    ViewData["PageTitle"] = "All Products";
+    ViewData["PageSubTitle"] = "সব প্রোডাক্টের তালিকা এবং ম্যানেজমেন্ট";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    .table-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+        overflow: hidden;
+    }
+    .table-header {
+        padding: 22px 26px;
+        border-bottom: 1px solid #eef2f5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .table-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #134856;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .table-header h2 i { color: #028EA5; }
+    
+    .btn-add-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 42px;
+        padding: 0 20px;
+        background: #86D200;
+        color: #134856;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background .2s, color .2s;
+    }
+    .btn-add-new:hover {
+        background: #134856;
+        color: #fff;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: #f7fafc; }
+    thead th {
+        text-align: left;
+        padding: 14px 18px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #6c8a93;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        white-space: nowrap;
+        border-bottom: 1px solid #eef2f5;
+    }
+    tbody tr { border-bottom: 1px solid #f4f7fa; transition: background .15s; }
+    tbody tr:hover { background: #f9fbfc; }
+    tbody tr:last-child { border-bottom: 0; }
+    tbody td { padding: 16px 18px; color: #134856; vertical-align: middle; }
+
+    .product-cell { display: flex; align-items: center; gap: 12px; }
+    .product-img {
+        width: 50px;
+        height: 60px;
+        border-radius: 6px;
+        object-fit: cover;
+        background: #f3f3f3;
+        border: 1px solid #eef2f5;
+    }
+    .product-name { font-weight: 600; color: #134856; line-height: 1.3; margin-bottom: 2px; }
+    .product-id { font-size: 12px; color: #6c8a93; }
+
+    .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .badge-category { background: #e3f2fd; color: #1565c0; }
+    .badge-active { background: #e8f5e9; color: #2e7d32; }
+    .badge-inactive { background: #fdeaea; color: #c62828; }
+
+    .price-col { font-weight: 700; color: #FFAA0D; }
+
+    .btn-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        border: 0;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background .15s, color .15s;
+        text-decoration: none;
+    }
+    .btn-delete { background: #fdeaea; color: #c62828; }
+    .btn-delete:hover { background: #c62828; color: #fff; }
+    .btn-view { background: #e3f2fd; color: #1976d2; }
+    .btn-view:hover { background: #1976d2; color: #fff; }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c8a93;
+    }
+    .empty-state i { font-size: 56px; color: #b0d4dc; margin-bottom: 16px; display: block; }
+    .empty-state h4 { color: #134856; margin-bottom: 6px; }
+
+    /* Alerts */
+    .alert { padding: 14px 20px; border-radius: 10px; margin-bottom: 22px; font-size: 14px; display: flex; align-items: center; gap: 10px; font-family: 'Hind Siliguri', sans-serif; }
+    .alert-success { background: #e3f6ec; border: 1px solid #b3e2c6; color: #0f7b3e; }
+    .alert-error { background: #fdeaea; border: 1px solid #f5c2c2; color: #b71c1c; }
+
+    @@media (max-width: 768px) {
+        .table-header { padding: 16px 18px; flex-direction: column; align-items: stretch; }
+        .btn-add-new { justify-content: center; }
+        thead th, tbody td { padding: 12px; font-size: 13px; }
+    }
+</style>
+
+@* Alerts *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>@TempData["Success"]</span>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>@TempData["Error"]</span>
+    </div>
+}
+
+<div class="table-card">
+    <div class="table-header">
+        <h2><i class="fa-solid fa-box"></i> Product List</h2>
+        <a asp-controller="Admin" asp-action="AddProduct" class="btn-add-new">
+            <i class="fa-solid fa-plus"></i> Add New Product
+        </a>
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="empty-state">
+            <i class="fa-solid fa-box-open"></i>
+            <h4>কোনো প্রোডাক্ট নেই</h4>
+            <p>এখনো কোনো প্রোডাক্ট অ্যাড করা হয়নি।</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock Status</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="product-cell">
+                                    <img src="@product.ImageUrl" alt="@product.Name" class="product-img" />
+                                    <div>
+                                        <div class="product-name">@product.Name</div>
+                                        <div class="product-id">#@product.Id</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-category">@product.CategoryName</span>
+                            </td>
+                            <td class="price-col">
+                                ৳@product.Price.ToString("0")
+                                @if (product.OldPrice.HasValue && product.OldPrice > product.Price)
+                                {
+                                    <span style="display:block; font-size:12px; color:#6c8a93; text-decoration:line-through; font-weight:400;">
+                                        ৳@product.OldPrice.Value.ToString("0")
+                                    </span>
+                                }
+                            </td>
+                            <td>
+                                @if (product.InStock)
+                                {
+                                    <span class="badge badge-active"><i class="fa-solid fa-circle-check"></i> In Stock</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-inactive"><i class="fa-solid fa-circle-xmark"></i> Out of Stock</span>
+                                }
+                            </td>
+                            <td>
+                                <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                    <!-- View on site -->
+                                    <a href="/Product/Details/@product.Id" target="_blank" class="btn-action btn-view" title="View on Site">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </a>
+                                    <!-- Delete -->
+                                    <form asp-controller="Admin" asp-action="DeleteProduct" method="post" style="margin:0;"
+                                          onsubmit="return confirm('আপনি কি নিশ্চিত এই প্রোডাক্টটি ডিলিট করতে চান?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@product.Id" />
+                                        <button type="submit" class="btn-action btn-delete" title="Delete">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

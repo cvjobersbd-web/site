@@ -1,0 +1,191 @@
+﻿@model al_ibtisam.Models.Product
+@{
+    ViewData["Title"] = "Add New Product";
+    ViewData["ActiveNav"] = "AddProduct";
+    ViewData["PageTitle"] = "Add New Product";
+    ViewData["PageSubTitle"] = "নতুন প্রোডাক্ট যোগ করুন";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    .form-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+        padding: 30px;
+        max-width: 900px;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group.full { grid-column: 1 / -1; }
+    
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #134856;
+        margin-bottom: 8px;
+    }
+    .form-control {
+        width: 100%;
+        height: 46px;
+        padding: 0 16px;
+        border: 1.5px solid #e0e6ed;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #134856;
+        outline: none;
+        transition: border-color .2s;
+    }
+    .form-control:focus {
+        border-color: #028EA5;
+        box-shadow: 0 0 0 3px rgba(2, 142, 165, .1);
+    }
+    textarea.form-control {
+        height: 100px;
+        padding: 12px 16px;
+        resize: vertical;
+    }
+    .form-select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23028EA5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 16px center;
+        background-size: 16px;
+        padding-right: 44px;
+    }
+    
+    .btn-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 50px;
+        padding: 0 32px;
+        background: #028EA5;
+        color: #fff;
+        border: 0;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background .2s;
+        margin-top: 10px;
+    }
+    .btn-submit:hover { background: #134856; }
+    
+    .field-validation-error {
+        color: #c62828;
+        font-size: 12.5px;
+        margin-top: 5px;
+        display: block;
+    }
+    input.input-validation-error, select.input-validation-error, textarea.input-validation-error {
+        border-color: #e57373 !important;
+        background: #fff5f5 !important;
+    }
+    
+    @@media (max-width: 768px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .form-card { padding: 20px; }
+    }
+</style>
+
+<div class="form-card">
+    <form asp-controller="Admin" asp-action="AddProduct" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="form-grid">
+            <!-- Product Name -->
+            <div class="form-group full">
+                <label asp-for="Name">Product Name *</label>
+                <input asp-for="Name" class="form-control" placeholder="যেমন: Premium Panjabi - 10" />
+                <span asp-validation-for="Name" class="field-validation-error"></span>
+            </div>
+
+            <!-- Category (Dynamic Dropdown) -->
+            <div class="form-group">
+                <label asp-for="CategoryName">Category *</label>
+                <select asp-for="CategoryName" class="form-control form-select">
+                    <option value="">-- সিলেক্ট করুন --</option>
+                    @* এখানে সঠিক নেমস্পেস (al_ibtisam.Models) ব্যবহার করা হয়েছে *@
+                    @foreach (var cat in al_ibtisam.Models.CategoryStore.GetAll())
+                    {
+                        <option value="@cat">@cat</option>
+                    }
+                </select>
+                <span asp-validation-for="CategoryName" class="field-validation-error"></span>
+            </div>
+
+            <!-- Brand -->
+            <div class="form-group">
+                <label asp-for="Brand">Brand</label>
+                <input asp-for="Brand" class="form-control" placeholder="যেমন: Believers" />
+                <span asp-validation-for="Brand" class="field-validation-error"></span>
+            </div>
+
+            <!-- Price -->
+            <div class="form-group">
+                <label asp-for="Price">Current Price (৳) *</label>
+                <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="যেমন: 2690" />
+                <span asp-validation-for="Price" class="field-validation-error"></span>
+            </div>
+
+            <!-- Old Price -->
+            <div class="form-group">
+                <label asp-for="OldPrice">Old Price (ঐচ্ছিক)</label>
+                <input asp-for="OldPrice" type="number" step="0.01" class="form-control" placeholder="যেমন: 4500" />
+                <span asp-validation-for="OldPrice" class="field-validation-error"></span>
+            </div>
+
+            <!-- Sizes -->
+            <div class="form-group full">
+                <label asp-for="SizesString">Available Sizes (কমা দিয়ে আলাদা করুন)</label>
+                <input asp-for="SizesString" class="form-control" placeholder="যেমন: M,L,XL,XXL অথবা 40,41,42" />
+                <span asp-validation-for="SizesString" class="field-validation-error"></span>
+            </div>
+
+            <!-- Main Image URL -->
+            <div class="form-group full">
+                <label asp-for="ImageUrl">Main Image URL *</label>
+                <input asp-for="ImageUrl" class="form-control" placeholder="https://i.ibb.co.com/..." />
+                <span asp-validation-for="ImageUrl" class="field-validation-error"></span>
+            </div>
+
+            <!-- Gallery Images -->
+            <div class="form-group full">
+                <label asp-for="GalleryImagesString">Gallery Images (ঐচ্ছিক, কমা দিয়ে আলাদা করুন)</label>
+                <textarea asp-for="GalleryImagesString" class="form-control" placeholder="https://img1.jpg, https://img2.jpg"></textarea>
+                <span asp-validation-for="GalleryImagesString" class="field-validation-error"></span>
+            </div>
+
+            <!-- Short Description -->
+            <div class="form-group full">
+                <label asp-for="ShortDescription">Short Description</label>
+                <textarea asp-for="ShortDescription" class="form-control" placeholder="প্রোডাক্টের ছোট বর্ণনা লিখুন..."></textarea>
+                <span asp-validation-for="ShortDescription" class="field-validation-error"></span>
+            </div>
+            
+            <!-- In Stock -->
+            <div class="form-group full" style="display:flex; align-items:center; gap:10px;">
+                <input asp-for="InStock" type="checkbox" style="width:20px; height:20px; accent-color:#028EA5;" checked />
+                <label asp-for="InStock" style="margin:0; cursor:pointer;">In Stock (স্টকে আছে)</label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-save"></i> Save Product
+        </button>
+        <a asp-controller="Admin" asp-action="Products" class="btn-submit" style="background:#e0e6ed; color:#134856; text-decoration:none; margin-left:10px;">
+            Cancel
+        </a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

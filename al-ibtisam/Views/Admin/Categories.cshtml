@@ -1,0 +1,298 @@
+﻿@{
+    ViewData["Title"] = "Categories Management";
+    ViewData["ActiveNav"] = "Categories";
+    ViewData["PageTitle"] = "Categories";
+    ViewData["PageSubTitle"] = "সব ক্যাটাগরি এবং প্রোডাক্ট ম্যানেজমেন্ট";
+    Layout = "_AdminLayout";
+    
+    // কন্ট্রোলার থেকে পাঠানো ডাইনামিক ডাটা রিসিভ করা
+    var categoriesData = ViewBag.CategoriesData as IEnumerable<dynamic>;
+}
+
+<style>
+    /* ================= LAYOUT ================= */
+    .category-layout {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    /* ================= LIST CARD ================= */
+    .list-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+        overflow: hidden;
+    }
+    .list-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #eef2f5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .list-header h2 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #134856;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .list-header h2 i { color: #028EA5; }
+    .list-header .total-count {
+        font-size: 13px;
+        color: #6c8a93;
+        font-weight: 500;
+        background: #f0f4f8;
+        padding: 6px 14px;
+        border-radius: 999px;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: #f7fafc; }
+    thead th {
+        text-align: left;
+        padding: 14px 20px;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #6c8a93;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        white-space: nowrap;
+        border-bottom: 1px solid #eef2f5;
+    }
+    tbody tr { border-bottom: 1px solid #f4f7fa; transition: background .15s; }
+    tbody tr:hover { background: #f9fbfc; }
+    tbody tr:last-child { border-bottom: 0; }
+    tbody td { padding: 16px 20px; color: #134856; vertical-align: middle; }
+
+    .cat-name {
+        font-weight: 600;
+        font-size: 15px;
+        color: #134856;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .cat-name i { color: #86D200; font-size: 14px; }
+
+    .product-count-badge {
+        background: #e3f2fd;
+        color: #1565c0;
+        padding: 5px 14px;
+        border-radius: 999px;
+        font-size: 12.5px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        background: #fdeaea;
+        color: #c62828;
+        border: 0;
+        cursor: pointer;
+        transition: background .15s, color .15s;
+    }
+    .btn-delete:hover { background: #c62828; color: #fff; }
+
+    /* ================= ADD NEW CARD ================= */
+    .add-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+        padding: 24px;
+        position: sticky;
+        top: 90px;
+    }
+    .add-card h3 {
+        font-size: 16px;
+        font-weight: 700;
+        color: #134856;
+        margin: 0 0 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #f0f4f8;
+    }
+    .add-card h3 i { color: #028EA5; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: #134856;
+        margin-bottom: 8px;
+    }
+    .form-control {
+        width: 100%;
+        height: 46px;
+        padding: 0 16px;
+        border: 1.5px solid #e0e6ed;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #134856;
+        outline: none;
+        transition: border-color .2s;
+    }
+    .form-control:focus { 
+        border-color: #028EA5; 
+        box-shadow: 0 0 0 3px rgba(2, 142, 165, .1);
+    }
+
+    .btn-add {
+        width: 100%;
+        height: 48px;
+        background: #86D200;
+        color: #134856;
+        border: 0;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background .2s, color .2s;
+    }
+    .btn-add:hover { background: #134856; color: #fff; }
+
+    /* ================= ALERTS ================= */
+    .alert {
+        padding: 14px 20px;
+        border-radius: 10px;
+        margin-bottom: 22px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Hind Siliguri', sans-serif;
+        animation: fadeIn .3s ease;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .alert-success { background: #e3f6ec; border: 1px solid #b3e2c6; color: #0f7b3e; }
+    .alert-error { background: #fdeaea; border: 1px solid #f5c2c2; color: #b71c1c; }
+
+    /* ================= RESPONSIVE ================= */
+    @@media (max-width: 991px) {
+        .category-layout { grid-template-columns: 1fr; }
+        .add-card { position: static; }
+    }
+    @@media (max-width: 575px) {
+        .list-header { flex-direction: column; align-items: flex-start; }
+        .list-header .total-count { align-self: flex-start; }
+        thead th, tbody td { padding: 12px; }
+    }
+</style>
+
+@* ================= ALERTS ================= *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>@TempData["Success"]</span>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>@TempData["Error"]</span>
+    </div>
+}
+
+<div class="category-layout">
+    
+    <!-- ================= CATEGORY LIST ================= -->
+    <div class="list-card">
+        <div class="list-header">
+            <h2><i class="fa-solid fa-layer-group"></i> All Categories</h2>
+            <span class="total-count">
+                মোট @(categoriesData?.Count() ?? 0) টি ক্যাটাগরি
+            </span>
+        </div>
+        
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Category Name</th>
+                        <th>Products</th>
+                        <th style="text-align:right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (categoriesData != null && categoriesData.Any())
+                    {
+                        foreach (var cat in categoriesData)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="cat-name">
+                                        <i class="fa-solid fa-tag"></i> @cat.Name
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="product-count-badge">@cat.ProductCount টি প্রোডাক্ট</span>
+                                </td>
+                                <td style="text-align:right;">
+                                    <form asp-controller="Admin" asp-action="DeleteCategory" method="post" style="margin:0;"
+                                          onsubmit="return confirm('আপনি কি নিশ্চিত এই ক্যাটাগরিটি ডিলিট করতে চান?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="categoryName" value="@cat.Name" />
+                                        <button type="submit" class="btn-delete" title="Delete Category">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="3" style="text-align:center; padding:40px; color:#6c8a93;">
+                                <i class="fa-solid fa-box-open" style="font-size:36px; color:#b0d4dc; display:block; margin-bottom:10px;"></i>
+                                কোনো ক্যাটাগরি পাওয়া যায়নি।
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= ADD NEW CATEGORY ================= -->
+    <div class="add-card">
+        <h3><i class="fa-solid fa-plus-circle"></i> Add New Category</h3>
+        
+        <form asp-controller="Admin" asp-action="AddCategory" method="post">
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label>Category Name</label>
+                <input type="text" name="categoryName" class="form-control" placeholder="যেমন: Hoodie, Panjabi etc." required autocomplete="off" />
+            </div>
+            <button type="submit" class="btn-add">
+                <i class="fa-solid fa-plus"></i> Add Category
+            </button>
+        </form>
+    </div>
+
+</div>

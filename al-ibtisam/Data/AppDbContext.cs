@@ -26,6 +26,11 @@ namespace al_ibtisam.Data
         /// </summary>
         public DbSet<ApplicationUser> Users { get; set; }
 
+        /// <summary>
+        /// Products টেবিল — প্রোডাক্টের তথ্য
+        /// </summary>
+        public DbSet<Product> Products { get; set; } // ⬅️ নতুন যোগ করা হলো
+
         // ============================================================
         // Model Configuration
         // ============================================================
@@ -124,6 +129,70 @@ namespace al_ibtisam.Data
                       .IsRequired()
                       .HasColumnName("email_verified")
                       .HasDefaultValue(false);
+            });
+
+            // --------------------------------------------------------
+            // Product Configuration (⬅️ নতুন যোগ করা হলো)
+            // --------------------------------------------------------
+            modelBuilder.Entity<Product>(entity =>
+            {
+                // ---------- Table Name ----------
+                entity.ToTable("Products");
+
+                // ---------- Primary Key ----------
+                entity.HasKey(p => p.Id);
+
+                // ---------- Auto Increment Id ----------
+                entity.Property(p => p.Id)
+                      .ValueGeneratedOnAdd();
+
+                // ---------- Name ----------
+                entity.Property(p => p.Name)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                // ---------- Image Url ----------
+                entity.Property(p => p.ImageUrl)
+                      .IsRequired()
+                      .HasMaxLength(1000);
+
+                // ---------- Price ----------
+                entity.Property(p => p.Price)
+                      .HasColumnType("decimal(18,2)");
+
+                // ---------- Old Price ----------
+                entity.Property(p => p.OldPrice)
+                      .HasColumnType("decimal(18,2)");
+
+                // ---------- Category Name ----------
+                entity.Property(p => p.CategoryName)
+                      .IsRequired()
+                      .HasMaxLength(100);
+
+                // ---------- Brand ----------
+                entity.Property(p => p.Brand)
+                      .HasMaxLength(100)
+                      .HasDefaultValue("Believers");
+
+                // ---------- In Stock ----------
+                entity.Property(p => p.InStock)
+                      .HasDefaultValue(true);
+
+                // ---------- Sizes String ----------
+                entity.Property(p => p.SizesString)
+                      .HasMaxLength(500);
+
+                // ---------- Gallery Images String ----------
+                entity.Property(p => p.GalleryImagesString)
+                      .HasMaxLength(2000);
+
+                // ---------- Short Description ----------
+                entity.Property(p => p.ShortDescription)
+                      .HasMaxLength(1000);
+
+                // ---------- Size Chart Image Url ----------
+                entity.Property(p => p.SizeChartImageUrl)
+                      .HasMaxLength(1000);
             });
         }
     }

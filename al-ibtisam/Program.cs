@@ -87,20 +87,36 @@ builder.Services.AddAntiforgery(options =>
 var app = builder.Build();
 
 // ============================================================
-// 7. Auto Migration on Startup
+// 7. Database Connection Check (Migration Disabled)
 // ============================================================
 using (var scope = app.Services.CreateScope())
 {
     try
     {
         var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        db.Database.EnsureCreated();
-        Console.WriteLine("✅ Database connected & initialized successfully.");
+
+        // ⬇️ যেহেতু pgAdmin দিয়ে ম্যানুয়ালি টেবিল তৈরি করা হয়েছে, তাই মাইগ্রেশন বন্ধ রাখা হলো ⬇️
+        // db.Database.Migrate(); 
+
+        // শুধু ডাটাবেজ কানেকশন চেক করা হচ্ছে
+        if (db.Database.CanConnect())
+        {
+            Console.WriteLine("✅ Database connected successfully.");
+        }
+        else
+        {
+            Console.WriteLine("❌ Database connection failed. Check your connection string.");
+        }
     }
     catch (Exception ex)
     {
         Console.WriteLine("❌ Database initialization error: " + ex.Message);
         Console.WriteLine("👉 appsettings.json-এ Connection String চেক করুন।");
+
+        if (ex.InnerException != null)
+        {
+            Console.WriteLine("👉 Inner Error: " + ex.InnerException.Message);
+        }
     }
 }
 
