@@ -5,9 +5,15 @@ namespace al_ibtisam.Models
 {
     public class Product
     {
+        // ============================================================
+        // Primary Key
+        // ============================================================
         [Key]
         public int Id { get; set; }
 
+        // ============================================================
+        // Basic Info
+        // ============================================================
         [Required(ErrorMessage = "প্রোডাক্টের নাম অবশ্যই দিতে হবে")]
         [StringLength(200)]
         public string Name { get; set; } = string.Empty;
@@ -28,15 +34,28 @@ namespace al_ibtisam.Models
 
         public string Brand { get; set; } = "Believers";
 
+        // ============================================================
+        // Stock (নতুন — Admin থেকে +/- দিয়ে কন্ট্রোল হবে)
+        // ============================================================
+
+        /// <summary>
+        /// মোট স্টক পরিমাণ।
+        /// 0 হলে অটোমেটিক Out of Stock হয়ে যাবে।
+        /// </summary>
+        public int StockQuantity { get; set; } = 0;
+
+        /// <summary>
+        /// InStock — StockQuantity > 0 হলে true।
+        /// Admin কন্ট্রোলার এটি অটো-সিঙ্ক করে।
+        /// </summary>
         public bool InStock { get; set; } = true;
 
         // ============================================================
-        // Database String Properties
+        // Database String Properties (কমা / newline দিয়ে সেভ হয়)
         // ============================================================
         public string SizesString { get; set; } = "M,L,XL,XXL";
         public string? GalleryImagesString { get; set; }
 
-        // নতুন যোগ করা প্রপার্টি (যা এরর দিচ্ছিল)
         public string? KeyFeaturesString { get; set; }
         public string? WhyYouWillLoveItString { get; set; }
 

@@ -1,4 +1,5 @@
 using al_ibtisam.Data;
+using al_ibtisam.Services;                       // ⬅️ ImageService-এর জন্য
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,11 +43,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
         // ---------- Expiration ----------
         options.ExpireTimeSpan = TimeSpan.FromDays(30);
-        options.SlidingExpiration = true;  // Active থাকলে Cookie renew হবে
+        options.SlidingExpiration = true;
 
         // ---------- Cookie Settings ----------
         options.Cookie.Name = "AlIbtisam.Auth";
-        options.Cookie.HttpOnly = true;   // JS থেকে access হবে না (XSS protection)
+        options.Cookie.HttpOnly = true;
         options.Cookie.IsEssential = true;
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
@@ -58,7 +59,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 
 // ============================================================
-// 4. Session (Optional — ভবিষ্যতে দরকার হতে পারে)
+// 4. ⬇️ Image Upload Service (নতুন) ⬇️
+// ============================================================
+builder.Services.AddScoped<IImageService, ImageService>();
+
+// ============================================================
+// 5. Session (Optional)
 // ============================================================
 builder.Services.AddSession(options =>
 {
@@ -69,12 +75,12 @@ builder.Services.AddSession(options =>
 });
 
 // ============================================================
-// 5. HttpContextAccessor (Layout-এ User info access করার জন্য)
+// 6. HttpContextAccessor
 // ============================================================
 builder.Services.AddHttpContextAccessor();
 
 // ============================================================
-// 6. Antiforgery (CSRF Protection)
+// 7. Antiforgery (CSRF Protection)
 // ============================================================
 builder.Services.AddAntiforgery(options =>
 {
@@ -87,18 +93,33 @@ builder.Services.AddAntiforgery(options =>
 var app = builder.Build();
 
 // ============================================================
-// 7. Database Connection Check (Migration Disabled)
+// 8. ⬇️ অ্যাপ স্টার্টআপে ফোল্ডার অটো তৈরি + DB কানেকশন চেক ⬇️
 // ============================================================
 using (var scope = app.Services.CreateScope())
 {
+    var services = scope.ServiceProvider;
+
+    // ---------- 8.1 Uploads ফোল্ডার অটো তৈরি ----------
     try
     {
-        var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        var imageService = services.GetRequiredService<IImageService>();
+        imageService.EnsureUploadFolders();
+        Console.WriteLine("✅ Upload folders are ready.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("❌ Upload folder creation error: " + ex.Message);
+    }
 
-        // ⬇️ যেহেতু pgAdmin দিয়ে ম্যানুয়ালি টেবিল তৈরি করা হয়েছে, তাই মাইগ্রেশন বন্ধ রাখা হলো ⬇️
-        // db.Database.Migrate(); 
+    // ---------- 8.2 Database কানেকশন চেক ----------
+    try
+    {
+        var db = services.GetRequiredService<AppDbContext>();
 
-        // শুধু ডাটাবেজ কানেকশন চেক করা হচ্ছে
+        // ⚠️ যেহেতু pgAdmin দিয়ে ম্যানুয়ালি টেবিল তৈরি করা হয়েছে,
+        // তাই মাইগ্রেশন বন্ধ রাখা হলো।
+        // db.Database.Migrate();
+
         if (db.Database.CanConnect())
         {
             Console.WriteLine("✅ Database connected successfully.");
@@ -121,10 +142,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // ============================================================
-// 8. Configure HTTP Request Pipeline
+// 9. Configure HTTP Request Pipeline
 // ============================================================
-
-// Development-এ detailed error, Production-এ custom error page
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -138,13 +157,15 @@ else
 // HTTPS redirect
 app.UseHttpsRedirection();
 
-// Static files serve (CSS, JS, images)
+// ============================================================
+// 10. Static Files — এটাই যথেষ্ট, wwwroot/uploads সহ সব serve হবে
+// ============================================================
 app.UseStaticFiles();
 
 // Routing enable
 app.UseRouting();
 
-// Session (UseAuthentication-এর আগে দিতে হবে)
+// Session (UseAuthentication-এর আগে)
 app.UseSession();
 
 // ============================================================
@@ -154,7 +175,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ============================================================
-// 9. Route Configuration
+// 11. Route Configuration
 // ============================================================
 app.MapControllerRoute(
     name: "default",

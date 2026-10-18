@@ -1,10 +1,19 @@
-﻿using al_ibtisam.Models;
+﻿using al_ibtisam.Data;
+using al_ibtisam.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace al_ibtisam.Controllers
 {
     public class CategoryController : Controller
     {
+        private readonly AppDbContext _db;
+
+        public CategoryController(AppDbContext db)
+        {
+            _db = db;
+        }
+
         // ============================================================
         // প্রতিটি ক্যাটাগরির জন্য Action
         // ============================================================
@@ -28,15 +37,16 @@ namespace al_ibtisam.Controllers
         public IActionResult FlashSale() => LoadCategory("Flash Sale");
 
         // ============================================================
-        // কমন মেথড — ProductStore থেকে ক্যাটাগরি অনুযায়ী ডাটা ফিল্টার করে ভিউ রিটার্ন
+        // কমন মেথড — ডাটাবেজ থেকে ক্যাটাগরি অনুযায়ী ডাটা ফিল্টার করে ভিউ রিটার্ন
         // ============================================================
         private IActionResult LoadCategory(string categoryName)
         {
             ViewBag.CategoryName = categoryName;
 
-            // ইন-মেমরি ProductStore থেকে ডাটা ফিল্টার করে আনা হচ্ছে
-            var products = ProductStore.GetAll()
+            // ডাটাবেজ থেকে ক্যাটাগরি অনুযায়ী প্রোডাক্ট ফিল্টার
+            var products = _db.Products
                 .Where(p => p.CategoryName.ToLower() == categoryName.ToLower())
+                .OrderBy(p => p.Id)
                 .ToList();
 
             return View("Category", products);

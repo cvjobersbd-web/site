@@ -1,35 +1,51 @@
-﻿@model al_ibtisam.Models.Product
+﻿@model al_ibtisam.Models.ProductFormViewModel
 @{
     ViewData["Title"] = "Add New Product";
     ViewData["ActiveNav"] = "AddProduct";
     ViewData["PageTitle"] = "Add New Product";
     ViewData["PageSubTitle"] = "নতুন প্রোডাক্ট যোগ করুন";
     Layout = "_AdminLayout";
+
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
 }
 
 <style>
+    /* ================= FORM CARD ================= */
     .form-card {
         background: #fff;
         border-radius: 12px;
         box-shadow: 0 2px 12px rgba(0,0,0,.06);
         padding: 30px;
-        max-width: 900px;
+        max-width: 950px;
     }
+
     .form-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 20px;
     }
-    .form-group { margin-bottom: 20px; }
-    .form-group.full { grid-column: 1 / -1; }
-    
-    .form-group label {
-        display: block;
-        font-size: 14px;
-        font-weight: 600;
-        color: #134856;
-        margin-bottom: 8px;
+
+    .form-group {
+        margin-bottom: 20px;
     }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #134856;
+            margin-bottom: 8px;
+        }
+
+            .form-group label .req {
+                color: #c62828;
+                margin-left: 3px;
+            }
+
     .form-control {
         width: 100%;
         height: 46px;
@@ -39,26 +55,187 @@
         font-size: 14px;
         color: #134856;
         outline: none;
-        transition: border-color .2s;
+        transition: border-color .2s, box-shadow .2s;
+        font-family: inherit;
+        background: #fff;
     }
-    .form-control:focus {
-        border-color: #028EA5;
-        box-shadow: 0 0 0 3px rgba(2, 142, 165, .1);
-    }
+
+        .form-control:focus {
+            border-color: #028EA5;
+            box-shadow: 0 0 0 3px rgba(2, 142, 165, .1);
+        }
+
     textarea.form-control {
         height: 100px;
         padding: 12px 16px;
         resize: vertical;
+        line-height: 1.6;
     }
+
     .form-select {
         appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23028EA5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 16px center;
-        background-size: 16px;
+        -webkit-appearance: none;
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23028EA5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center / 16px;
         padding-right: 44px;
+        cursor: pointer;
     }
-    
+
+    .form-hint {
+        font-size: 12.5px;
+        color: #6c8a93;
+        margin-top: 5px;
+        display: block;
+    }
+
+    /* ================= IMAGE UPLOAD BOX ================= */
+    .img-upload-box {
+        border: 2px dashed #b0d4dc;
+        border-radius: 10px;
+        padding: 24px;
+        text-align: center;
+        background: #f7fafc;
+        cursor: pointer;
+        position: relative;
+        transition: border-color .2s, background .2s;
+    }
+
+        .img-upload-box:hover,
+        .img-upload-box.dragover {
+            border-color: #028EA5;
+            background: #eaf9fc;
+        }
+
+        .img-upload-box input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .img-upload-box i {
+            font-size: 32px;
+            color: #028EA5;
+            margin-bottom: 8px;
+            display: block;
+            pointer-events: none;
+        }
+
+        .img-upload-box p {
+            margin: 0;
+            font-size: 14px;
+            color: #134856;
+            font-weight: 500;
+            pointer-events: none;
+        }
+
+        .img-upload-box small {
+            font-size: 12px;
+            color: #6c8a93;
+            display: block;
+            margin-top: 4px;
+            pointer-events: none;
+        }
+
+    /* ================= IMAGE PREVIEW ================= */
+    .image-preview-wrap {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .image-preview {
+        position: relative;
+        width: 100px;
+        height: 120px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid #e0e6ed;
+        background: #f7fafc;
+        box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .image-preview .remove-img {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(198, 40, 40, .9);
+            color: #fff;
+            border: 0;
+            cursor: pointer;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background .2s;
+        }
+
+            .image-preview .remove-img:hover {
+                background: #c62828;
+            }
+
+    /* ================= STOCK HIGHLIGHT ================= */
+    .stock-group {
+        background: #f7fafc;
+        border: 1.5px solid #e0e6ed;
+        border-radius: 10px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+        .stock-group .form-control {
+            width: 140px;
+            flex: 0 0 auto;
+            background: #fff;
+        }
+
+    .stock-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 600;
+        flex: 0 0 auto;
+    }
+
+        .stock-badge.in-stock {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .stock-badge.out-stock {
+            background: #fdeaea;
+            color: #c62828;
+        }
+
+    /* ================= BUTTONS ================= */
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 10px;
+        flex-wrap: wrap;
+        padding-top: 20px;
+        border-top: 1px solid #f0f4f8;
+    }
+
     .btn-submit {
         display: inline-flex;
         align-items: center;
@@ -73,47 +250,149 @@
         font-size: 15px;
         font-weight: 600;
         cursor: pointer;
-        transition: background .2s;
-        margin-top: 10px;
+        transition: background .2s, transform .1s;
+        font-family: inherit;
     }
-    .btn-submit:hover { background: #134856; }
-    
+
+        .btn-submit:hover {
+            background: #134856;
+        }
+
+        .btn-submit:active {
+            transform: scale(.99);
+        }
+
+        .btn-submit:disabled {
+            opacity: .7;
+            cursor: not-allowed;
+        }
+
+    .btn-cancel {
+        display: inline-flex;
+        align-items: center;
+        height: 50px;
+        padding: 0 24px;
+        background: #e0e6ed;
+        color: #134856;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 14px;
+        transition: background .2s;
+    }
+
+        .btn-cancel:hover {
+            background: #cdd6e0;
+            color: #134856;
+        }
+
+    /* ================= VALIDATION ================= */
     .field-validation-error {
         color: #c62828;
         font-size: 12.5px;
         margin-top: 5px;
         display: block;
     }
-    input.input-validation-error, select.input-validation-error, textarea.input-validation-error {
+
+    input.input-validation-error,
+    select.input-validation-error,
+    textarea.input-validation-error {
         border-color: #e57373 !important;
         background: #fff5f5 !important;
     }
-    
+
+    /* ================= ALERTS ================= */
+    .alert {
+        padding: 14px 20px;
+        border-radius: 10px;
+        margin-bottom: 22px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Hind Siliguri', sans-serif;
+    }
+
+    .alert-error {
+        background: #fdeaea;
+        border: 1px solid #f5c2c2;
+        color: #b71c1c;
+    }
+
+    /* ================= RESPONSIVE ================= */
     @@media (max-width: 768px) {
-        .form-grid { grid-template-columns: 1fr; }
-        .form-card { padding: 20px; }
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+        .stock-group {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .stock-group .form-control {
+                width: 100%;
+            }
+
+        .btn-row {
+            flex-direction: column;
+        }
+
+        .btn-submit,
+        .btn-cancel {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>
 
+@* ================= ERROR ALERT ================= *@
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="alert alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                @error.ErrorMessage
+                <br />
+            }
+        </span>
+    </div>
+}
+
 <div class="form-card">
-    <form asp-controller="Admin" asp-action="AddProduct" method="post">
+    <form asp-controller="Admin"
+          asp-action="AddProduct"
+          method="post"
+          enctype="multipart/form-data"
+          novalidate
+          id="addProductForm">
         @Html.AntiForgeryToken()
 
         <div class="form-grid">
-            <!-- Product Name -->
+
+            @* ================= PRODUCT NAME ================= *@
             <div class="form-group full">
-                <label asp-for="Name">Product Name *</label>
-                <input asp-for="Name" class="form-control" placeholder="যেমন: Premium Panjabi - 10" />
+                <label asp-for="Name">Product Name <span class="req">*</span></label>
+                <input asp-for="Name"
+                       class="form-control"
+                       required
+                       placeholder="যেমন: Premium Panjabi - 10"
+                       autofocus />
                 <span asp-validation-for="Name" class="field-validation-error"></span>
             </div>
 
-            <!-- Category (Dynamic Dropdown) -->
+            @* ================= CATEGORY ================= *@
             <div class="form-group">
-                <label asp-for="CategoryName">Category *</label>
-                <select asp-for="CategoryName" class="form-control form-select">
+                <label asp-for="CategoryName">Category <span class="req">*</span></label>
+                <select asp-for="CategoryName" class="form-control form-select" required>
                     <option value="">-- সিলেক্ট করুন --</option>
-                    @* এখানে সঠিক নেমস্পেস (al_ibtisam.Models) ব্যবহার করা হয়েছে *@
-                    @foreach (var cat in al_ibtisam.Models.CategoryStore.GetAll())
+                    @foreach (var cat in categories)
                     {
                         <option value="@cat">@cat</option>
                     }
@@ -121,71 +400,343 @@
                 <span asp-validation-for="CategoryName" class="field-validation-error"></span>
             </div>
 
-            <!-- Brand -->
+            @* ================= BRAND ================= *@
             <div class="form-group">
                 <label asp-for="Brand">Brand</label>
-                <input asp-for="Brand" class="form-control" placeholder="যেমন: Believers" />
+                <input asp-for="Brand"
+                       class="form-control"
+                       value="Believers"
+                       placeholder="যেমন: Believers" />
                 <span asp-validation-for="Brand" class="field-validation-error"></span>
             </div>
 
-            <!-- Price -->
+            @* ================= PRICE ================= *@
             <div class="form-group">
-                <label asp-for="Price">Current Price (৳) *</label>
-                <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="যেমন: 2690" />
+                <label asp-for="Price">Current Price (৳) <span class="req">*</span></label>
+                <input asp-for="Price"
+                       type="number"
+                       step="0.01"
+                       min="0"
+                       class="form-control"
+                       required
+                       placeholder="যেমন: 2690" />
                 <span asp-validation-for="Price" class="field-validation-error"></span>
             </div>
 
-            <!-- Old Price -->
+            @* ================= OLD PRICE ================= *@
             <div class="form-group">
-                <label asp-for="OldPrice">Old Price (ঐচ্ছিক)</label>
-                <input asp-for="OldPrice" type="number" step="0.01" class="form-control" placeholder="যেমন: 4500" />
+                <label asp-for="OldPrice">Old Price (৳)</label>
+                <input asp-for="OldPrice"
+                       type="number"
+                       step="0.01"
+                       min="0"
+                       class="form-control"
+                       placeholder="যেমন: 4500" />
+                <span class="form-hint">ঐচ্ছিক। ফাঁকা রাখলে পুরনো দাম দেখাবে না।</span>
                 <span asp-validation-for="OldPrice" class="field-validation-error"></span>
             </div>
 
-            <!-- Sizes -->
-            <div class="form-group full">
-                <label asp-for="SizesString">Available Sizes (কমা দিয়ে আলাদা করুন)</label>
-                <input asp-for="SizesString" class="form-control" placeholder="যেমন: M,L,XL,XXL অথবা 40,41,42" />
+            @* ================= DISCOUNT ================= *@
+            <div class="form-group">
+                <label asp-for="DiscountPercent">Discount (%)</label>
+                <input asp-for="DiscountPercent"
+                       type="number"
+                       min="0"
+                       max="100"
+                       class="form-control"
+                       placeholder="যেমন: 50" />
+                <span class="form-hint">০ থেকে ১০০ এর মধ্যে। ফাঁকা রাখলে ডিসকাউন্ট দেখাবে না।</span>
+                <span asp-validation-for="DiscountPercent" class="field-validation-error"></span>
+            </div>
+
+            @* ================= STOCK QUANTITY ================= *@
+            <div class="form-group">
+                <label asp-for="StockQuantity">Stock Quantity <span class="req">*</span></label>
+                <div class="stock-group">
+                    <input asp-for="StockQuantity"
+                           type="number"
+                           min="0"
+                           value="0"
+                           class="form-control"
+                           required
+                           id="stockInput" />
+                    <span class="stock-badge out-stock" id="stockBadge">
+                        <i class="fa-solid fa-circle-xmark"></i>
+                        <span>Out of Stock</span>
+                    </span>
+                </div>
+                <span class="form-hint">০ দিলে অটোমেটিক Out of Stock হয়ে যাবে।</span>
+                <span asp-validation-for="StockQuantity" class="field-validation-error"></span>
+            </div>
+
+            @* ================= SIZES ================= *@
+            <div class="form-group">
+                <label asp-for="SizesString">Available Sizes</label>
+                <input asp-for="SizesString"
+                       class="form-control"
+                       value="M,L,XL,XXL"
+                       placeholder="যেমন: M,L,XL,XXL অথবা 40,41,42" />
+                <span class="form-hint">কমা দিয়ে আলাদা করুন।</span>
                 <span asp-validation-for="SizesString" class="field-validation-error"></span>
             </div>
 
-            <!-- Main Image URL -->
+            @* ================= MAIN IMAGE UPLOAD ================= *@
             <div class="form-group full">
-                <label asp-for="ImageUrl">Main Image URL *</label>
-                <input asp-for="ImageUrl" class="form-control" placeholder="https://i.ibb.co.com/..." />
-                <span asp-validation-for="ImageUrl" class="field-validation-error"></span>
+                <label>Main Image <span class="req">*</span></label>
+                <div class="img-upload-box" id="mainImageBox">
+                    <input type="file"
+                           asp-for="MainImageFile"
+                           accept="image/*"
+                           id="mainImageInput" />
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <p>ক্লিক করুন অথবা ইমেজ ড্র্যাগ করুন</p>
+                    <small>JPG, PNG, WEBP • সর্বোচ্চ 5MB</small>
+                </div>
+                <div class="image-preview-wrap" id="mainPreviewWrap"></div>
+                <span asp-validation-for="MainImageFile" class="field-validation-error"></span>
             </div>
 
-            <!-- Gallery Images -->
+            @* ================= GALLERY IMAGES ================= *@
             <div class="form-group full">
-                <label asp-for="GalleryImagesString">Gallery Images (ঐচ্ছিক, কমা দিয়ে আলাদা করুন)</label>
-                <textarea asp-for="GalleryImagesString" class="form-control" placeholder="https://img1.jpg, https://img2.jpg"></textarea>
-                <span asp-validation-for="GalleryImagesString" class="field-validation-error"></span>
+                <label>Gallery Images</label>
+                <div class="img-upload-box" id="galleryBox">
+                    <input type="file"
+                           asp-for="GalleryFiles"
+                           multiple
+                           accept="image/*"
+                           id="galleryInput" />
+                    <i class="fa-solid fa-images"></i>
+                    <p>একাধিক ইমেজ সিলেক্ট করুন</p>
+                    <small>JPG, PNG, WEBP • প্রতিটি সর্বোচ্চ 5MB</small>
+                </div>
+                <div class="image-preview-wrap" id="galleryPreviewWrap"></div>
+                <span class="form-hint">ঐচ্ছিক। একাধিক ইমেজ একসাথে সিলেক্ট করতে পারবেন।</span>
             </div>
 
-            <!-- Short Description -->
+            @* ================= SIZE CHART ================= *@
+            <div class="form-group full">
+                <label>Size Chart Image</label>
+                <div class="img-upload-box" id="sizeChartBox">
+                    <input type="file"
+                           asp-for="SizeChartFile"
+                           accept="image/*"
+                           id="sizeChartInput" />
+                    <i class="fa-solid fa-ruler-combined"></i>
+                    <p>সাইজ চার্ট আপলোড করুন</p>
+                    <small>ঐচ্ছিক</small>
+                </div>
+                <div class="image-preview-wrap" id="sizeChartPreviewWrap"></div>
+                <span asp-validation-for="SizeChartFile" class="field-validation-error"></span>
+            </div>
+
+            @* ================= SHORT DESCRIPTION ================= *@
             <div class="form-group full">
                 <label asp-for="ShortDescription">Short Description</label>
-                <textarea asp-for="ShortDescription" class="form-control" placeholder="প্রোডাক্টের ছোট বর্ণনা লিখুন..."></textarea>
+                <textarea asp-for="ShortDescription"
+                          class="form-control"
+                          placeholder="প্রোডাক্টের ছোট বর্ণনা লিখুন..."></textarea>
                 <span asp-validation-for="ShortDescription" class="field-validation-error"></span>
             </div>
-            
-            <!-- In Stock -->
-            <div class="form-group full" style="display:flex; align-items:center; gap:10px;">
-                <input asp-for="InStock" type="checkbox" style="width:20px; height:20px; accent-color:#028EA5;" checked />
-                <label asp-for="InStock" style="margin:0; cursor:pointer;">In Stock (স্টকে আছে)</label>
+
+            @* ================= KEY FEATURES ================= *@
+            <div class="form-group full">
+                <label asp-for="KeyFeaturesString">Key Features &amp; Specifications</label>
+                <textarea asp-for="KeyFeaturesString"
+                          class="form-control"
+                          style="height: 160px;"
+                          placeholder="Fabric: Jacquard Print&#10;Pattern: All-over subtle textured design&#10;Collar Type: Mandarin Collar"></textarea>
+                <span class="form-hint">প্রতি লাইনে একটি ফিচার লিখুন।</span>
+                <span asp-validation-for="KeyFeaturesString" class="field-validation-error"></span>
             </div>
+
+            @* ================= WHY YOU WILL LOVE IT ================= *@
+            <div class="form-group full">
+                <label asp-for="WhyYouWillLoveItString">Why You'll Love It</label>
+                <textarea asp-for="WhyYouWillLoveItString"
+                          class="form-control"
+                          style="height: 160px;"
+                          placeholder="Unique &amp; Modern Designs&#10;Elegant color that complements all skin tones&#10;Breathable fabric"></textarea>
+                <span class="form-hint">প্রতি লাইনে একটি কারণ লিখুন।</span>
+                <span asp-validation-for="WhyYouWillLoveItString" class="field-validation-error"></span>
+            </div>
+
+            @* ================= COLOR DISCLAIMER ================= *@
+            <div class="form-group full">
+                <label asp-for="ColorDisclaimer">Color Disclaimer</label>
+                <textarea asp-for="ColorDisclaimer"
+                          class="form-control"
+                          placeholder="Actual product color and design may vary slightly from images due to lighting conditions and different screen settings."></textarea>
+                <span asp-validation-for="ColorDisclaimer" class="field-validation-error"></span>
+            </div>
+
         </div>
 
-        <button type="submit" class="btn-submit">
-            <i class="fa-solid fa-save"></i> Save Product
-        </button>
-        <a asp-controller="Admin" asp-action="Products" class="btn-submit" style="background:#e0e6ed; color:#134856; text-decoration:none; margin-left:10px;">
-            Cancel
-        </a>
+        @* ================= SUBMIT ================= *@
+        <div class="btn-row">
+            <button type="submit" class="btn-submit" id="saveBtn">
+                <i class="fa-solid fa-save"></i> Save Product
+            </button>
+            <a asp-controller="Admin" asp-action="Products" class="btn-cancel">
+                <i class="fa-solid fa-xmark" style="margin-right: 6px;"></i> Cancel
+            </a>
+        </div>
     </form>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function () {
+
+            // ============================================================
+            // 1. IMAGE PREVIEW HELPER
+            // ============================================================
+            function setupPreview(inputId, wrapId, multiple) {
+                var input = document.getElementById(inputId);
+                var wrap = document.getElementById(wrapId);
+                if (!input || !wrap) return;
+
+                input.addEventListener('change', function () {
+                    wrap.innerHTML = '';
+
+                    var files = multiple
+                        ? Array.from(input.files)
+                        : (input.files.length ? [input.files[0]] : []);
+
+                    files.forEach(function (file) {
+                        if (!file.type.startsWith('image/')) return;
+
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            var box = document.createElement('div');
+                            box.className = 'image-preview';
+                            box.innerHTML =
+                                '<img src="' + e.target.result + '" alt="Preview" />' +
+                                '<button type="button" class="remove-img" title="Remove">' +
+                                '<i class="fa-solid fa-xmark"></i>' +
+                                '</button>';
+
+                            box.querySelector('.remove-img').addEventListener('click', function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                box.remove();
+                            });
+
+                            wrap.appendChild(box);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                });
+            }
+
+            setupPreview('mainImageInput', 'mainPreviewWrap', false);
+            setupPreview('galleryInput', 'galleryPreviewWrap', true);
+            setupPreview('sizeChartInput', 'sizeChartPreviewWrap', false);
+
+            // ============================================================
+            // 2. DRAG & DROP EFFECT
+            // ============================================================
+            document.querySelectorAll('.img-upload-box').forEach(function (box) {
+                ['dragenter', 'dragover'].forEach(function (ev) {
+                    box.addEventListener(ev, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        box.classList.add('dragover');
+                    });
+                });
+
+                ['dragleave', 'drop'].forEach(function (ev) {
+                    box.addEventListener(ev, function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        box.classList.remove('dragover');
+                    });
+                });
+            });
+
+            // ============================================================
+            // 3. STOCK BADGE LIVE UPDATE
+            // ============================================================
+            var stockInput = document.getElementById('stockInput');
+            var stockBadge = document.getElementById('stockBadge');
+
+            function updateStockBadge() {
+                if (!stockInput || !stockBadge) return;
+
+                var val = parseInt(stockInput.value) || 0;
+
+                if (val > 0) {
+                    stockBadge.className = 'stock-badge in-stock';
+                    stockBadge.innerHTML =
+                        '<i class="fa-solid fa-circle-check"></i><span>In Stock</span>';
+                } else {
+                    stockBadge.className = 'stock-badge out-stock';
+                    stockBadge.innerHTML =
+                        '<i class="fa-solid fa-circle-xmark"></i><span>Out of Stock</span>';
+                }
+            }
+
+            if (stockInput) {
+                stockInput.addEventListener('input', updateStockBadge);
+                updateStockBadge();
+            }
+
+            // ============================================================
+            // 4. SUBMIT BUTTON LOADING + VALIDATION
+            // ============================================================
+            var form = document.getElementById('addProductForm');
+            var saveBtn = document.getElementById('saveBtn');
+
+            if (form && saveBtn) {
+                form.addEventListener('submit', function (e) {
+
+                    // ---------- Client-side validation ----------
+                    var name = document.getElementById('Name');
+                    var category = document.getElementById('CategoryName');
+                    var price = document.getElementById('Price');
+                    var mainImage = document.getElementById('mainImageInput');
+
+                    if (name && name.value.trim().length < 2) {
+                        e.preventDefault();
+                        alert('প্রোডাক্টের নাম দিন (কমপক্ষে ২ অক্ষর)');
+                        name.focus();
+                        return;
+                    }
+
+                    if (category && !category.value) {
+                        e.preventDefault();
+                        alert('ক্যাটাগরি সিলেক্ট করুন');
+                        category.focus();
+                        return;
+                    }
+
+                    if (price && (!price.value || parseFloat(price.value) < 0)) {
+                        e.preventDefault();
+                        alert('সঠিক প্রাইস দিন');
+                        price.focus();
+                        return;
+                    }
+
+                    if (mainImage && mainImage.files.length === 0) {
+                        e.preventDefault();
+                        alert('মেইন ইমেজ আপলোড করুন');
+                        return;
+                    }
+
+                    // ---------- Loading state ----------
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML =
+                        '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+                });
+            }
+
+            // ============================================================
+            // 5. AUTO-FOCUS FIRST ERROR
+            // ============================================================
+            var firstError = document.querySelector('.input-validation-error');
+            if (firstError) {
+                firstError.focus();
+            }
+        })();
+    </script>
 }

@@ -29,7 +29,7 @@ namespace al_ibtisam.Data
         /// <summary>
         /// Products টেবিল — প্রোডাক্টের তথ্য
         /// </summary>
-        public DbSet<Product> Products { get; set; } // ⬅️ নতুন যোগ করা হলো
+        public DbSet<Product> Products { get; set; }
 
         // ============================================================
         // Model Configuration
@@ -132,7 +132,7 @@ namespace al_ibtisam.Data
             });
 
             // --------------------------------------------------------
-            // Product Configuration (⬅️ নতুন যোগ করা হলো)
+            // Product Configuration
             // --------------------------------------------------------
             modelBuilder.Entity<Product>(entity =>
             {
@@ -174,8 +174,14 @@ namespace al_ibtisam.Data
                       .HasMaxLength(100)
                       .HasDefaultValue("Believers");
 
+                // ---------- Stock Quantity (নতুন) ----------
+                entity.Property(p => p.StockQuantity)
+                      .IsRequired()
+                      .HasDefaultValue(0);
+
                 // ---------- In Stock ----------
                 entity.Property(p => p.InStock)
+                      .IsRequired()
                       .HasDefaultValue(true);
 
                 // ---------- Sizes String ----------
@@ -193,6 +199,18 @@ namespace al_ibtisam.Data
                 // ---------- Size Chart Image Url ----------
                 entity.Property(p => p.SizeChartImageUrl)
                       .HasMaxLength(1000);
+
+                // ---------- Color Disclaimer ----------
+                entity.Property(p => p.ColorDisclaimer)
+                      .HasMaxLength(1000);
+
+                // ---------- Key Features String ----------
+                entity.Property(p => p.KeyFeaturesString)
+                      .HasMaxLength(4000);
+
+                // ---------- Why You Will Love It String ----------
+                entity.Property(p => p.WhyYouWillLoveItString)
+                      .HasMaxLength(4000);
             });
         }
     }
