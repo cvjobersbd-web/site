@@ -3,13 +3,12 @@ using al_ibtisam.Models;
 using al_ibtisam.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace al_ibtisam.Controllers
 {
-    // [Authorize(Roles = "Admin")] // প্রয়োজনে আনকমেন্ট করুন
+    // [Authorize(Roles = "Admin")] // প্রয়োজনে আনকমেন্ট করুন
     public class AdminController : Controller
     {
         private readonly AppDbContext _db;
@@ -48,7 +47,6 @@ namespace al_ibtisam.Controllers
 
         // ============================================================
         // 2. USERS MANAGEMENT
-        // URL: /Admin/Users
         // ============================================================
         public async Task<IActionResult> Users()
         {
@@ -56,7 +54,6 @@ namespace al_ibtisam.Controllers
             return View(users);
         }
 
-        // GET: /Admin/UserDetails/5
         public async Task<IActionResult> UserDetails(int id)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
@@ -64,7 +61,6 @@ namespace al_ibtisam.Controllers
             return View(user);
         }
 
-        // POST: /Admin/ToggleActive
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleActive(int id)
@@ -79,7 +75,6 @@ namespace al_ibtisam.Controllers
             return RedirectToAction(nameof(Users));
         }
 
-        // POST: /Admin/DeleteUser
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(int id)
@@ -112,7 +107,13 @@ namespace al_ibtisam.Controllers
                 .OrderBy(p => p.Id)
                 .ToListAsync();
 
-            ViewBag.Categories = CategoryStore.GetAll();
+            // ক্যাটাগরি ড্রপডাউনের জন্য DB থেকে লিস্ট
+            ViewBag.Categories = await _db.Categories
+                .OrderBy(c => c.DisplayOrder)
+                .ThenBy(c => c.Name)
+                .Select(c => c.Name)
+                .ToListAsync();
+
             ViewBag.SelectedCategory = category;
             ViewBag.TotalCount = await _db.Products.CountAsync();
 
@@ -121,27 +122,28 @@ namespace al_ibtisam.Controllers
 
         // ============================================================
         // ADD PRODUCT (GET)
-        // URL: /Admin/AddProduct
         // ============================================================
         [HttpGet]
-        public IActionResult AddProduct()
+        public async Task<IActionResult> AddProduct()
         {
-            ViewBag.Categories = CategoryStore.GetAll();
+            ViewBag.Categories = await _db.Categories
+                .OrderBy(c => c.DisplayOrder)
+                .ThenBy(c => c.Name)
+                .Select(c => c.Name)
+                .ToListAsync();
+
             return View(new ProductFormViewModel());
         }
 
         // ============================================================
         // ADD PRODUCT (POST) — File Upload সহ
-        // URL: /Admin/AddProduct
         // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddProduct(ProductFormViewModel model)
         {
             _logger.LogInformation("========== ADD PRODUCT ATTEMPT ==========");
-            _logger.LogInformation($"Name: {model.Name}, Category: {model.CategoryName}");
 
-            // ---------- মেইন ইমেজ বাধ্যতামূলক চেক ----------
             if (model.MainImageFile == null || model.MainImageFile.Length == 0)
             {
                 ModelState.AddModelError(nameof(model.MainImageFile),
@@ -150,25 +152,31 @@ namespace al_ibtisam.Controllers
 
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = CategoryStore.GetAll();
+                ViewBag.Categories = await _db.Categories
+                    .OrderBy(c => c.DisplayOrder)
+                    .ThenBy(c => c.Name)
+                    .Select(c => c.Name)
+                    .ToListAsync();
                 return View(model);
             }
 
             try
             {
-                // ---------- 1. Main Image Upload ----------
+                // Main Image Upload
                 var mainImagePath = await _imageService.UploadImageAsync(
                     model.MainImageFile!, "products");
 
                 if (string.IsNullOrEmpty(mainImagePath))
                 {
                     ModelState.AddModelError(nameof(model.MainImageFile),
-                        "ইমেজ আপলোড ব্যর্থ হয়েছে। সঠিক ফাইল দিন (JPG/PNG/WEBP, সর্বোচ্চ 5MB)।");
-                    ViewBag.Categories = CategoryStore.GetAll();
+                        "ইমেজ আপলোড ব্যর্থ হয়েছে (JPG/PNG/WEBP, max 5MB)।");
+                    ViewBag.Categories = await _db.Categories
+                        .OrderBy(c => c.DisplayOrder)
+                        .Select(c => c.Name).ToListAsync();
                     return View(model);
                 }
 
-                // ---------- 2. Gallery Upload ----------
+                // Gallery Upload
                 var galleryPaths = new List<string>();
                 if (model.GalleryFiles != null && model.GalleryFiles.Count > 0)
                 {
@@ -176,7 +184,7 @@ namespace al_ibtisam.Controllers
                         model.GalleryFiles, "gallery");
                 }
 
-                // ---------- 3. Size Chart Upload ----------
+                // Size Chart Upload
                 string? sizeChartPath = null;
                 if (model.SizeChartFile != null && model.SizeChartFile.Length > 0)
                 {
@@ -184,7 +192,7 @@ namespace al_ibtisam.Controllers
                         model.SizeChartFile, "sizecart");
                 }
 
-                // ---------- 4. Product Entity তৈরি ----------
+                // Product Entity
                 var product = new Product
                 {
                     Name = model.Name.Trim(),
@@ -220,19 +228,18 @@ namespace al_ibtisam.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"AddProduct error: {ex.Message}");
-                _logger.LogError($"Inner: {ex.InnerException?.Message}");
-
                 ModelState.AddModelError(string.Empty,
                     "প্রোডাক্ট যোগ করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
 
-                ViewBag.Categories = CategoryStore.GetAll();
+                ViewBag.Categories = await _db.Categories
+                    .OrderBy(c => c.DisplayOrder)
+                    .Select(c => c.Name).ToListAsync();
                 return View(model);
             }
         }
 
         // ============================================================
         // EDIT PRODUCT (GET)
-        // URL: /Admin/EditProduct/5
         // ============================================================
         [HttpGet]
         public async Task<IActionResult> EditProduct(int id)
@@ -240,7 +247,6 @@ namespace al_ibtisam.Controllers
             var product = await _db.Products.FindAsync(id);
             if (product == null) return NotFound();
 
-            // Entity → ViewModel ম্যাপিং
             var vm = new ProductFormViewModel
             {
                 Id = product.Id,
@@ -261,24 +267,27 @@ namespace al_ibtisam.Controllers
                 ExistingGalleryImagesString = product.GalleryImagesString
             };
 
-            ViewBag.Categories = CategoryStore.GetAll();
+            ViewBag.Categories = await _db.Categories
+                .OrderBy(c => c.DisplayOrder)
+                .ThenBy(c => c.Name)
+                .Select(c => c.Name)
+                .ToListAsync();
+
             return View(vm);
         }
 
         // ============================================================
-        // EDIT PRODUCT (POST) — File Upload সহ
-        // URL: /Admin/EditProduct
+        // EDIT PRODUCT (POST)
         // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditProduct(ProductFormViewModel model)
         {
-            _logger.LogInformation("========== EDIT PRODUCT ATTEMPT ==========");
-            _logger.LogInformation($"ID: {model.Id}, Name: {model.Name}");
-
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = CategoryStore.GetAll();
+                ViewBag.Categories = await _db.Categories
+                    .OrderBy(c => c.DisplayOrder)
+                    .Select(c => c.Name).ToListAsync();
                 return View(model);
             }
 
@@ -287,21 +296,19 @@ namespace al_ibtisam.Controllers
 
             try
             {
-                // ---------- 1. Main Image (নতুন দিলে পুরনো ডিলিট) ----------
+                // Main Image
                 if (model.MainImageFile != null && model.MainImageFile.Length > 0)
                 {
                     var newPath = await _imageService.UploadImageAsync(
                         model.MainImageFile, "products");
-
                     if (!string.IsNullOrEmpty(newPath))
                     {
                         _imageService.DeleteImage(existing.ImageUrl);
                         existing.ImageUrl = newPath;
-                        _logger.LogInformation($"Main image updated: {newPath}");
                     }
                 }
 
-                // ---------- 2. Gallery (নতুনগুলো পুরনোর সাথে যোগ হবে) ----------
+                // Gallery (যোগ হবে পুরনোর সাথে)
                 if (model.GalleryFiles != null && model.GalleryFiles.Count > 0)
                 {
                     var newGallery = await _imageService.UploadMultipleImagesAsync(
@@ -317,27 +324,22 @@ namespace al_ibtisam.Controllers
 
                         existingList.AddRange(newGallery);
                         existing.GalleryImagesString = string.Join(",", existingList);
-
-                        _logger.LogInformation(
-                            $"Gallery updated: {newGallery.Count} new images added");
                     }
                 }
 
-                // ---------- 3. Size Chart ----------
+                // Size Chart
                 if (model.SizeChartFile != null && model.SizeChartFile.Length > 0)
                 {
                     var newSizeChart = await _imageService.UploadImageAsync(
                         model.SizeChartFile, "sizecart");
-
                     if (!string.IsNullOrEmpty(newSizeChart))
                     {
                         _imageService.DeleteImage(existing.SizeChartImageUrl);
                         existing.SizeChartImageUrl = newSizeChart;
-                        _logger.LogInformation($"Size chart updated: {newSizeChart}");
                     }
                 }
 
-                // ---------- 4. অন্যান্য ফিল্ড আপডেট ----------
+                // অন্যান্য ফিল্ড
                 existing.Name = model.Name.Trim();
                 existing.CategoryName = model.CategoryName;
                 existing.Brand = string.IsNullOrWhiteSpace(model.Brand)
@@ -356,8 +358,6 @@ namespace al_ibtisam.Controllers
 
                 await _db.SaveChangesAsync();
 
-                _logger.LogInformation($"✅ Product updated! ID = {existing.Id}");
-
                 TempData["Success"] = "প্রোডাক্ট সফলভাবে আপডেট হয়েছে।";
                 return RedirectToAction(nameof(Products),
                     new { category = existing.CategoryName });
@@ -365,34 +365,30 @@ namespace al_ibtisam.Controllers
             catch (Exception ex)
             {
                 _logger.LogError($"EditProduct error: {ex.Message}");
-                _logger.LogError($"Inner: {ex.InnerException?.Message}");
-
                 ModelState.AddModelError(string.Empty,
-                    "প্রোডাক্ট আপডেটে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+                    "প্রোডাক্ট আপডেটে সমস্যা হয়েছে।");
 
-                ViewBag.Categories = CategoryStore.GetAll();
+                ViewBag.Categories = await _db.Categories
+                    .OrderBy(c => c.DisplayOrder)
+                    .Select(c => c.Name).ToListAsync();
                 return View(model);
             }
         }
 
         // ============================================================
-        // DELETE PRODUCT (POST) — ইমেজসহ ডিলিট
-        // URL: /Admin/DeleteProduct
+        // DELETE PRODUCT — ইমেজসহ ডিলিট
         // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             var product = await _db.Products.FindAsync(id);
-
             if (product != null)
             {
                 try
                 {
-                    // ---------- 1. Main image ডিলিট ----------
                     _imageService.DeleteImage(product.ImageUrl);
 
-                    // ---------- 2. Gallery images ডিলিট ----------
                     if (!string.IsNullOrEmpty(product.GalleryImagesString))
                     {
                         foreach (var img in product.GalleryImagesString
@@ -402,14 +398,10 @@ namespace al_ibtisam.Controllers
                         }
                     }
 
-                    // ---------- 3. Size chart ডিলিট ----------
                     _imageService.DeleteImage(product.SizeChartImageUrl);
 
-                    // ---------- 4. ডাটাবেজ থেকে রিমুভ ----------
                     _db.Products.Remove(product);
                     await _db.SaveChangesAsync();
-
-                    _logger.LogInformation($"✅ Product deleted! ID = {id}");
 
                     TempData["Success"] = "প্রোডাক্ট এবং এর সব ইমেজ ডিলিট করা হয়েছে।";
                 }
@@ -419,7 +411,6 @@ namespace al_ibtisam.Controllers
                     TempData["Error"] = "প্রোডাক্ট ডিলিট করতে সমস্যা হয়েছে।";
                 }
             }
-
             return RedirectToAction(nameof(Products));
         }
 
@@ -427,7 +418,6 @@ namespace al_ibtisam.Controllers
         // 3.1 STOCK MANAGEMENT (AJAX)
         // ============================================================
 
-        // POST: /Admin/UpdateStock?id=5&delta=1
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStock(int id, int delta)
@@ -444,8 +434,6 @@ namespace al_ibtisam.Controllers
 
             await _db.SaveChangesAsync();
 
-            _logger.LogInformation($"Stock updated: Product #{id} → {newQty}");
-
             return Json(new
             {
                 success = true,
@@ -454,7 +442,6 @@ namespace al_ibtisam.Controllers
             });
         }
 
-        // POST: /Admin/SetStock?id=5&quantity=20
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetStock(int id, int quantity)
@@ -470,8 +457,6 @@ namespace al_ibtisam.Controllers
 
             await _db.SaveChangesAsync();
 
-            _logger.LogInformation($"Stock set: Product #{id} → {quantity}");
-
             return Json(new
             {
                 success = true,
@@ -481,51 +466,94 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // 4. CATEGORIES MANAGEMENT
-        // URL: /Admin/Categories
+        // 4. CATEGORIES MANAGEMENT (DB থেকে)
         // ============================================================
+
+        // GET: /Admin/Categories
         public async Task<IActionResult> Categories()
         {
-            var categories = CategoryStore.GetAll();
+            var categories = await _db.Categories
+                .OrderBy(c => c.DisplayOrder)
+                .ThenBy(c => c.Id)
+                .ToListAsync();
+
             var products = await _db.Products.ToListAsync();
 
-            var categoriesData = categories.Select(catName => new
+            var data = categories.Select(c => new
             {
-                Name = catName,
+                c.Id,
+                c.Name,
+                c.ShowInNavbar,
+                c.DisplayOrder,
+                c.IsFlashSale,
                 ProductCount = products.Count(p =>
                     !string.IsNullOrEmpty(p.CategoryName) &&
-                    p.CategoryName.Equals(catName, StringComparison.OrdinalIgnoreCase))
+                    p.CategoryName.Equals(c.Name, StringComparison.OrdinalIgnoreCase))
             }).ToList();
 
-            ViewBag.CategoriesData = categoriesData;
+            ViewBag.CategoriesData = data;
             return View();
         }
 
-        // POST: /Admin/AddCategory
+        // POST: Navbar Toggle
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult AddCategory(string categoryName)
+        public async Task<IActionResult> ToggleNavbar(int id)
         {
-            if (!string.IsNullOrWhiteSpace(categoryName))
+            var cat = await _db.Categories.FindAsync(id);
+            if (cat != null)
             {
-                CategoryStore.Add(categoryName);
-                TempData["Success"] = "নতুন ক্যাটাগরি যোগ করা হয়েছে।";
-            }
-            else
-            {
-                TempData["Error"] = "ক্যাটাগরির নাম খালি রাখা যাবে না।";
+                cat.ShowInNavbar = !cat.ShowInNavbar;
+                await _db.SaveChangesAsync();
+                TempData["Success"] = $"'{cat.Name}' Navbar-এ {(cat.ShowInNavbar ? "দেখাবে" : "দেখাবে না")}।";
             }
             return RedirectToAction(nameof(Categories));
         }
 
-        // POST: /Admin/DeleteCategory
+        // POST: Add new category
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteCategory(string categoryName)
+        public async Task<IActionResult> AddCategory(string categoryName)
         {
-            if (!string.IsNullOrWhiteSpace(categoryName))
+            if (string.IsNullOrWhiteSpace(categoryName))
             {
-                CategoryStore.Delete(categoryName);
+                TempData["Error"] = "ক্যাটাগরির নাম খালি রাখা যাবে না।";
+                return RedirectToAction(nameof(Categories));
+            }
+
+            var name = categoryName.Trim();
+
+            if (await _db.Categories.AnyAsync(c => c.Name.ToLower() == name.ToLower()))
+            {
+                TempData["Error"] = "এই নামে ক্যাটাগরি আগেই আছে।";
+                return RedirectToAction(nameof(Categories));
+            }
+
+            var maxOrder = await _db.Categories.MaxAsync(c => (int?)c.DisplayOrder) ?? 0;
+
+            _db.Categories.Add(new Category
+            {
+                Name = name,
+                ShowInNavbar = true,
+                DisplayOrder = maxOrder + 1,
+                CreatedAt = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] = $"নতুন ক্যাটাগরি '{name}' যোগ করা হয়েছে।";
+            return RedirectToAction(nameof(Categories));
+        }
+
+        // POST: Delete category
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var cat = await _db.Categories.FindAsync(id);
+            if (cat != null)
+            {
+                _db.Categories.Remove(cat);
+                await _db.SaveChangesAsync();
                 TempData["Success"] = "ক্যাটাগরি ডিলিট করা হয়েছে।";
             }
             return RedirectToAction(nameof(Categories));
@@ -533,7 +561,6 @@ namespace al_ibtisam.Controllers
 
         // ============================================================
         // 5. SIGN OUT
-        // URL: /Admin/SignOut
         // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]

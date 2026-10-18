@@ -1,4 +1,27 @@
-﻿<!DOCTYPE html>
+﻿@using al_ibtisam.Data
+@using Microsoft.EntityFrameworkCore
+@inject AppDbContext _db
+
+@{
+    // ============================================================
+    // Navbar-এ দেখানোর জন্য ক্যাটাগরি (শুধু ShowInNavbar = true)
+    // ============================================================
+    var navbarCategories = _db.Categories
+        .Where(c => c.ShowInNavbar)
+        .OrderBy(c => c.DisplayOrder)
+        .ThenBy(c => c.Id)
+        .ToList();
+
+    // Navbar-এ দেখানোর ডিসপ্লে নাম
+    Func<string, string> toDisplay = (name) =>
+    {
+        if (name == "Flash Sale") return "FLASH SALE - 26 🔥🔥";
+        if (name == "T-Shirt") return "Drop Shoulder";
+        return name;
+    };
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -40,84 +63,30 @@
         /* ---------- Account Dropdown ---------- */
         .account-dropdown { position: relative; }
         .account-menu {
-            position: absolute;
-            top: calc(100% + 12px);
-            right: 0;
-            min-width: 220px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(15, 76, 92, .18);
-            padding: 8px;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-8px);
-            transition: opacity .2s, visibility .2s, transform .2s;
+            position: absolute; top: calc(100% + 12px); right: 0; min-width: 220px;
+            background: #fff; border-radius: 10px; box-shadow: 0 10px 30px rgba(15, 76, 92, .18);
+            padding: 8px; z-index: 999; opacity: 0; visibility: hidden;
+            transform: translateY(-8px); transition: opacity .2s, visibility .2s, transform .2s;
         }
-        .account-dropdown.open .account-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
+        .account-dropdown.open .account-menu { opacity: 1; visibility: visible; transform: translateY(0); }
         .account-menu::before {
-            content: "";
-            position: absolute;
-            top: -6px;
-            right: 30px;
-            width: 12px;
-            height: 12px;
-            background: #fff;
-            transform: rotate(45deg);
-            box-shadow: -2px -2px 4px rgba(0,0,0,.03);
+            content: ""; position: absolute; top: -6px; right: 30px; width: 12px; height: 12px;
+            background: #fff; transform: rotate(45deg); box-shadow: -2px -2px 4px rgba(0,0,0,.03);
         }
-        .account-menu a,
-        .account-menu button {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            padding: 11px 14px;
-            border: 0;
-            background: transparent;
-            text-align: left;
-            font-size: 14px;
-            font-weight: 500;
-            color: #134856;
-            text-decoration: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background .15s, color .15s;
-            font-family: inherit;
+        .account-menu a, .account-menu button {
+            display: flex; align-items: center; gap: 12px; width: 100%; padding: 11px 14px;
+            border: 0; background: transparent; text-align: left; font-size: 14px; font-weight: 500;
+            color: #134856; text-decoration: none; border-radius: 6px; cursor: pointer;
+            transition: background .15s, color .15s; font-family: inherit;
         }
-        .account-menu a i,
-        .account-menu button i {
-            width: 18px;
-            text-align: center;
-            font-size: 15px;
-            color: #028EA5;
-        }
-        .account-menu a:hover,
-        .account-menu button:hover {
-            background: #E5FBFF;
-            color: #028EA5;
-        }
+        .account-menu a i, .account-menu button i { width: 18px; text-align: center; font-size: 15px; color: #028EA5; }
+        .account-menu a:hover, .account-menu button:hover { background: #E5FBFF; color: #028EA5; }
         .account-menu button.logout-btn {
-            color: #c62828;
-            border-top: 1px solid #E5FBFF;
-            border-radius: 0 0 6px 6px;
-            margin-top: 4px;
-            padding-top: 13px;
+            color: #c62828; border-top: 1px solid #E5FBFF; border-radius: 0 0 6px 6px;
+            margin-top: 4px; padding-top: 13px;
         }
-        .account-menu button.logout-btn i {
-            color: #c62828;
-        }
-        .account-menu button.logout-btn:hover {
-            background: #fdeaea;
-            color: #c62828;
-        }
-        .account-menu button.logout-btn:hover i {
-            color: #c62828;
-        }
+        .account-menu button.logout-btn i { color: #c62828; }
+        .account-menu button.logout-btn:hover { background: #fdeaea; color: #c62828; }
 
         .wishlist-link { position: relative; color: #E5FBFF; display: inline-flex; margin-right: 13px; text-decoration: none; }
         .wishlist-link:hover { color: #86D200; }
@@ -280,10 +249,7 @@
 
                     <div class="header-actions">
 
-                        @* ==================================================== *@
-                        @* === লগইন থাকলে → Account Dropdown দেখাবে === *@
-                        @* === লগইন না থাকলে → Sign In লিংক দেখাবে === *@
-                        @* ==================================================== *@
+                        @* === লগইন থাকলে Account Dropdown === *@
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <div class="account-dropdown" id="accountDropdown">
@@ -346,6 +312,7 @@
                 </div>
             </div>
 
+            <!-- ================= DYNAMIC NAVBAR ================= -->
             <nav class="navbar navbar-expand-lg category-nav">
                 <div class="site-container">
                     <button class="navbar-toggler my-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -353,22 +320,17 @@
                     </button>
                     <div class="collapse navbar-collapse category-nav-inner" id="mainNav">
                         <ul class="navbar-nav">
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Panjabi">Panjabi</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Thobe">Thobe</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Jubbah">Jubbah</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="TShirt">Drop Shoulder</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="WomensClothing">Women's Clothing</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Attar">Attar</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Perfumes">Perfumes</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Watch">Watch</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Wallet">Wallet</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Sneakers">Sneakers</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Waistcoat">Waistcoat</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="Tupi">Tupi</a></li>
-                            <li class="nav-item"><a class="nav-link" asp-controller="Category" asp-action="ComboOffers">Combo Offers</a></li>
-                            <li class="nav-item"><a class="nav-link flash-sale" asp-controller="Category" asp-action="FlashSale">FLASH SALE - 26 🔥🔥</a></li>
+                            @foreach (var cat in navbarCategories)
+                            {
+                                var displayName = toDisplay(cat.Name);
+
+                                <li class="nav-item">
+                                    <a class="nav-link @(cat.IsFlashSale ? "flash-sale" : "")"
+                                       asp-controller="Category"
+                                       asp-action="Load"
+                                       asp-route-name="@cat.Name">@displayName</a>
+                                </li>
+                            }
                         </ul>
                         <div class="hotline">
                             <svg viewBox="0 0 24 24" fill="none" stroke="#86D200" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2a9 9 0 0 1 9 9" /><path d="M13 6a5 5 0 0 1 5 5" /><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" /></svg>
@@ -396,7 +358,6 @@
                     <span class="wishlist-badge-m" id="wishlistCountBadgeMobile">0</span>
                 </a>
 
-                @* === Mobile Account Icon: লগইন থাকলে Profile-এ, না থাকলে SignIn-এ যাবে === *@
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <a asp-controller="Account" asp-action="Profile" class="account-icon-m" aria-label="Account">
@@ -417,11 +378,11 @@
             </div>
             <div class="mobile-cat-strip">
                 <div class="mobile-cat-list">
-                    <a asp-controller="Category" asp-action="Panjabi">Panjabi</a>
-                    <a asp-controller="Category" asp-action="Thobe">Thobe</a>
-                    <a asp-controller="Category" asp-action="Jubbah">Jubbah</a>
-                    <a asp-controller="Category" asp-action="TShirt">Drop Shoulder</a>
-                    <a asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a>
+                    @foreach (var cat in navbarCategories.Take(5))
+                    {
+                        var displayName = toDisplay(cat.Name);
+                        <a asp-controller="Category" asp-action="Load" asp-route-name="@cat.Name">@displayName</a>
+                    }
                 </div>
                 <button type="button" class="mobile-cat-more" id="mobileMenuOpen" aria-label="More categories">
                     More <i class="fa-solid fa-chevron-down"></i>
@@ -450,7 +411,6 @@
         </div>
         <div class="mobile-drawer-body">
             <ul>
-                @* === Mobile drawer-এ Account section === *@
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <li>
@@ -470,22 +430,17 @@
                     </li>
                 }
 
-                <li><a asp-controller="Category" asp-action="Panjabi">Panjabi <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Thobe">Thobe <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Jubbah">Jubbah <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="TShirt">Drop Shoulder <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="PoloShirt">Polo Shirt <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="WomensClothing">Women's Clothing <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Attar">Attar <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Perfumes">Perfumes <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Watch">Watch <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Wallet">Wallet <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Sneakers">Sneakers <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Waistcoat">Waistcoat <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="Tupi">Tupi <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="ComboOffers">Combo Offers <i class="fa-solid fa-chevron-right"></i></a></li>
-                <li><a asp-controller="Category" asp-action="FlashSale" class="flash">FLASH SALE - 26 🔥🔥 <i class="fa-solid fa-chevron-right"></i></a></li>
+                @foreach (var cat in navbarCategories)
+                {
+                    var displayName = toDisplay(cat.Name);
+
+                    <li>
+                        <a asp-controller="Category" asp-action="Load" asp-route-name="@cat.Name"
+                           class="@(cat.IsFlashSale ? "flash" : "")">
+                            @displayName <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
         <div class="mobile-drawer-footer">
@@ -556,15 +511,11 @@
                 <div class="footer-col">
                     <h4>Shop</h4>
                     <ul>
-                        <li><a asp-controller="Category" asp-action="Panjabi">Panjabi</a></li>
-                        <li><a asp-controller="Category" asp-action="Thobe">Thobe</a></li>
-                        <li><a asp-controller="Category" asp-action="Jubbah">Jubbah</a></li>
-                        <li><a asp-controller="Category" asp-action="TShirt">Drop Shoulder</a></li>
-                        <li><a asp-controller="Category" asp-action="PoloShirt">Polo Shirt</a></li>
-                        <li><a asp-controller="Category" asp-action="PantTrouser">Pant &amp; Trouser</a></li>
-                        <li><a asp-controller="Category" asp-action="WomensClothing">Women's Clothing</a></li>
-                        <li><a asp-controller="Category" asp-action="Attar">Attar &amp; Perfumes</a></li>
-                        <li><a asp-controller="Category" asp-action="ComboOffers">Combo Offers</a></li>
+                        @foreach (var cat in navbarCategories.Take(9))
+                        {
+                            var displayName = toDisplay(cat.Name);
+                            <li><a asp-controller="Category" asp-action="Load" asp-route-name="@cat.Name">@displayName</a></li>
+                        }
                     </ul>
                 </div>
 
@@ -585,7 +536,6 @@
                     <ul>
                         <li><a href="#">About Us</a></li>
 
-                        @* === Footer-এ Account Section: লগইন অনুযায়ী পরিবর্তন === *@
                         @if (User.Identity != null && User.Identity.IsAuthenticated)
                         {
                             <li><a asp-controller="Account" asp-action="Profile">My Account</a></li>
@@ -629,14 +579,12 @@
                     accountDropdown.classList.toggle('open');
                 });
 
-                // বাইরে ক্লিক করলে বন্ধ হবে
                 document.addEventListener('click', function (e) {
                     if (!accountDropdown.contains(e.target)) {
                         accountDropdown.classList.remove('open');
                     }
                 });
 
-                // ESC চাপলে বন্ধ হবে
                 document.addEventListener('keydown', function (e) {
                     if (e.key === 'Escape') {
                         accountDropdown.classList.remove('open');

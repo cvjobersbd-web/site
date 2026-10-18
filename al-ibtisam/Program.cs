@@ -1,5 +1,5 @@
 using al_ibtisam.Data;
-using al_ibtisam.Services;                       // ⬅️ ImageService-এর জন্য
+using al_ibtisam.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -59,12 +59,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 
 // ============================================================
-// 4. ⬇️ Image Upload Service (নতুন) ⬇️
+// 4. Image Upload Service
 // ============================================================
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // ============================================================
-// 5. Session (Optional)
+// 5. Session
 // ============================================================
 builder.Services.AddSession(options =>
 {
@@ -93,7 +93,7 @@ builder.Services.AddAntiforgery(options =>
 var app = builder.Build();
 
 // ============================================================
-// 8. ⬇️ অ্যাপ স্টার্টআপে ফোল্ডার অটো তৈরি + DB কানেকশন চেক ⬇️
+// 8. অ্যাপ স্টার্টআপে ফোল্ডার তৈরি + DB চেক + Categories চেক
 // ============================================================
 using (var scope = app.Services.CreateScope())
 {
@@ -116,8 +116,7 @@ using (var scope = app.Services.CreateScope())
     {
         var db = services.GetRequiredService<AppDbContext>();
 
-        // ⚠️ যেহেতু pgAdmin দিয়ে ম্যানুয়ালি টেবিল তৈরি করা হয়েছে,
-        // তাই মাইগ্রেশন বন্ধ রাখা হলো।
+        // যেহেতু pgAdmin দিয়ে ম্যানুয়ালি টেবিল তৈরি করা হয়েছে, তাই migration বন্ধ
         // db.Database.Migrate();
 
         if (db.Database.CanConnect())
@@ -139,6 +138,29 @@ using (var scope = app.Services.CreateScope())
             Console.WriteLine("👉 Inner Error: " + ex.InnerException.Message);
         }
     }
+
+    // ---------- 8.3 Categories টেবিল চেক (নতুন) ----------
+    try
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+
+        var categoryCount = db.Categories.Count();
+
+        if (categoryCount == 0)
+        {
+            Console.WriteLine("⚠️ Categories টেবিল খালি — SQL script দিয়ে ডাটা ইনসার্ট করুন।");
+            Console.WriteLine("👉 pgAdmin-এ Categories SQL script চালান।");
+        }
+        else
+        {
+            Console.WriteLine($"✅ Categories loaded: {categoryCount} টি");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("⚠️ Categories টেবিল পাওয়া যায়নি: " + ex.Message);
+        Console.WriteLine("👉 pgAdmin-এ Categories টেবিল তৈরি করার SQL script চালান।");
+    }
 }
 
 // ============================================================
@@ -157,9 +179,7 @@ else
 // HTTPS redirect
 app.UseHttpsRedirection();
 
-// ============================================================
-// 10. Static Files — এটাই যথেষ্ট, wwwroot/uploads সহ সব serve হবে
-// ============================================================
+// Static files serve (CSS, JS, images, /uploads সহ সব)
 app.UseStaticFiles();
 
 // Routing enable
@@ -168,14 +188,12 @@ app.UseRouting();
 // Session (UseAuthentication-এর আগে)
 app.UseSession();
 
-// ============================================================
-// ⚠️ গুরুত্বপূর্ণ ক্রম: Authentication → Authorization
-// ============================================================
+// Authentication → Authorization (ক্রম গুরুত্বপূর্ণ)
 app.UseAuthentication();
 app.UseAuthorization();
 
 // ============================================================
-// 11. Route Configuration
+// 10. Route Configuration
 // ============================================================
 app.MapControllerRoute(
     name: "default",

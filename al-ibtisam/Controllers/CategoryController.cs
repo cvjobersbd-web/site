@@ -15,7 +15,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // প্রতিটি ক্যাটাগরির জন্য Action
+        // পুরনো সব Hardcoded Action (এগুলো ঠিকই কাজ করবে)
         // ============================================================
         public IActionResult Panjabi() => LoadCategory("Panjabi");
         public IActionResult Thobe() => LoadCategory("Thobe");
@@ -35,6 +35,19 @@ namespace al_ibtisam.Controllers
         public IActionResult ComboOffers() => LoadCategory("Combo Offers");
         public IActionResult Katua() => LoadCategory("Katua");
         public IActionResult FlashSale() => LoadCategory("Flash Sale");
+
+        // ============================================================
+        // 🆕 নতুন জেনেরিক অ্যাকশন — যেকোনো নতুন ক্যাটাগরির জন্য
+        // URL: /Category/Load?name=Bra  অথবা /Category/Bra (রাউট কনফিগ)
+        // ============================================================
+        [HttpGet]
+        public IActionResult Load(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return RedirectToAction("Index", "Home");
+
+            return LoadCategory(name);
+        }
 
         // ============================================================
         // কমন মেথড — ডাটাবেজ থেকে ক্যাটাগরি অনুযায়ী ডাটা ফিল্টার করে ভিউ রিটার্ন
