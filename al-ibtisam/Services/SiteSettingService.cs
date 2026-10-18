@@ -36,6 +36,11 @@ namespace al_ibtisam.Services
         /// একটি key মুছে ফেলে। সফল হলে true।
         /// </summary>
         Task<bool> RemoveAsync(string key);
+
+        /// <summary>
+        /// সাইটের থিম কালারসমূহ Dictionary আকারে ফেরত দেয়।
+        /// </summary>
+        Task<Dictionary<string, string>> GetThemeColorsAsync();
     }
 
     /// <summary>
@@ -53,6 +58,13 @@ namespace al_ibtisam.Services
         public const string HeroSliderIntervalKey = "HeroSliderInterval";
         public const string SiteNameKey = "SiteName";
         public const string ContactPhoneKey = "ContactPhone";
+
+        // 🆕 থিম কালার সেটিংস Keys
+        public const string ThemePrimaryColor = "ThemePrimaryColor";
+        public const string ThemeSecondaryColor = "ThemeSecondaryColor";
+        public const string ThemeButtonColor = "ThemeButtonColor";
+        public const string ThemePriceColor = "ThemePriceColor";
+        public const string ThemeBgColor = "ThemeBgColor";
 
         // Default fallback value
         private const int DefaultSliderInterval = 3;
@@ -209,6 +221,24 @@ namespace al_ibtisam.Services
                 _logger.LogError($"RemoveAsync error [{key}]: {ex.Message}");
                 return false;
             }
+        }
+
+        // ============================================================
+        // 6. Get Theme Colors (নতুন)
+        // ============================================================
+        public async Task<Dictionary<string, string>> GetThemeColorsAsync()
+        {
+            var colors = new Dictionary<string, string>();
+            var allSettings = await GetAllAsync();
+
+            // ডাটাবেজে কালার না থাকলে ডিফল্ট কালার সেট হবে
+            colors["Primary"] = allSettings.GetValueOrDefault(ThemePrimaryColor) ?? "#134856";
+            colors["Secondary"] = allSettings.GetValueOrDefault(ThemeSecondaryColor) ?? "#028EA5";
+            colors["Button"] = allSettings.GetValueOrDefault(ThemeButtonColor) ?? "#86D200";
+            colors["Price"] = allSettings.GetValueOrDefault(ThemePriceColor) ?? "#FFAA0D";
+            colors["Bg"] = allSettings.GetValueOrDefault(ThemeBgColor) ?? "#E5FBFF";
+
+            return colors;
         }
     }
 }

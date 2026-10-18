@@ -8,8 +8,8 @@ namespace al_ibtisam.Controllers
 {
     /// <summary>
     /// অ্যাডমিন প্যানেলের Settings পেজ।
-    /// এখানে হোম পেইজের হিরো স্লাইডার (ইমেজ, active/inactive, interval) ম্যানেজ করা হয়।
-    /// View name: "Settings" (Views/Settings/Settings.cshtml)
+    /// এখানে হোম পেইজের হিরো স্লাইডার (ইমেজ, active/inactive, interval) এবং 
+    /// সম্পূর্ণ সাইটের থিম কালার (Customize Site) ম্যানেজ করা হয়।
     /// </summary>
     public class SettingsController : Controller
     {
@@ -50,7 +50,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // SETTINGS PAGE (GET)
+        // 1. SLIDER SETTINGS (GET)
         // URL: /Settings/Index
         // View: Views/Settings/Settings.cshtml
         // ============================================================
@@ -85,7 +85,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // UPDATE SLIDER INTERVAL (POST)
+        // 2. UPDATE SLIDER INTERVAL (POST)
         // URL: /Settings/UpdateSliderInterval
         // ============================================================
         [HttpPost]
@@ -118,9 +118,67 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // ADD SLIDE (GET)
+        // 3. CUSTOMIZE SITE - THEME COLORS (GET)
+        // URL: /Settings/Customize
+        // View: Views/Settings/Customize.cshtml
+        // ============================================================
+        [HttpGet]
+        public async Task<IActionResult> Customize()
+        {
+            if (!IsAdmin())
+                return RedirectToAction("SignIn", "Account", new { returnUrl = "/Settings/Customize" });
+
+            var colors = await _siteSettings.GetThemeColorsAsync();
+            return View(colors);
+        }
+
+        // ============================================================
+        // 4. CUSTOMIZE SITE - THEME COLORS (POST)
+        // URL: /Settings/Customize
+        // ============================================================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Customize(
+            string primaryColor,
+            string secondaryColor,
+            string buttonColor,
+            string priceColor,
+            string bgColor)
+        {
+            if (!IsAdmin())
+                return RedirectToAction("SignIn", "Account");
+
+            try
+            {
+                if (!string.IsNullOrEmpty(primaryColor))
+                    await _siteSettings.SetValueAsync(SiteSettingService.ThemePrimaryColor, primaryColor);
+
+                if (!string.IsNullOrEmpty(secondaryColor))
+                    await _siteSettings.SetValueAsync(SiteSettingService.ThemeSecondaryColor, secondaryColor);
+
+                if (!string.IsNullOrEmpty(buttonColor))
+                    await _siteSettings.SetValueAsync(SiteSettingService.ThemeButtonColor, buttonColor);
+
+                if (!string.IsNullOrEmpty(priceColor))
+                    await _siteSettings.SetValueAsync(SiteSettingService.ThemePriceColor, priceColor);
+
+                if (!string.IsNullOrEmpty(bgColor))
+                    await _siteSettings.SetValueAsync(SiteSettingService.ThemeBgColor, bgColor);
+
+                TempData["Success"] = "সাইটের কালার সফলভাবে আপডেট করা হয়েছে!";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Customize error: {ex.Message}");
+                TempData["Error"] = "কালার সেভ করতে সমস্যা হয়েছে।";
+            }
+
+            return RedirectToAction(nameof(Customize));
+        }
+
+        // ============================================================
+        // 5. ADD SLIDE (GET)
         // URL: /Settings/AddSlide
-        // View: Views/Settings/AddSlide.cshtml
         // ============================================================
         [HttpGet]
         public IActionResult AddSlide()
@@ -132,7 +190,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // ADD SLIDE (POST) — File Upload
+        // 6. ADD SLIDE (POST) — File Upload
         // URL: /Settings/AddSlide
         // ============================================================
         [HttpPost]
@@ -145,7 +203,6 @@ namespace al_ibtisam.Controllers
                 return RedirectToAction("SignIn", "Account");
 
             // ✅ IMPORTANT: ImageUrl রিকোয়ার্ড ভ্যালিডেশন ইগনোর করুন
-            // কারণ আমরা টেক্সট URL না নিয়ে imageFile (IFormFile) দিয়ে ইমেজ নিচ্ছি।
             ModelState.Remove("ImageUrl");
 
             // ---------- Image required ----------
@@ -194,9 +251,8 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // EDIT SLIDE (GET)
+        // 7. EDIT SLIDE (GET)
         // URL: /Settings/EditSlide/5
-        // View: Views/Settings/EditSlide.cshtml
         // ============================================================
         [HttpGet]
         public async Task<IActionResult> EditSlide(int id)
@@ -212,7 +268,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // EDIT SLIDE (POST)
+        // 8. EDIT SLIDE (POST)
         // URL: /Settings/EditSlide
         // ============================================================
         [HttpPost]
@@ -277,7 +333,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // TOGGLE ACTIVE (POST) — AJAX
+        // 9. TOGGLE ACTIVE (POST) — AJAX
         // URL: /Settings/ToggleActive?id=5
         // ============================================================
         [HttpPost]
@@ -311,7 +367,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // DELETE SLIDE (POST)
+        // 10. DELETE SLIDE (POST)
         // URL: /Settings/DeleteSlide
         // ============================================================
         [HttpPost]

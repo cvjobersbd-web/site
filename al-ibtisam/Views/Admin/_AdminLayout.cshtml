@@ -514,13 +514,30 @@
 
             <li class="sidebar-nav-section">System</li>
 
-            <!-- SETTINGS (নতুন — SettingsController-এ যাবে) -->
-            <li>
-                <a asp-controller="Settings" asp-action="Index"
-                   class="@(ViewData["ActiveNav"]?.ToString() == "Settings" ? "active" : "")">
+            <!-- SETTINGS SUBMENU (Slider & Customize) -->
+            @{
+                var isSettingsPage = ViewData["ActiveNav"]?.ToString() == "Settings" || ViewData["ActiveNav"]?.ToString() == "Customize";
+            }
+            <li class="has-submenu @(isSettingsPage ? "open" : "")" id="settingsMenu">
+                <a href="javascript:void(0)" id="settingsToggle">
                     <i class="fa-solid fa-gear"></i>
                     <span>Settings</span>
+                    <i class="fa-solid fa-chevron-down dropdown-icon"></i>
                 </a>
+                <ul class="sidebar-submenu">
+                    <li>
+                        <a asp-controller="Settings" asp-action="Index"
+                           class="@(ViewData["ActiveNav"]?.ToString() == "Settings" ? "active" : "")">
+                            Slider Setup
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-controller="Settings" asp-action="Customize"
+                           class="@(ViewData["ActiveNav"]?.ToString() == "Customize" ? "active" : "")">
+                            Customize Site
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <!-- VISIT STORE -->
@@ -623,6 +640,19 @@
                 productsToggle.addEventListener('click', function (e) {
                     e.preventDefault();
                     productsMenu.classList.toggle('open');
+                });
+            }
+
+            // ==========================================
+            // Smooth Settings Submenu Toggle
+            // ==========================================
+            var settingsMenu = document.getElementById('settingsMenu');
+            var settingsToggle = document.getElementById('settingsToggle');
+
+            if (settingsToggle) {
+                settingsToggle.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    settingsMenu.classList.toggle('open');
                 });
             }
         })();

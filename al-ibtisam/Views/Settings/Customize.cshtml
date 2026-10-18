@@ -1,0 +1,272 @@
+﻿@model Dictionary<string, string>
+@{
+    ViewData["Title"] = "Customize Site";
+    ViewData["ActiveNav"] = "Customize";
+    ViewData["PageTitle"] = "Customize Site";
+    ViewData["PageSubTitle"] = "সাইটের মূল কালারসমূহ পরিবর্তন করুন";
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+}
+
+<style>
+    /* ================= COLOR CARD ================= */
+    .color-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 2px 12px rgba(0,0,0,.06);
+        max-width: 800px;
+    }
+    
+    /* ================= COLOR ROW ================= */
+    .color-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 18px 0;
+        border-bottom: 1px solid #f0f4f8;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .color-row:last-child {
+        border-bottom: 0;
+    }
+    .color-info h4 {
+        margin: 0 0 4px;
+        font-size: 15px;
+        font-weight: 600;
+        color: #134856;
+    }
+    .color-info p {
+        margin: 0;
+        font-size: 12.5px;
+        color: #6c8a93;
+        font-family: 'Hind Siliguri', sans-serif;
+    }
+
+    /* ================= COLOR INPUT ================= */
+    .color-input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #f9fbfc;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1.5px solid #e0e6ed;
+        transition: border-color .2s;
+    }
+    .color-input-wrap:focus-within {
+        border-color: #028EA5;
+    }
+    .color-input-wrap input[type="color"] {
+        width: 40px;
+        height: 40px;
+        border: 0;
+        border-radius: 6px;
+        cursor: pointer;
+        background: transparent;
+        padding: 0;
+    }
+    .color-input-wrap input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+    .color-input-wrap input[type="color"]::-webkit-color-swatch {
+        border: 1px solid #e0e6ed;
+        border-radius: 6px;
+    }
+    .color-input-wrap input[type="text"] {
+        border: 0;
+        background: transparent;
+        font-family: monospace;
+        font-size: 14px;
+        font-weight: 600;
+        color: #134856;
+        width: 85px;
+        outline: none;
+        text-transform: uppercase;
+    }
+
+    /* ================= BUTTONS ================= */
+    .btn-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        padding-top: 24px;
+        border-top: 1px solid #f0f4f8;
+        flex-wrap: wrap;
+    }
+    .btn-save-colors {
+        height: 52px;
+        padding: 0 36px;
+        background: #028EA5;
+        color: #fff;
+        border: 0;
+        border-radius: 8px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: background .2s, transform .1s;
+    }
+    .btn-save-colors:hover {
+        background: #134856;
+    }
+    .btn-save-colors:active {
+        transform: scale(.99);
+    }
+    .btn-save-colors:disabled {
+        opacity: .7;
+        cursor: not-allowed;
+    }
+
+    /* ================= ALERTS ================= */
+    .alert {
+        padding: 14px 20px;
+        border-radius: 10px;
+        margin-bottom: 22px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Hind Siliguri', sans-serif;
+        animation: fadeIn .3s ease;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .alert-success { background: #e3f6ec; border: 1px solid #b3e2c6; color: #0f7b3e; }
+    .alert-error { background: #fdeaea; border: 1px solid #f5c2c2; color: #b71c1c; }
+
+    /* ================= RESPONSIVE ================= */
+    @@media (max-width: 768px) {
+        .color-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .color-input-wrap {
+            width: 100%;
+        }
+        .color-input-wrap input[type="text"] {
+            flex: 1;
+            width: auto;
+        }
+        .btn-row {
+            flex-direction: column;
+        }
+        .btn-save-colors {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+
+@* ================= SUCCESS MESSAGE ================= *@
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success">
+        <i class="fa-solid fa-circle-check"></i>
+        <span>@TempData["Success"]</span>
+    </div>
+}
+
+@* ================= ERROR MESSAGE ================= *@
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>@TempData["Error"]</span>
+    </div>
+}
+
+<div class="color-card">
+    <form asp-controller="Settings" asp-action="Customize" method="post" id="customizeForm">
+        @Html.AntiForgeryToken()
+
+        <!-- Primary Color (Navbar/Footer) -->
+        <div class="color-row">
+            <div class="color-info">
+                <h4>Primary Color (Navbar & Footer)</h4>
+                <p>হেডার, ফুটার এবং গুরুত্বপূর্ণ টেক্সট এর কালার</p>
+            </div>
+            <div class="color-input-wrap">
+                <input type="color" id="primaryColorPicker" value="@Model["Primary"]" oninput="document.getElementById('primaryColorText').value = this.value">
+                <input type="text" id="primaryColorText" name="primaryColor" value="@Model["Primary"]" oninput="document.getElementById('primaryColorPicker').value = this.value" maxlength="7">
+            </div>
+        </div>
+
+        <!-- Secondary Color (Links/Hover) -->
+        <div class="color-row">
+            <div class="color-info">
+                <h4>Secondary Color (Links & Highlights)</h4>
+                <p>লিংক, সাব-হেডিং এবং হাইলাইট করা টেক্সটের কালার</p>
+            </div>
+            <div class="color-input-wrap">
+                <input type="color" id="secondaryColorPicker" value="@Model["Secondary"]" oninput="document.getElementById('secondaryColorText').value = this.value">
+                <input type="text" id="secondaryColorText" name="secondaryColor" value="@Model["Secondary"]" oninput="document.getElementById('secondaryColorPicker').value = this.value" maxlength="7">
+            </div>
+        </div>
+
+        <!-- Button Color -->
+        <div class="color-row">
+            <div class="color-info">
+                <h4>Button Color</h4>
+                <p>"Add to Cart", "Buy Now" সহ সব বাটনের কালার</p>
+            </div>
+            <div class="color-input-wrap">
+                <input type="color" id="buttonColorPicker" value="@Model["Button"]" oninput="document.getElementById('buttonColorText').value = this.value">
+                <input type="text" id="buttonColorText" name="buttonColor" value="@Model["Button"]" oninput="document.getElementById('buttonColorPicker').value = this.value" maxlength="7">
+            </div>
+        </div>
+
+        <!-- Price Color -->
+        <div class="color-row">
+            <div class="color-info">
+                <h4>Price Color</h4>
+                <p>প্রোডাক্টের দাম দেখানোর কালার</p>
+            </div>
+            <div class="color-input-wrap">
+                <input type="color" id="priceColorPicker" value="@Model["Price"]" oninput="document.getElementById('priceColorText').value = this.value">
+                <input type="text" id="priceColorText" name="priceColor" value="@Model["Price"]" oninput="document.getElementById('priceColorPicker').value = this.value" maxlength="7">
+            </div>
+        </div>
+
+        <!-- Background Color -->
+        <div class="color-row">
+            <div class="color-info">
+                <h4>Background Color</h4>
+                <p>সম্পূর্ণ সাইটের ব্যাকগ্রাউন্ড কালার</p>
+            </div>
+            <div class="color-input-wrap">
+                <input type="color" id="bgColorPicker" value="@Model["Bg"]" oninput="document.getElementById('bgColorText').value = this.value">
+                <input type="text" id="bgColorText" name="bgColor" value="@Model["Bg"]" oninput="document.getElementById('bgColorPicker').value = this.value" maxlength="7">
+            </div>
+        </div>
+
+        <!-- SUBMIT -->
+        <div class="btn-row">
+            <button type="submit" class="btn-save-colors" id="saveBtn">
+                <i class="fa-solid fa-floppy-disk"></i> Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var form = document.getElementById('customizeForm');
+            var saveBtn = document.getElementById('saveBtn');
+
+            if (form && saveBtn) {
+                form.addEventListener('submit', function () {
+                    // Loading State
+                    saveBtn.disabled = true;
+                    saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Saving...';
+                });
+            }
+        })();
+    </script>
+}
