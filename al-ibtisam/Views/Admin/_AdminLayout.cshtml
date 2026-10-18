@@ -215,7 +215,7 @@
         }
         
         .has-submenu.open .sidebar-submenu {
-            max-height: 300px; /* ম্যাক্স হাইট বাড়ানো হলো */
+            max-height: 300px;
             opacity: 1;
         }
         
@@ -494,7 +494,7 @@
                             Add New Product
                         </a>
                     </li>
-                    <!-- CATEGORIES সরাসরি এখানে যুক্ত করা হলো -->
+                    <!-- CATEGORIES -->
                     <li>
                         <a asp-controller="Admin" asp-action="Categories"
                            class="@(ViewData["ActiveNav"]?.ToString() == "Categories" ? "active" : "")">
@@ -514,17 +514,20 @@
 
             <li class="sidebar-nav-section">System</li>
 
+            <!-- SETTINGS (নতুন — SettingsController-এ যাবে) -->
             <li>
-                <a asp-controller="Home" asp-action="Index">
-                    <i class="fa-solid fa-store"></i>
-                    <span>Visit Store</span>
+                <a asp-controller="Settings" asp-action="Index"
+                   class="@(ViewData["ActiveNav"]?.ToString() == "Settings" ? "active" : "")">
+                    <i class="fa-solid fa-gear"></i>
+                    <span>Settings</span>
                 </a>
             </li>
 
+            <!-- VISIT STORE -->
             <li>
-                <a href="#">
-                    <i class="fa-solid fa-gear"></i>
-                    <span>Settings</span>
+                <a asp-controller="Home" asp-action="Index" target="_blank">
+                    <i class="fa-solid fa-store"></i>
+                    <span>Visit Store</span>
                 </a>
             </li>
         </ul>

@@ -64,7 +64,12 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // ============================================================
-// 5. Session
+// 5. Site Setting Service (নতুন — স্লাইডার interval ইত্যাদির জন্য)
+// ============================================================
+builder.Services.AddScoped<ISiteSettingService, SiteSettingService>();
+
+// ============================================================
+// 6. Session
 // ============================================================
 builder.Services.AddSession(options =>
 {
@@ -75,12 +80,12 @@ builder.Services.AddSession(options =>
 });
 
 // ============================================================
-// 6. HttpContextAccessor
+// 7. HttpContextAccessor
 // ============================================================
 builder.Services.AddHttpContextAccessor();
 
 // ============================================================
-// 7. Antiforgery (CSRF Protection)
+// 8. Antiforgery (CSRF Protection)
 // ============================================================
 builder.Services.AddAntiforgery(options =>
 {
@@ -93,13 +98,13 @@ builder.Services.AddAntiforgery(options =>
 var app = builder.Build();
 
 // ============================================================
-// 8. অ্যাপ স্টার্টআপে ফোল্ডার তৈরি + DB চেক + Categories চেক
+// 9. অ্যাপ স্টার্টআপে ফোল্ডার তৈরি + DB চেক + Categories/SiteSettings চেক
 // ============================================================
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
 
-    // ---------- 8.1 Uploads ফোল্ডার অটো তৈরি ----------
+    // ---------- 9.1 Uploads ফোল্ডার অটো তৈরি ----------
     try
     {
         var imageService = services.GetRequiredService<IImageService>();
@@ -111,7 +116,7 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("❌ Upload folder creation error: " + ex.Message);
     }
 
-    // ---------- 8.2 Database কানেকশন চেক ----------
+    // ---------- 9.2 Database কানেকশন চেক ----------
     try
     {
         var db = services.GetRequiredService<AppDbContext>();
@@ -139,7 +144,7 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // ---------- 8.3 Categories টেবিল চেক (নতুন) ----------
+    // ---------- 9.3 Categories টেবিল চেক ----------
     try
     {
         var db = services.GetRequiredService<AppDbContext>();
@@ -161,10 +166,60 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("⚠️ Categories টেবিল পাওয়া যায়নি: " + ex.Message);
         Console.WriteLine("👉 pgAdmin-এ Categories টেবিল তৈরি করার SQL script চালান।");
     }
+
+    // ---------- 9.4 HeroSlides টেবিল চেক (নতুন) ----------
+    try
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+
+        var slideCount = db.HeroSlides.Count();
+        Console.WriteLine($"✅ HeroSlides loaded: {slideCount} টি স্লাইড");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("⚠️ HeroSlides টেবিল পাওয়া যায়নি: " + ex.Message);
+        Console.WriteLine("👉 pgAdmin-এ HeroSlides টেবিল তৈরি করার SQL script চালান।");
+    }
+
+    // ---------- 9.5 SiteSettings টেবিল চেক + ডিফল্ট তৈরি (নতুন) ----------
+    try
+    {
+        var db = services.GetRequiredService<AppDbContext>();
+        var siteSettings = services.GetRequiredService<ISiteSettingService>();
+
+        // টেবিল আছে কিনা চেক
+        var settingCount = db.SiteSettings.Count();
+
+        // ডিফল্ট HeroSliderInterval না থাকলে তৈরি করুন
+        var existing = db.SiteSettings
+            .FirstOrDefault(s => s.SettingKey == SiteSettingService.HeroSliderIntervalKey);
+
+        if (existing == null)
+        {
+            db.SiteSettings.Add(new al_ibtisam.Models.SiteSetting
+            {
+                SettingKey = SiteSettingService.HeroSliderIntervalKey,
+                SettingValue = "3",
+                UpdatedAt = DateTime.UtcNow
+            });
+            db.SaveChanges();
+
+            Console.WriteLine("✅ Default HeroSliderInterval = 3 সেকেন্ড তৈরি করা হয়েছে।");
+        }
+        else
+        {
+            Console.WriteLine($"✅ SiteSettings loaded: {settingCount} টি | Slider Interval = {existing.SettingValue}s");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("⚠️ SiteSettings টেবিল পাওয়া যায়নি: " + ex.Message);
+        Console.WriteLine("👉 pgAdmin-এ SiteSettings টেবিল তৈরি করার SQL script চালান।");
+    }
 }
 
 // ============================================================
-// 9. Configure HTTP Request Pipeline
+// 10. Configure HTTP Request Pipeline
 // ============================================================
 if (!app.Environment.IsDevelopment())
 {
@@ -193,7 +248,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // ============================================================
-// 10. Route Configuration
+// 11. Route Configuration
 // ============================================================
 app.MapControllerRoute(
     name: "default",

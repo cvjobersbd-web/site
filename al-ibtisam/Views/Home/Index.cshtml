@@ -1,5 +1,13 @@
-﻿@{
+﻿@using al_ibtisam.Models
+@{
     ViewData["Title"] = "Home Page";
+
+    // ============================================================
+    // Hero Slider — ডাটাবেজ থেকে লোড (HomeController.ViewBag)
+    // ============================================================
+    var heroSlides = ViewBag.HeroSlides as List<HeroSlide> ?? new List<HeroSlide>();
+    int sliderMs = ViewBag.SliderIntervalSeconds ?? 3000;
+    int slideCount = heroSlides.Count;
 }
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -182,7 +190,7 @@
 
     @@media (prefers-reduced-motion: reduce) {
         .hero .carousel-item.active .hero-anim,
-        .hero .carousel-item-next .hero-anim {
+        .hero .carousel-item.next .hero-anim {
             animation: none;
         }
     }
@@ -569,50 +577,102 @@
     }
 </style>
 
-@* Hero Section *@
+@* ============================================================ *@
+@* HERO SLIDER — Dynamic from DB                                 *@
+@* ============================================================ *@
 <div class="hero-wrap">
-    <section id="heroSlider" class="hero carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000" aria-label="Featured collections">
-        <div class="carousel-indicators">
-            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="1" aria-label="Slide 2"></button>
-            <button type="button" data-bs-target="#heroSlider" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
+    @if (slideCount > 0)
+    {
+        <section id="heroSlider"
+                 class="hero carousel slide carousel-fade"
+                 data-bs-ride="carousel"
+                 data-bs-interval="@sliderMs"
+                 aria-label="Featured collections">
 
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img class="hero-img" src="https://i.ibb.co.com/8gpc2ppZ/hero-images-1.jpg" alt="Fashion glasses" />
-                <div class="hero-caption">
-                    <p class="hero-label hero-anim">New Collection</p>
-                    <h2 class="hero-title-light hero-anim">Fashion</h2>
-                    <h2 class="hero-title-bold hero-anim">Glasses</h2>
-                    <p class="hero-sub hero-anim">Best eyeglasses for women to channel your inner Clark Kent</p>
+            @if (slideCount > 1)
+            {
+                <div class="carousel-indicators">
+                    @for (int i = 0; i < slideCount; i++)
+                    {
+                        <button type="button"
+                                data-bs-target="#heroSlider"
+                                data-bs-slide-to="@i"
+                                class="@(i == 0 ? "active" : "")"
+                                aria-current="@(i == 0 ? "true" : null)"
+                                aria-label="Slide @(i + 1)"></button>
+                    }
+                </div>
+            }
+
+            <div class="carousel-inner">
+                @for (int i = 0; i < slideCount; i++)
+                {
+                    var slide = heroSlides[i];
+                    var hasCaption = !string.IsNullOrWhiteSpace(slide.Label)
+                                  || !string.IsNullOrWhiteSpace(slide.TitleLight)
+                                  || !string.IsNullOrWhiteSpace(slide.TitleBold)
+                                  || !string.IsNullOrWhiteSpace(slide.Subtitle);
+
+                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                        <img class="hero-img"
+                             src="@slide.ImageUrl"
+                             alt="Slide @(i + 1)"
+                             loading="@(i == 0 ? "eager" : "lazy")" />
+
+                        @if (hasCaption)
+                        {
+                            <div class="hero-caption">
+                                @if (!string.IsNullOrWhiteSpace(slide.Label))
+                                {
+                                    <p class="hero-label hero-anim">@slide.Label</p>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(slide.TitleLight))
+                                {
+                                    <h2 class="hero-title-light hero-anim">@slide.TitleLight</h2>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(slide.TitleBold))
+                                {
+                                    <h2 class="hero-title-bold hero-anim">@slide.TitleBold</h2>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(slide.Subtitle))
+                                {
+                                    <p class="hero-sub hero-anim">@slide.Subtitle</p>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </section>
+    }
+    else
+    {
+        @* ---------- Fallback (কোনো স্লাইড ডাটাবেজে নেই) ---------- *@
+        <section id="heroSlider"
+                 class="hero carousel slide carousel-fade"
+                 data-bs-ride="carousel"
+                 data-bs-interval="3000"
+                 aria-label="Featured collections">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img class="hero-img"
+                         src="https://i.ibb.co.com/8gpc2ppZ/hero-images-1.jpg"
+                         alt="Slide 1" />
+                    <div class="hero-caption">
+                        <p class="hero-label hero-anim">New Collection</p>
+                        <h2 class="hero-title-light hero-anim">Fashion</h2>
+                        <h2 class="hero-title-bold hero-anim">Glasses</h2>
+                        <p class="hero-sub hero-anim">Best eyeglasses for women to channel your inner Clark Kent</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="carousel-item">
-                <img class="hero-img" src="https://i.ibb.co.com/QvN0kN3Y/hero-images-2.jpg" alt="The hotlist of summer" />
-                <div class="hero-caption">
-                    <p class="hero-label hero-anim">Fashion Trends</p>
-                    <h2 class="hero-title-light hero-anim">The Hotlist of</h2>
-                    <h2 class="hero-title-bold hero-anim">Summer</h2>
-                    <p class="hero-sub hero-anim">The 12 Biggest Spring/Summer 2021 Trends</p>
-                </div>
-            </div>
-
-            <div class="carousel-item">
-                <img class="hero-img" src="https://i.ibb.co.com/FbkwZKSs/hero-images-3.jpg" alt="Find your perfect style" />
-                <div class="hero-caption">
-                    <p class="hero-label hero-anim">New Collection</p>
-                    <h2 class="hero-title-light hero-anim">Find Your</h2>
-                    <h2 class="hero-title-bold hero-anim">Perfect</h2>
-                    <p class="hero-sub hero-anim">Uncompromising in style, quality and performance</p>
-                </div>
-            </div>
-        </div>
-    </section>
+        </section>
+    }
 </div>
 
-@* Top Item Section *@
+@* ============================================================ *@
+@* TOP ITEM SECTION                                              *@
+@* ============================================================ *@
 @{
     var categories = new[]
     {
@@ -630,7 +690,6 @@
 
 <section class="tc" aria-label="Top Item">
     <div class="tc-inner">
-
         <div class="tc-head">
             <h2>Top Item</h2>
         </div>
@@ -648,7 +707,9 @@
     </div>
 </section>
 
-@* Showroom Location Banner Section *@
+@* ============================================================ *@
+@* SHOWROOM BANNER                                               *@
+@* ============================================================ *@
 <section class="showroom-banner" aria-label="Showroom Location">
     <div class="showroom-inner">
         <a href="#" class="showroom-link">
@@ -659,7 +720,9 @@
     </div>
 </section>
 
-@* Jubbah Section *@
+@* ============================================================ *@
+@* JUBBAH SECTION                                                *@
+@* ============================================================ *@
 @{
     var jubbahProducts = new[]
     {
@@ -672,7 +735,6 @@
 
 <section class="jb" aria-label="Jubbah Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Jubbah" class="jb-main">
             <img src="https://i.ibb.co.com/nsF1QbH4/Elegant-Jubbah-in-Islamic-Courtyard.png" alt="Elegant Jubbah in Islamic Courtyard" loading="lazy" />
         </a>
@@ -696,7 +758,9 @@
     </div>
 </section>
 
-@* Thobe Section *@
+@* ============================================================ *@
+@* THOBE SECTION                                                 *@
+@* ============================================================ *@
 @{
     var thobeProducts = new[]
     {
@@ -709,7 +773,6 @@
 
 <section class="jb" aria-label="Thobe Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Thobe" class="jb-main">
             <img src="https://i.ibb.co.com/xKn32pbD/Luxury-Thobe-Courtyard-Campaign.png" alt="Premium Thobe Collection in Courtyard" loading="lazy" />
         </a>
@@ -733,7 +796,9 @@
     </div>
 </section>
 
-@* Panjabi Section *@
+@* ============================================================ *@
+@* PANJABI SECTION                                               *@
+@* ============================================================ *@
 @{
     var panjabiProducts = new[]
     {
@@ -746,7 +811,6 @@
 
 <section class="jb" aria-label="Panjabi Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Panjabi" class="jb-main">
             <img src="https://i.ibb.co.com/NnKffXNf/category-image-2-20251008131600.jpg" alt="Premium Panjabi Collection" loading="lazy" />
         </a>
@@ -770,7 +834,9 @@
     </div>
 </section>
 
-@* Waistcoat Section *@
+@* ============================================================ *@
+@* WAISTCOAT SECTION                                             *@
+@* ============================================================ *@
 @{
     var waistcoatProducts = new[]
     {
@@ -783,7 +849,6 @@
 
 <section class="jb" aria-label="Waistcoat Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Waistcoat" class="jb-main">
             <img src="https://i.ibb.co.com/BHk7K2CT/Signature-Waistcoat-Collection.png" alt="Signature Waistcoat Collection" loading="lazy" />
         </a>
@@ -807,7 +872,9 @@
     </div>
 </section>
 
-@* Pajamas Trousers Section *@
+@* ============================================================ *@
+@* PAJAMAS TROUSERS SECTION                                      *@
+@* ============================================================ *@
 @{
     var pajamasTrousersProducts = new[]
     {
@@ -820,7 +887,6 @@
 
 <section class="jb" aria-label="Pajamas Trousers Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="PantTrouser" class="jb-main">
             <img src="https://i.ibb.co.com/707sg7Y/Premium-Pants-Trousers-Display.png" alt="Premium Pants & Trousers Display" loading="lazy" />
         </a>
@@ -844,7 +910,9 @@
     </div>
 </section>
 
-@* Sneakers Section *@
+@* ============================================================ *@
+@* SNEAKERS SECTION                                              *@
+@* ============================================================ *@
 @{
     var sneakersProducts = new[]
     {
@@ -857,7 +925,6 @@
 
 <section class="jb" aria-label="Sneakers Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Sneakers" class="jb-main">
             <img src="https://i.ibb.co.com/n8NCysMY/Sneakers.jpg" alt="Sneakers Collection" loading="lazy" />
         </a>
@@ -881,7 +948,9 @@
     </div>
 </section>
 
-@* Attar Section *@
+@* ============================================================ *@
+@* ATTAR SECTION                                                 *@
+@* ============================================================ *@
 @{
     var attarProducts = new[]
     {
@@ -894,7 +963,6 @@
 
 <section class="jb" aria-label="Attar Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Attar" class="jb-main">
             <img src="https://i.ibb.co.com/rRNbTjgZ/ATTAR.jpg" alt="Attar Collection" loading="lazy" />
         </a>
@@ -918,7 +986,9 @@
     </div>
 </section>
 
-@* Drop Shoulder Section *@
+@* ============================================================ *@
+@* DROP SHOULDER SECTION                                         *@
+@* ============================================================ *@
 @{
     var dropShoulderProducts = new[]
     {
@@ -931,7 +1001,6 @@
 
 <section class="jb" aria-label="Drop Shoulder Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="TShirt" class="jb-main">
             <img src="https://i.ibb.co.com/mrfP1CR5/Premium-Drop-Shoulder-Tee-Campaign.png" alt="Premium Drop Shoulder Tee Campaign" loading="lazy" />
         </a>
@@ -955,7 +1024,9 @@
     </div>
 </section>
 
-@* Katua Section *@
+@* ============================================================ *@
+@* KATUA SECTION                                                 *@
+@* ============================================================ *@
 @{
     var katuaProducts = new[]
     {
@@ -968,7 +1039,6 @@
 
 <section class="jb" aria-label="Katua Collection">
     <div class="jb-inner">
-
         <a asp-controller="Category" asp-action="Katua" class="jb-main">
             <img src="https://i.ibb.co.com/TDG6NFhr/Premium-Katua-Courtyard-Collection.png" alt="Premium Katua Courtyard Collection" loading="lazy" />
         </a>
@@ -992,7 +1062,9 @@
     </div>
 </section>
 
-@* Features Section *@
+@* ============================================================ *@
+@* FEATURES SECTION                                              *@
+@* ============================================================ *@
 @{
     var features = new[]
     {

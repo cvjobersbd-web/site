@@ -32,9 +32,19 @@ namespace al_ibtisam.Data
         public DbSet<Product> Products { get; set; }
 
         /// <summary>
-        /// Categories টেবিল — ক্যাটাগরি ও Navbar কন্ট্রোল (নতুন)
+        /// Categories টেবিল — ক্যাটাগরি ও Navbar কন্ট্রোল
         /// </summary>
         public DbSet<Category> Categories { get; set; }
+
+        /// <summary>
+        /// HeroSlides টেবিল — হোম পেইজের হিরো স্লাইডার ইমেজ ও ক্যাপশন
+        /// </summary>
+        public DbSet<HeroSlide> HeroSlides { get; set; }
+
+        /// <summary>
+        /// SiteSettings টেবিল — গ্লোবাল key/value সেটিংস (যেমন: Slider Interval)
+        /// </summary>
+        public DbSet<SiteSetting> SiteSettings { get; set; }
 
         // ============================================================
         // Model Configuration
@@ -182,53 +192,125 @@ namespace al_ibtisam.Data
             });
 
             // --------------------------------------------------------
-            // Category Configuration (নতুন)
+            // Category Configuration
             // --------------------------------------------------------
             modelBuilder.Entity<Category>(entity =>
             {
-                // ---------- Table Name ----------
                 entity.ToTable("Categories");
-
-                // ---------- Primary Key ----------
                 entity.HasKey(c => c.Id);
 
-                // ---------- Auto Increment Id ----------
                 entity.Property(c => c.Id)
                       .ValueGeneratedOnAdd();
 
-                // ---------- Name ----------
                 entity.Property(c => c.Name)
                       .IsRequired()
                       .HasMaxLength(100)
                       .HasColumnName("name");
 
-                // Name Unique Index
                 entity.HasIndex(c => c.Name)
                       .IsUnique()
                       .HasDatabaseName("ix_categories_name_unique");
 
-                // ---------- Show In Navbar ----------
                 entity.Property(c => c.ShowInNavbar)
                       .IsRequired()
                       .HasColumnName("show_in_navbar")
                       .HasDefaultValue(true);
 
-                // ---------- Display Order ----------
                 entity.Property(c => c.DisplayOrder)
                       .IsRequired()
                       .HasColumnName("display_order")
                       .HasDefaultValue(0);
 
-                // ---------- Is Flash Sale ----------
                 entity.Property(c => c.IsFlashSale)
                       .IsRequired()
                       .HasColumnName("is_flash_sale")
                       .HasDefaultValue(false);
 
-                // ---------- Created At ----------
                 entity.Property(c => c.CreatedAt)
                       .IsRequired()
                       .HasColumnName("created_at")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            // --------------------------------------------------------
+            // HeroSlide Configuration (নতুন)
+            // --------------------------------------------------------
+            modelBuilder.Entity<HeroSlide>(entity =>
+            {
+                entity.ToTable("HeroSlides");
+                entity.HasKey(h => h.Id);
+
+                entity.Property(h => h.Id)
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(h => h.ImageUrl)
+                      .IsRequired()
+                      .HasMaxLength(1000)
+                      .HasColumnName("image_url");
+
+                entity.Property(h => h.Label)
+                      .HasMaxLength(100)
+                      .HasColumnName("label");
+
+                entity.Property(h => h.TitleLight)
+                      .HasMaxLength(150)
+                      .HasColumnName("title_light");
+
+                entity.Property(h => h.TitleBold)
+                      .HasMaxLength(150)
+                      .HasColumnName("title_bold");
+
+                entity.Property(h => h.Subtitle)
+                      .HasMaxLength(300)
+                      .HasColumnName("subtitle");
+
+                entity.Property(h => h.IsActive)
+                      .IsRequired()
+                      .HasColumnName("is_active")
+                      .HasDefaultValue(true);
+
+                entity.Property(h => h.DisplayOrder)
+                      .IsRequired()
+                      .HasColumnName("display_order")
+                      .HasDefaultValue(0);
+
+                entity.Property(h => h.CreatedAt)
+                      .IsRequired()
+                      .HasColumnName("created_at")
+                      .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                // পারফরম্যান্স — active slides দ্রুত লোড হবে
+                entity.HasIndex(h => new { h.IsActive, h.DisplayOrder })
+                      .HasDatabaseName("ix_hero_slides_active_order");
+            });
+
+            // --------------------------------------------------------
+            // SiteSetting Configuration (নতুন)
+            // --------------------------------------------------------
+            modelBuilder.Entity<SiteSetting>(entity =>
+            {
+                entity.ToTable("SiteSettings");
+                entity.HasKey(s => s.Id);
+
+                entity.Property(s => s.Id)
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(s => s.SettingKey)
+                      .IsRequired()
+                      .HasMaxLength(100)
+                      .HasColumnName("setting_key");
+
+                entity.HasIndex(s => s.SettingKey)
+                      .IsUnique()
+                      .HasDatabaseName("ix_site_settings_key_unique");
+
+                entity.Property(s => s.SettingValue)
+                      .HasMaxLength(500)
+                      .HasColumnName("setting_value");
+
+                entity.Property(s => s.UpdatedAt)
+                      .IsRequired()
+                      .HasColumnName("updated_at")
                       .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }
