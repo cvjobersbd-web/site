@@ -46,6 +46,11 @@ namespace al_ibtisam.Data
         /// </summary>
         public DbSet<SiteSetting> SiteSettings { get; set; }
 
+        /// <summary>
+        /// NavigationMenus টেবিল — 🆕 নেভবারের মেনু (হোম, শপ, ব্লগ ইত্যাদি)
+        /// </summary>
+        public DbSet<NavigationMenu> NavigationMenus { get; set; }
+
         // ============================================================
         // Model Configuration
         // ============================================================
@@ -230,10 +235,14 @@ namespace al_ibtisam.Data
                       .IsRequired()
                       .HasColumnName("created_at")
                       .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                entity.Property(c => c.IconUrl)
+                      .HasMaxLength(500)
+                      .HasColumnName("icon_url");
             });
 
             // --------------------------------------------------------
-            // HeroSlide Configuration (নতুন)
+            // HeroSlide Configuration
             // --------------------------------------------------------
             modelBuilder.Entity<HeroSlide>(entity =>
             {
@@ -279,13 +288,12 @@ namespace al_ibtisam.Data
                       .HasColumnName("created_at")
                       .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                // পারফরম্যান্স — active slides দ্রুত লোড হবে
                 entity.HasIndex(h => new { h.IsActive, h.DisplayOrder })
                       .HasDatabaseName("ix_hero_slides_active_order");
             });
 
             // --------------------------------------------------------
-            // SiteSetting Configuration (নতুন)
+            // SiteSetting Configuration
             // --------------------------------------------------------
             modelBuilder.Entity<SiteSetting>(entity =>
             {
@@ -312,6 +320,44 @@ namespace al_ibtisam.Data
                       .IsRequired()
                       .HasColumnName("updated_at")
                       .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            });
+
+            // --------------------------------------------------------
+            // 🆕 NavigationMenu Configuration
+            // --------------------------------------------------------
+            modelBuilder.Entity<NavigationMenu>(entity =>
+            {
+                entity.ToTable("NavigationMenus");
+                entity.HasKey(n => n.Id);
+
+                entity.Property(n => n.Id)
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(n => n.Title)
+                      .IsRequired()
+                      .HasMaxLength(100)
+                      .HasColumnName("title");
+
+                entity.Property(n => n.Url)
+                      .IsRequired()
+                      .HasMaxLength(500)
+                      .HasColumnName("url");
+
+                entity.Property(n => n.IsActive)
+                      .IsRequired()
+                      .HasColumnName("is_active")
+                      .HasDefaultValue(true);
+
+                entity.Property(n => n.DisplayOrder)
+                      .IsRequired()
+                      .HasColumnName("display_order")
+                      .HasDefaultValue(0);
+
+                entity.Property(n => n.Alignment)
+                      .IsRequired()
+                      .HasMaxLength(20)
+                      .HasColumnName("alignment")
+                      .HasDefaultValue("Left");
             });
         }
     }

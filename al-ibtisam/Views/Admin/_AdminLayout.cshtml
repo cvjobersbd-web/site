@@ -215,7 +215,7 @@
         }
         
         .has-submenu.open .sidebar-submenu {
-            max-height: 300px;
+            max-height: 400px; /* ম্যাক্স হাইট */
             opacity: 1;
         }
         
@@ -467,13 +467,22 @@
                 </a>
             </li>
 
-            <!-- PRODUCTS & CATEGORIES (Smooth Animated Submenu) -->
+            <!-- 🆕 NAVIGATION MENU -->
+            <li>
+                <a asp-controller="Admin" asp-action="Navigation"
+                   class="@(ViewData["ActiveNav"]?.ToString() == "Navigation" ? "active" : "")">
+                    <i class="fa-solid fa-bars"></i>
+                    <span>Nav Menus</span>
+                </a>
+            </li>
+
+            <!-- PRODUCTS & SHOP CATEGORIES (Smooth Animated Submenu) -->
             @{
                 // চেক করা হচ্ছে আমরা প্রোডাক্ট বা ক্যাটাগরি পেজে আছি কিনা
                 var isProductPage = ViewData["ActiveNav"]?.ToString() == "Products" 
                                     || ViewData["ActiveNav"]?.ToString() == "ProductsList" 
                                     || ViewData["ActiveNav"]?.ToString() == "AddProduct"
-                                    || ViewData["ActiveNav"]?.ToString() == "Categories";
+                                    || ViewData["ActiveNav"]?.ToString() == "ShopCategories";
             }
             <li class="has-submenu @(isProductPage ? "open" : "")" id="productsMenu">
                 <a href="javascript:void(0)" id="productsToggle">
@@ -494,11 +503,11 @@
                             Add New Product
                         </a>
                     </li>
-                    <!-- CATEGORIES -->
+                    <!-- শুধু Shop Categories থাকবে -->
                     <li>
-                        <a asp-controller="Admin" asp-action="Categories"
-                           class="@(ViewData["ActiveNav"]?.ToString() == "Categories" ? "active" : "")">
-                            Categories
+                        <a asp-controller="Admin" asp-action="ShopCategories"
+                           class="@(ViewData["ActiveNav"]?.ToString() == "ShopCategories" ? "active" : "")">
+                            Shop Categories
                         </a>
                     </li>
                 </ul>

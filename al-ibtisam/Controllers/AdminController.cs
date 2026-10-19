@@ -466,59 +466,29 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // 4. CATEGORIES MANAGEMENT (DB থেকে)
+        // 4. SHOP BY CATEGORY MANAGEMENT
         // ============================================================
 
-        // GET: /Admin/Categories
-        public async Task<IActionResult> Categories()
+        // GET: /Admin/ShopCategories
+        [HttpGet]
+        public async Task<IActionResult> ShopCategories()
         {
             var categories = await _db.Categories
                 .OrderBy(c => c.DisplayOrder)
                 .ThenBy(c => c.Id)
                 .ToListAsync();
-
-            var products = await _db.Products.ToListAsync();
-
-            var data = categories.Select(c => new
-            {
-                c.Id,
-                c.Name,
-                c.ShowInNavbar,
-                c.DisplayOrder,
-                c.IsFlashSale,
-                ProductCount = products.Count(p =>
-                    !string.IsNullOrEmpty(p.CategoryName) &&
-                    p.CategoryName.Equals(c.Name, StringComparison.OrdinalIgnoreCase))
-            }).ToList();
-
-            ViewBag.CategoriesData = data;
-            return View();
+            return View(categories);
         }
 
-        // POST: Navbar Toggle
+        // POST: /Admin/AddShopCategory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ToggleNavbar(int id)
-        {
-            var cat = await _db.Categories.FindAsync(id);
-            if (cat != null)
-            {
-                cat.ShowInNavbar = !cat.ShowInNavbar;
-                await _db.SaveChangesAsync();
-                TempData["Success"] = $"'{cat.Name}' Navbar-এ {(cat.ShowInNavbar ? "দেখাবে" : "দেখাবে না")}।";
-            }
-            return RedirectToAction(nameof(Categories));
-        }
-
-        // POST: Add new category
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddCategory(string categoryName)
+        public async Task<IActionResult> AddShopCategory(string categoryName, IFormFile? iconFile)
         {
             if (string.IsNullOrWhiteSpace(categoryName))
             {
                 TempData["Error"] = "ক্যাটাগরির নাম খালি রাখা যাবে না।";
-                return RedirectToAction(nameof(Categories));
+                return RedirectToAction(nameof(ShopCategories));
             }
 
             var name = categoryName.Trim();
@@ -526,7 +496,19 @@ namespace al_ibtisam.Controllers
             if (await _db.Categories.AnyAsync(c => c.Name.ToLower() == name.ToLower()))
             {
                 TempData["Error"] = "এই নামে ক্যাটাগরি আগেই আছে।";
-                return RedirectToAction(nameof(Categories));
+                return RedirectToAction(nameof(ShopCategories));
+            }
+
+            string? iconPath = null;
+            if (iconFile != null && iconFile.Length > 0)
+            {
+                // ইমেজ সার্ভিস দিয়ে আপলোড
+                iconPath = await _imageService.UploadImageAsync(iconFile, "category-icons");
+                if (string.IsNullOrEmpty(iconPath))
+                {
+                    TempData["Error"] = "আইকন আপলোড ব্যর্থ হয়েছে। (সর্বোচ্চ 5MB, JPG/PNG)";
+                    return RedirectToAction(nameof(ShopCategories));
+                }
             }
 
             var maxOrder = await _db.Categories.MaxAsync(c => (int?)c.DisplayOrder) ?? 0;
@@ -536,31 +518,196 @@ namespace al_ibtisam.Controllers
                 Name = name,
                 ShowInNavbar = true,
                 DisplayOrder = maxOrder + 1,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                IconUrl = iconPath // আইকন সেভ
             });
             await _db.SaveChangesAsync();
 
-            TempData["Success"] = $"নতুন ক্যাটাগরি '{name}' যোগ করা হয়েছে।";
-            return RedirectToAction(nameof(Categories));
+            TempData["Success"] = $"নতুন ক্যাটাগরি '{name}' সফলভাবে যোগ করা হয়েছে।";
+            return RedirectToAction(nameof(ShopCategories));
         }
 
-        // POST: Delete category
+        // GET: /Admin/EditShopCategory/5
+        [HttpGet]
+        public async Task<IActionResult> EditShopCategory(int id)
+        {
+            var cat = await _db.Categories.FindAsync(id);
+            if (cat == null)
+            {
+                TempData["Error"] = "ক্যাটাগরি পাওয়া যায়নি।";
+                return RedirectToAction(nameof(ShopCategories));
+            }
+            return View(cat);
+        }
+
+        // POST: /Admin/EditShopCategory
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteCategory(int id)
+        public async Task<IActionResult> EditShopCategory(int id, string categoryName, IFormFile? iconFile)
+        {
+            var cat = await _db.Categories.FindAsync(id);
+            if (cat == null) return NotFound();
+
+            if (string.IsNullOrWhiteSpace(categoryName))
+            {
+                TempData["Error"] = "ক্যাটাগরির নাম খালি রাখা যাবে না।";
+                return RedirectToAction(nameof(EditShopCategory), new { id = id });
+            }
+
+            var name = categoryName.Trim();
+
+            // নাম ডুপ্লিকেট চেক (নিজের নাম বাদে)
+            if (await _db.Categories.AnyAsync(c => c.Name.ToLower() == name.ToLower() && c.Id != id))
+            {
+                TempData["Error"] = "এই নামে অন্য একটি ক্যাটাগরি আগেই আছে।";
+                return RedirectToAction(nameof(EditShopCategory), new { id = id });
+            }
+
+            // নতুন আইকন আপলোড হলে
+            if (iconFile != null && iconFile.Length > 0)
+            {
+                var newIconPath = await _imageService.UploadImageAsync(iconFile, "category-icons");
+                if (!string.IsNullOrEmpty(newIconPath))
+                {
+                    // পুরনো আইকন ডিলিট করে নতুনটি সেট করা
+                    if (!string.IsNullOrEmpty(cat.IconUrl))
+                    {
+                        _imageService.DeleteImage(cat.IconUrl);
+                    }
+                    cat.IconUrl = newIconPath;
+                }
+                else
+                {
+                    TempData["Error"] = "নতুন আইকন আপলোড ব্যর্থ হয়েছে।";
+                    return RedirectToAction(nameof(EditShopCategory), new { id = id });
+                }
+            }
+
+            cat.Name = name;
+            await _db.SaveChangesAsync();
+
+            TempData["Success"] = $"ক্যাটাগরি '{name}' সফলভাবে আপডেট করা হয়েছে।";
+            return RedirectToAction(nameof(ShopCategories));
+        }
+
+        // POST: /Admin/DeleteShopCategory
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteShopCategory(int id)
         {
             var cat = await _db.Categories.FindAsync(id);
             if (cat != null)
             {
+                // চাইলে এখানে ইমেজ ডিলিট করতে পারেন
+                if (!string.IsNullOrEmpty(cat.IconUrl))
+                {
+                    _imageService.DeleteImage(cat.IconUrl);
+                }
+
                 _db.Categories.Remove(cat);
                 await _db.SaveChangesAsync();
                 TempData["Success"] = "ক্যাটাগরি ডিলিট করা হয়েছে।";
             }
-            return RedirectToAction(nameof(Categories));
+            return RedirectToAction(nameof(ShopCategories));
         }
 
         // ============================================================
-        // 5. SIGN OUT
+        // 5. NAVIGATION MENU MANAGEMENT
+        // ============================================================
+
+        // GET: /Admin/Navigation
+        [HttpGet]
+        public async Task<IActionResult> Navigation()
+        {
+            var menus = await _db.NavigationMenus
+                .OrderBy(m => m.DisplayOrder)
+                .ThenBy(m => m.Id)
+                .ToListAsync();
+            return View(menus);
+        }
+
+        // POST: /Admin/AddNavMenu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNavMenu(string title, string url, string alignment)
+        {
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                TempData["Error"] = "মেনুর নাম খালি রাখা যাবে না।";
+                return RedirectToAction(nameof(Navigation));
+            }
+
+            var maxOrder = await _db.NavigationMenus.MaxAsync(m => (int?)m.DisplayOrder) ?? 0;
+
+            _db.NavigationMenus.Add(new NavigationMenu
+            {
+                Title = title.Trim(),
+                Url = string.IsNullOrWhiteSpace(url) ? "#" : url.Trim(),
+                Alignment = alignment,
+                DisplayOrder = maxOrder + 1,
+                IsActive = true
+            });
+
+            await _db.SaveChangesAsync();
+            TempData["Success"] = $"নতুন মেনু '{title}' যোগ করা হয়েছে।";
+            return RedirectToAction(nameof(Navigation));
+        }
+
+        // POST: /Admin/EditNavMenu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditNavMenu(int id, string title, string url, string alignment)
+        {
+            var menu = await _db.NavigationMenus.FindAsync(id);
+            if (menu == null) return NotFound();
+
+            if (string.IsNullOrWhiteSpace(title))
+            {
+                TempData["Error"] = "মেনুর নাম খালি রাখা যাবে না।";
+                return RedirectToAction(nameof(Navigation));
+            }
+
+            menu.Title = title.Trim();
+            menu.Url = string.IsNullOrWhiteSpace(url) ? "#" : url.Trim();
+            menu.Alignment = alignment;
+
+            await _db.SaveChangesAsync();
+            TempData["Success"] = "মেনু আপডেট করা হয়েছে।";
+            return RedirectToAction(nameof(Navigation));
+        }
+
+        // POST: /Admin/ToggleNavMenu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleNavMenu(int id)
+        {
+            var menu = await _db.NavigationMenus.FindAsync(id);
+            if (menu != null)
+            {
+                menu.IsActive = !menu.IsActive;
+                await _db.SaveChangesAsync();
+                TempData["Success"] = $"মেনু '{menu.Title}' {(menu.IsActive ? "সক্রিয়" : "নিষ্ক্রিয়")} করা হয়েছে।";
+            }
+            return RedirectToAction(nameof(Navigation));
+        }
+
+        // POST: /Admin/DeleteNavMenu
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteNavMenu(int id)
+        {
+            var menu = await _db.NavigationMenus.FindAsync(id);
+            if (menu != null)
+            {
+                _db.NavigationMenus.Remove(menu);
+                await _db.SaveChangesAsync();
+                TempData["Success"] = "মেনু ডিলিট করা হয়েছে।";
+            }
+            return RedirectToAction(nameof(Navigation));
+        }
+
+        // ============================================================
+        // 6. SIGN OUT
         // ============================================================
         [HttpPost]
         [ValidateAntiForgeryToken]

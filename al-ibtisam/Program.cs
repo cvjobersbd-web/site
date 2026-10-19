@@ -1,7 +1,10 @@
 using al_ibtisam.Data;
 using al_ibtisam.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Localization;          // 🆕 Localization
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;              // 🆕 Localization options
+using System.Globalization;                      // 🆕 CultureInfo
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,12 +62,41 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 builder.Services.AddControllersWithViews();
 
 // ============================================================
+// 3.1 🆕 Localization — দুই ভাষা সাপোর্ট (English + বাংলা)
+// ------------------------------------------------------------
+// - ResourcesPath = "Resources" → .resx ফাইলগুলো Resources/ ফোল্ডারে
+// - Supported: "en" (English), "bn" (বাংলা)
+// - Default: "en"
+// - ভাষা মনে রাখা হয় ".AspNetCore.Culture" Cookie-তে (১ বছর)
+// ============================================================
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en"),
+        new CultureInfo("bn")
+    };
+
+    options.DefaultRequestCulture = new RequestCulture("en");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    // Cookie থেকে ভাষা পড়বে (সবার আগে চেক করবে)
+    options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider
+    {
+        CookieName = ".AspNetCore.Culture"
+    });
+});
+
+// ============================================================
 // 4. Image Upload Service
 // ============================================================
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // ============================================================
-// 5. Site Setting Service (নতুন — স্লাইডার interval ইত্যাদির জন্য)
+// 5. Site Setting Service (স্লাইডার interval ইত্যাদির জন্য)
 // ============================================================
 builder.Services.AddScoped<ISiteSettingService, SiteSettingService>();
 
@@ -167,7 +199,7 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("👉 pgAdmin-এ Categories টেবিল তৈরি করার SQL script চালান।");
     }
 
-    // ---------- 9.4 HeroSlides টেবিল চেক (নতুন) ----------
+    // ---------- 9.4 HeroSlides টেবিল চেক ----------
     try
     {
         var db = services.GetRequiredService<AppDbContext>();
@@ -181,7 +213,7 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("👉 pgAdmin-এ HeroSlides টেবিল তৈরি করার SQL script চালান।");
     }
 
-    // ---------- 9.5 SiteSettings টেবিল চেক + ডিফল্ট তৈরি (নতুন) ----------
+    // ---------- 9.5 SiteSettings টেবিল চেক + ডিফল্ট তৈরি ----------
     try
     {
         var db = services.GetRequiredService<AppDbContext>();
@@ -216,6 +248,34 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("⚠️ SiteSettings টেবিল পাওয়া যায়নি: " + ex.Message);
         Console.WriteLine("👉 pgAdmin-এ SiteSettings টেবিল তৈরি করার SQL script চালান।");
     }
+
+    // ---------- 9.6 🆕 Fonts ফোল্ডার চেক ----------
+    try
+    {
+        var env = services.GetRequiredService<IWebHostEnvironment>();
+        var fontsPath = Path.Combine(env.WebRootPath ?? Path.Combine(env.ContentRootPath, "wwwroot"), "fonts");
+        var regularFont = Path.Combine(fontsPath, "regular.ttf");
+        var boldFont = Path.Combine(fontsPath, "bold.ttf");
+
+        if (!Directory.Exists(fontsPath))
+        {
+            Directory.CreateDirectory(fontsPath);
+            Console.WriteLine("⚠️ wwwroot/fonts ফোল্ডার তৈরি করা হয়েছে — এখানে regular.ttf ও bold.ttf রাখুন।");
+        }
+
+        if (!File.Exists(regularFont) || !File.Exists(boldFont))
+        {
+            Console.WriteLine("⚠️ বাংলা ফন্ট পাওয়া যায়নি — wwwroot/fonts/regular.ttf ও bold.ttf রাখুন।");
+        }
+        else
+        {
+            Console.WriteLine("✅ AdorNoirrit বাংলা ফন্ট লোড করার জন্য প্রস্তুত।");
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("⚠️ Fonts ফোল্ডার চেক ব্যর্থ: " + ex.Message);
+    }
 }
 
 // ============================================================
@@ -231,10 +291,14 @@ else
     app.UseDeveloperExceptionPage();
 }
 
+// 🆕 Localization — অবশ্যই UseRouting-এর আগে
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions.Value);
+
 // HTTPS redirect
 app.UseHttpsRedirection();
 
-// Static files serve (CSS, JS, images, /uploads সহ সব)
+// Static files serve (CSS, JS, images, /uploads, /fonts সহ সব)
 app.UseStaticFiles();
 
 // Routing enable

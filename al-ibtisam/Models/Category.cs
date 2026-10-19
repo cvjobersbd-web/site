@@ -6,9 +6,15 @@ namespace al_ibtisam.Models
     [Table("Categories")]
     public class Category
     {
+        // ============================================================
+        // Primary Key
+        // ============================================================
         [Key]
         public int Id { get; set; }
 
+        // ============================================================
+        // Category Name
+        // ============================================================
         [Required]
         [StringLength(100)]
         [Column("name")]
@@ -28,5 +34,17 @@ namespace al_ibtisam.Models
 
         [Column("created_at")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        // ============================================================
+        // 🆕 Shop By Category Icon
+        // ============================================================
+        /// <summary>
+        /// ক্যাটাগরির আইকনের URL (অ্যাডমিন প্যানেল থেকে আপলোড করা হবে)।
+        /// শুধুমাত্র "Shop By Category" সাইডবারে দেখানোর জন্য ব্যবহৃত হবে।
+        /// উদাহরণ: "/uploads/category-icons/abc123.png"
+        /// </summary>
+        [StringLength(500)]
+        [Column("icon_url")]
+        public string? IconUrl { get; set; }
     }
 }

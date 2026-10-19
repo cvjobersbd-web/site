@@ -11,6 +11,7 @@ namespace al_ibtisam.Controllers
     /// হোম পেইজের কন্ট্রোলার।
     /// হিরো স্লাইডার ডাটাবেজ (HeroSlides) থেকে লোড করে।
     /// Slider interval (সেকেন্ড) SiteSettings থেকে আসে।
+    /// Shop By Category-র জন্য Categories লোড করা হয়।
     /// </summary>
     public class HomeController : Controller
     {
@@ -32,7 +33,7 @@ namespace al_ibtisam.Controllers
         }
 
         // ============================================================
-        // HOME PAGE — হিরো স্লাইডার + interval লোড
+        // HOME PAGE — হিরো স্লাইডার + interval + categories লোড
         // URL: /
         // ============================================================
         [HttpGet]
@@ -51,10 +52,19 @@ namespace al_ibtisam.Controllers
                 // ---------- 2. Slider interval (সেকেন্ড) ----------
                 var interval = await _siteSettings.GetSliderIntervalAsync();
 
-                // ---------- 3. ViewBag-এ পাঠান ----------
+                // ---------- 3. Navbar Categories (Shop By Category-র জন্য) ----------
+                var categories = await _db.Categories
+                    .AsNoTracking()
+                    .Where(c => c.ShowInNavbar) // শুধু যেগুলো নেভবারে দেখানোর জন্য সিলেক্ট করা
+                    .OrderBy(c => c.DisplayOrder)
+                    .ThenBy(c => c.Id)
+                    .ToListAsync();
+
+                // ---------- 4. ViewBag-এ পাঠান ----------
                 ViewBag.HeroSlides = slides;
                 ViewBag.SliderInterval = interval;            // সেকেন্ড
                 ViewBag.SliderIntervalSeconds = interval * 1000; // ms (Bootstrap data-bs-interval)
+                ViewBag.NavbarCategories = categories;        // 🆕 সাইডবারের জন্য
 
                 return View();
             }
@@ -62,10 +72,11 @@ namespace al_ibtisam.Controllers
             {
                 _logger.LogError($"Home/Index error: {ex.Message}");
 
-                // Error হলেও হোম পেইজ খুলবে — empty slider
+                // Error হলেও হোম পেইজ খুলবে — empty data fallback
                 ViewBag.HeroSlides = new List<HeroSlide>();
                 ViewBag.SliderInterval = 3;
                 ViewBag.SliderIntervalSeconds = 3000;
+                ViewBag.NavbarCategories = new List<Category>(); // Fallback
 
                 return View();
             }

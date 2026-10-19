@@ -1,0 +1,392 @@
+﻿@model List<al_ibtisam.Models.NavigationMenu>
+@{
+    ViewData["Title"] = "Navigation Menu Setup";
+    ViewData["ActiveNav"] = "Navigation";
+    ViewData["PageTitle"] = "Navigation Menu";
+    ViewData["PageSubTitle"] = "নেভবারের মেনু অ্যাড, এডিট এবং অ্যালাইনমেন্ট সেট করুন";
+    Layout = "_AdminLayout";
+}
+
+<style>
+    /* ================= LAYOUT ================= */
+    .nav-setup-layout { 
+        display: grid; 
+        grid-template-columns: 1fr 360px; 
+        gap: 24px; 
+        align-items: flex-start; 
+    }
+    
+    /* ================= LIST CARD ================= */
+    .list-card { 
+        background: #fff; 
+        border-radius: 12px; 
+        box-shadow: 0 2px 12px rgba(0,0,0,.06); 
+        overflow: hidden; 
+    }
+    .list-header { 
+        padding: 20px 24px; 
+        border-bottom: 1px solid #eef2f5; 
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .list-header h2 { 
+        font-size: 18px; 
+        font-weight: 700; 
+        color: #134856; 
+        margin: 0; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+    }
+    .list-header h2 i { color: #028EA5; }
+
+    /* ================= TABLE ================= */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: #f7fafc; }
+    thead th { 
+        text-align: left; 
+        padding: 14px 20px; 
+        font-size: 12.5px; 
+        font-weight: 700; 
+        color: #6c8a93; 
+        text-transform: uppercase; 
+        letter-spacing: .5px; 
+        border-bottom: 1px solid #eef2f5; 
+    }
+    tbody tr { border-bottom: 1px solid #f4f7fa; transition: background .15s; }
+    tbody tr:hover { background: #f9fbfc; }
+    tbody td { padding: 16px 20px; color: #134856; vertical-align: middle; }
+
+    /* ================= BADGES ================= */
+    .badge { 
+        display: inline-flex; 
+        align-items: center; 
+        gap: 5px; 
+        padding: 5px 12px; 
+        border-radius: 999px; 
+        font-size: 12px; 
+        font-weight: 600; 
+    }
+    .badge-active { background: #e8f5e9; color: #2e7d32; }
+    .badge-inactive { background: #fdeaea; color: #c62828; }
+    .badge-align-left { background: #e3f2fd; color: #1565c0; }
+    .badge-align-center { background: #f3e5f5; color: #7b1fa2; }
+    .badge-align-right { background: #fff3e0; color: #e65100; }
+
+    /* ================= ACTION BUTTONS ================= */
+    .btn-action { 
+        display: inline-flex; 
+        align-items: center; 
+        justify-content: center; 
+        width: 34px; 
+        height: 34px; 
+        border-radius: 8px; 
+        border: 0; 
+        cursor: pointer; 
+        font-size: 14px; 
+        text-decoration: none; 
+        transition: background .15s, color .15s;
+    }
+    .btn-edit { background: #fff3e0; color: #f57c00; }
+    .btn-edit:hover { background: #f57c00; color: #fff; }
+    .btn-toggle { background: #e3f2fd; color: #1976d2; }
+    .btn-toggle:hover { background: #1976d2; color: #fff; }
+    .btn-delete { background: #fdeaea; color: #c62828; }
+    .btn-delete:hover { background: #c62828; color: #fff; }
+    .actions-cell { display: flex; gap: 8px; justify-content: flex-end; }
+
+    /* ================= ADD / EDIT CARD ================= */
+    .add-card { 
+        background: #fff; 
+        border-radius: 12px; 
+        box-shadow: 0 2px 12px rgba(0,0,0,.06); 
+        padding: 24px; 
+        position: sticky; 
+        top: 90px; 
+    }
+    .add-card h3 { 
+        font-size: 16px; 
+        font-weight: 700; 
+        color: #134856; 
+        margin: 0 0 18px; 
+        padding-bottom: 14px; 
+        border-bottom: 1px solid #f0f4f8; 
+        display: flex; 
+        align-items: center; 
+        gap: 8px; 
+    }
+    .add-card h3 i { color: #028EA5; }
+    
+    .form-group { margin-bottom: 16px; }
+    .form-group label { 
+        display: block; 
+        font-size: 13.5px; 
+        font-weight: 600; 
+        color: #134856; 
+        margin-bottom: 8px; 
+    }
+    .form-control { 
+        width: 100%; 
+        height: 46px; 
+        padding: 0 16px; 
+        border: 1.5px solid #e0e6ed; 
+        border-radius: 8px; 
+        font-size: 14px; 
+        color: #134856; 
+        outline: none; 
+        font-family: inherit; 
+        transition: border-color .2s, box-shadow .2s;
+        background: #fff;
+    }
+    .form-control:focus { 
+        border-color: #028EA5; 
+        box-shadow: 0 0 0 3px rgba(2, 142, 165, .1);
+    }
+    select.form-control {
+        appearance: none;
+        -webkit-appearance: none;
+        background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23028EA5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 16px center / 16px;
+        padding-right: 44px;
+        cursor: pointer;
+    }
+    
+    .btn-add { 
+        width: 100%; 
+        height: 48px; 
+        background: #86D200; 
+        color: #134856; 
+        border: 0; 
+        border-radius: 8px; 
+        font-size: 14px; 
+        font-weight: 700; 
+        cursor: pointer; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        gap: 8px; 
+        margin-top: 10px; 
+        transition: background .2s, color .2s;
+    }
+    .btn-add:hover { background: #134856; color: #fff; }
+
+    /* ================= ALERTS ================= */
+    .alert { 
+        padding: 14px 20px; 
+        border-radius: 10px; 
+        margin-bottom: 22px; 
+        font-size: 14px; 
+        display: flex; 
+        align-items: center; 
+        gap: 10px; 
+        font-family: 'Hind Siliguri', sans-serif; 
+        animation: fadeIn .3s ease;
+    }
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .alert-success { background: #e3f6ec; border: 1px solid #b3e2c6; color: #0f7b3e; }
+    .alert-error { background: #fdeaea; border: 1px solid #f5c2c2; color: #b71c1c; }
+
+    /* ================= RESPONSIVE ================= */
+    @@media (max-width: 991px) { 
+        .nav-setup-layout { grid-template-columns: 1fr; } 
+        .add-card { position: static; } 
+    }
+</style>
+
+@* ================= ALERTS ================= *@
+@if (TempData["Success"] != null) { 
+    <div class="alert alert-success">
+        <i class="fa-solid fa-circle-check"></i> 
+        <span>@TempData["Success"]</span>
+    </div> 
+}
+@if (TempData["Error"] != null) { 
+    <div class="alert alert-error">
+        <i class="fa-solid fa-circle-exclamation"></i> 
+        <span>@TempData["Error"]</span>
+    </div> 
+}
+
+<div class="nav-setup-layout">
+    <!-- ================= MENU LIST ================= -->
+    <div class="list-card">
+        <div class="list-header">
+            <h2><i class="fa-solid fa-bars"></i> Navigation Menus</h2>
+            <span class="badge" style="background:#e3f2fd; color:#1565c0; padding:6px 14px; border-radius:999px; font-size:12.5px; font-weight:600;">
+                মোট @(Model?.Count ?? 0) টি
+            </span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 60px;">Order</th>
+                        <th>Title</th>
+                        <th>URL</th>
+                        <th>Alignment</th>
+                        <th>Status</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var menu in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <span class="badge" style="background:#f0f4f8; color:#6c8a93;">@menu.DisplayOrder</span>
+                                </td>
+                                <td style="font-weight:600;">@menu.Title</td>
+                                <td style="color:#6c8a93; font-family:monospace;">@menu.Url</td>
+                                <td>
+                                    @if (menu.Alignment == "Center")
+                                    {
+                                        <span class="badge badge-align-center">Center</span>
+                                    }
+                                    else if (menu.Alignment == "Right")
+                                    {
+                                        <span class="badge badge-align-right">Right</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-align-left">Left</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (menu.IsActive) { 
+                                        <span class="badge badge-active"><i class="fa-solid fa-check"></i> Active</span> 
+                                    } else { 
+                                        <span class="badge badge-inactive"><i class="fa-solid fa-xmark"></i> Inactive</span> 
+                                    }
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <!-- Edit Button (JS trigger) -->
+                                        <button type="button" 
+                                                class="btn-action btn-edit" 
+                                                onclick="editMenu(@menu.Id, '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(menu.Title))', '@Html.Raw(System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(menu.Url))', '@menu.Alignment')" 
+                                                title="Edit">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </button>
+                                        
+                                        <!-- Toggle Active -->
+                                        <form asp-action="ToggleNavMenu" method="post" style="margin:0;">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@menu.Id" />
+                                            <button type="submit" class="btn-action btn-toggle" title="Toggle Status">
+                                                <i class="fa-solid fa-power-off"></i>
+                                            </button>
+                                        </form>
+                                        
+                                        <!-- Delete -->
+                                        <form asp-action="DeleteNavMenu" method="post" style="margin:0;" onsubmit="return confirm('আপনি কি নিশ্চিত এই মেনুটি ডিলিট করতে চান?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@menu.Id" />
+                                            <button type="submit" class="btn-action btn-delete" title="Delete">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding:40px; color:#6c8a93;">
+                                <i class="fa-solid fa-bars" style="font-size:36px; color:#b0d4dc; display:block; margin-bottom:10px;"></i>
+                                কোনো মেনু পাওয়া যায়নি।
+                                <br />
+                                <small style="font-size:12px;">ডান পাশের ফর্ম দিয়ে নতুন মেনু যোগ করুন।</small>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ================= ADD / EDIT FORM ================= -->
+    <div class="add-card" id="formCard">
+        <h3 id="formTitle"><i class="fa-solid fa-plus-circle"></i> Add New Menu</h3>
+        
+        <form asp-action="AddNavMenu" method="post" id="mainForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" id="menuId" value="0" />
+            
+            <div class="form-group">
+                <label>Menu Title <span style="color:#c62828;">*</span></label>
+                <input type="text" name="title" id="menuTitle" class="form-control" placeholder="e.g. হোম" required autocomplete="off" />
+            </div>
+            
+            <div class="form-group">
+                <label>URL / Link</label>
+                <input type="text" name="url" id="menuUrl" class="form-control" placeholder="e.g. / বা /Category/Load?name=All" value="#" autocomplete="off" />
+            </div>
+            
+            <div class="form-group">
+                <label>Alignment (অবস্থান)</label>
+                <select name="alignment" id="menuAlignment" class="form-control">
+                    <option value="Left">Left (বাম দিকে)</option>
+                    <option value="Center">Center (মাঝখানে)</option>
+                    <option value="Right">Right (ডান দিকে)</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn-add" id="btnSubmit">
+                <i class="fa-solid fa-plus"></i> Add Menu
+            </button>
+            <button type="button" class="btn-add" id="btnCancel" style="display:none; background:#e0e6ed; color:#134856;" onclick="resetForm()">
+                <i class="fa-solid fa-xmark"></i> Cancel Edit
+            </button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // ==========================================
+        // Edit Menu Function (Form Populate)
+        // ==========================================
+        function editMenu(id, title, url, alignment) {
+            // Form Title & Action Change
+            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-pen"></i> Edit Menu';
+            document.getElementById('mainForm').action = '/Admin/EditNavMenu';
+            
+            // Populate Data
+            document.getElementById('menuId').value = id;
+            document.getElementById('menuTitle').value = title;
+            document.getElementById('menuUrl').value = url;
+            document.getElementById('menuAlignment').value = alignment;
+            
+            // Buttons Update
+            document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-save"></i> Save Changes';
+            document.getElementById('btnCancel').style.display = 'flex';
+            
+            // Scroll to Form
+            document.getElementById('formCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // ==========================================
+        // Reset Form (Cancel Edit)
+        // ==========================================
+        function resetForm() {
+            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-plus-circle"></i> Add New Menu';
+            document.getElementById('mainForm').action = '/Admin/AddNavMenu';
+            
+            document.getElementById('menuId').value = '0';
+            document.getElementById('menuTitle').value = '';
+            document.getElementById('menuUrl').value = '#';
+            document.getElementById('menuAlignment').value = 'Left';
+            
+            document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-plus"></i> Add Menu';
+            document.getElementById('btnCancel').style.display = 'none';
+        }
+    </script>
+}
